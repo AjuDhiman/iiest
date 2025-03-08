@@ -65,6 +65,7 @@ export class SidebarComponent {
   getUserData() {
     const rawUserData: any = this.registerService.LoggedInUserData()
     this.userData = JSON.parse(rawUserData);
+    console.log("userData=================>",this.userData)
     if(this.userData) {
       this.userImageId = this.userData.employeeImage;
       this.getUserImage();

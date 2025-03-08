@@ -53,7 +53,12 @@ export class LandingpageComponent implements OnInit, AfterViewInit {
     } else {
       const bodyElement = document.body;
       bodyElement.classList.add('app');
+      if(type == "company")
       this.router.navigateByUrl('/home');
+    }
+    if(type == "consumer"){
+      this.router.navigateByUrl('/consumer-main-page')
+
     }
   }
 

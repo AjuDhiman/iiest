@@ -14,6 +14,7 @@ import { SaleDocModalComponent } from './modals/sale-doc-modal/sale-doc-modal.co
 import { ShopsModalComponent } from './modals/shops-modal/shops-modal.component';
 import { AccountsModule } from './accounts/accounts.module';
 import { CoworksModule } from './coworks/coworks.module';
+import { ConsumerModule } from './consumer-pages/consumer/consumer.module';
 
 
 
@@ -26,16 +27,20 @@ import { CoworksModule } from './coworks/coworks.module';
     RefundPolicyComponent,
     SaleDocModalComponent,
     ShopsModalComponent,
+    // ConsumerHomeComponent,
   ],
   imports: [
     CommonModule,
     SharedModule,
+    ConsumerModule,
     GeneralModule,
     SalesModule,
     OperationModule,
     HRModule,
     AccountsModule,
-    CoworksModule
+    CoworksModule,
+
+    
   ],
   exports: [
     SalesModule,

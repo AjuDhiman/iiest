@@ -12,11 +12,14 @@ exports.employeeFormData = async(req, res)=>{
 exports.fboFormData = async(req, res)=>{
     try {
         const data = await generalDataSchema.find();
+        console.log("general data---------------->",data);
+        console.log("general data---------------->",data[0].fbo_data)
+
         return res.status(200).json(data[0].fbo_data);
     } catch (error) {
         return res.status(500).json({message: "Internal Server Error"})
     }
-}
+}   
  
 exports.getProductData = async(req, res)=>{
     try {

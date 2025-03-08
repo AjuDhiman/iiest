@@ -143,7 +143,8 @@ const master_roles = [
    'Senior IT Associate',
    'IT Associate',
    'IT Developer',
-   'Design Executive'
+   'Design Executive',
+   'Consumer'
 ]
 
 export const fbo_roles = [

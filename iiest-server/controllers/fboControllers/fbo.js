@@ -736,16 +736,16 @@ exports.boPayLater = async (req, res) => {
     const signExists = await doesFileExist(`${employeeDocsPath}${signatureFile}`);
     console.log('sign Exsists:', signExists)
 
-    if (!signExists) {
-      return res.status(404).json({ success: false, noSignErr: true })
-    }
+    // if (!signExists) {
+    //   return res.status(404).json({ success: false, noSignErr: true })
+    // }
 
     //generating customer id or rather say ShopId
     const { idNumber, generatedCustomerId } = await generatedInfo();
 
     //getting boInfo
     const boData = await boModel.findOne({ _id: boInfo });
-
+console.log("boData================>",boData)
     //array for saving invoices datas
     const invoiceData = [];
 
@@ -844,8 +844,8 @@ exports.boPayLater = async (req, res) => {
     //creating shop details obj in case of HRA and Foscos
     product_name.forEach(async (product) => {
       const addShop = await shopModel.create({
-        salesInfo: selectedProductInfo._id, managerName: boData.manager_name, address: address, state: state, district: district, pincode: pincode, shopId: generatedCustomerId, product_name: product, village: village,
-        tehsil: tehsil, isVerificationLinkSend: false
+        salesInfo:  selectedProductInfo._id, managerName: boData.manager_name, address: address, state: state, district: district, pincode: pincode, shopId: generatedCustomerId, product_name: product, village: village,
+        tehsil: tehsil, isVerificationLinkSend: false,boId:boData.customer_id,
       }); //create shop after sale for belongs  tohis sale
       await logAudit(user._id, "fbo_registers", fboEntry._id, {}, fboEntry, `${product} sold by paylater`);
     })

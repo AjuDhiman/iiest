@@ -184,9 +184,9 @@ exports.existingFboPayLater = async (req, res) => {
     const signExists = await doesFileExist(`${employeeDocsPath}${signatureFile}`);
     console.log('sign Exsists:', signExists)
 
-    if (!signExists) {
-      return res.status(404).json({ success, noSignErr: true })
-    }
+    // if (!signExists) {
+    //   return res.status(404).json({ success, noSignErr: true })
+    // }
 
     const { product_name, payment_mode, grand_total, pincode, fostac_training, foscos_training, hygiene_audit, medical, khadya_paaln, food_labeling, water_test_report, existingFboId } = req.body;
     const formData = req.body;
@@ -251,7 +251,9 @@ exports.existingFboPayLater = async (req, res) => {
     }
 
     product_name.forEach(async (product) => {
-      const addShop = await shopModel.create({ salesInfo: selectedProductInfo._id, managerName: existingFboInfo.boInfo.manager_name, address: existingFboInfo.address, state: existingFboInfo.state, district: existingFboInfo.district, pincode: existingFboInfo.pincode, shopId: existingFboInfo.customer_id, product_name: product, village: existingFboInfo.village, tehsil: existingFboInfo.tehsil, isVerificationLinkSend: true }); //create shop after sale for belongs to this sale
+      const addShop = await shopModel.create({ 
+        // you also need to add BO 
+        salesInfo: selectedProductInfo._id, managerName: existingFboInfo.boInfo.manager_name, address: existingFboInfo.address, state: existingFboInfo.state, district: existingFboInfo.district, pincode: existingFboInfo.pincode, shopId: existingFboInfo.customer_id, product_name: product, village: existingFboInfo.village, tehsil: existingFboInfo.tehsil, isVerificationLinkSend: true }); //create shop after sale for belongs to this sale
       await logAudit(createrObjId, "fbo_registers", existingFboInfo._id, {}, existingFboInfo, `${product} sold by paylater`);
     })
 

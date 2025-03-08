@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from 'src/app/pages/home/home.component';
 import { LandingpageComponent } from 'src/app/pages/landingpage/landingpage.component'
-import { authGuard } from 'src/app/shared/gaurds/auth.guard';
+import { authGuard, consumerAuthGuard } from 'src/app/shared/gaurds/auth.guard';
 import { routeGuard } from 'src/app/shared/gaurds/route.guard';
 import { fbo_roles, empRegister_roles, caseList_roles, bookSaleRoles, director_roles } from 'src/app/utils/config';
 import { UserAccountComponent } from 'src/app/pages/user-account/user-account.component';
@@ -22,6 +22,9 @@ import { TermsAndConditionsComponent } from './pages/terms-and-conditions/terms-
 import { ClientListComponent } from './pages/sales/client-list/client-list.component';
 import { InvoiceListComponent } from './pages/accounts/invoice-list/invoice-list.component';
 import { CreateInvoiceComponent } from './pages/coworks/create-invoice/create-invoice.component';
+import { ConsumerDashboardComponent } from './pages/consumer-pages/consumer/consumer-dashboard/consumer-dashboard.component';
+import { ConsumerMainPageComponent } from './pages/consumer-pages/consumer/consumer-main-page/consumer-main-page.component';
+// import { ConsumerHomeComponent } from './pages/consumer-pages/consumer-home-page/consumer-home';
 
 const routes: Routes = [
   { path: '', redirectTo: 'main', pathMatch: 'full' }, // Default route
@@ -49,6 +52,11 @@ const routes: Routes = [
   { path: 'createinvoice', component: CreateInvoiceComponent, canActivate:[authGuard, routeGuard], data: {allowedRoles: director_roles, allowedPanels: ['DPIIT Sales Panel']}},
   { path: 'emplist', component: EmployeelistComponent, canActivate:[authGuard, routeGuard], data: {allowedRoles:empRegister_roles}},
   { path: 'lms', component: LmsComponent, canActivate:[authGuard]},
+//  { path: 'consumer-home', component: ConsumerHomeComponent, canActivate:[authGuard]},
+  { path: 'consumer-main-page', component:ConsumerMainPageComponent,canActivate:[consumerAuthGuard]},
+ { path: 'consumer-dashboard', component: ConsumerDashboardComponent,canActivate:[consumerAuthGuard]},
+
+
 ];
 
 @NgModule({

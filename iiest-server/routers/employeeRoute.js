@@ -13,13 +13,7 @@ const { deleteDocFromS3 } = require('../controllers/operationControllers/documen
 const router = express.Router();
 const employeeFilesStorage = multer.memoryStorage();
 const employeeFilesUpload = multer({storage: employeeFilesStorage});
-
-
-
-
-
 //-----------------------------------------------routes--------------------------------------------------------------------------------------
-
 router.post('/empregister', authMiddleware, employeeRegister); //Route of regitering new employee
 router.post('/login', employeeLogin);// Route for calling login API for a particular employee
 router.post('/forgot-password', forgotPassword);  //route for calling forgot password api
@@ -66,10 +60,6 @@ router.get('/gettopsalespersons', authMiddleware, getTopSalesPersons);//route fo
 router.get('/gettopproducts', authMiddleware, getTopProducts);//route for getting to to product list
 router.get('/getempundermanager', authMiddleware, getEmpUnderManager); //route for getting to sales of employee under a manager
 router.get('/getmostrepeatedcust', authMiddleware, mostRepeatedCustomer); //route for getting to most repeted customer list
-
-
-
-
 router.post('/verifymail/:id', verifyEmail);//route for verifing mail
 router.get('/getempnamelist', getEmployeeNameAndId); //route for getting employee name and id list for onboard form
 

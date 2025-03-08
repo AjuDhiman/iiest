@@ -76,6 +76,7 @@ export class ViewFboComponent implements OnInit {
     this.fulladdress = this.formatAddress(this.fulladdress);
 
     if (this.fboData.foscosInfo) {
+      console.log("fboData.foscosInfo===========>",this.fboData)
       this.calculateRemaningDays();
     }
 

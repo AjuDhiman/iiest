@@ -39,7 +39,8 @@ import { GSTListState } from './store/state/gstlist.state';
     EditrecordComponent,
     CaseListComponent,
     BatchListComponent,
-    ConformationModalComponent
+    ConformationModalComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -69,3 +70,4 @@ import { GSTListState } from './store/state/gstlist.state';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+  

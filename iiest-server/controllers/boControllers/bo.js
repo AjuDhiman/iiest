@@ -1,7 +1,9 @@
 const boModel = require('../../models/BoModels/boSchema');
+const customerModel = require('../../models/customerModel/customerModel');
+
 const employeeSchema = require('../../models/employeeModels/employeeSchema')
-const { sendMailToBo } = require('./emailService');
-const { generateUniqueId } = require('../../fbo/generateCredentials');
+const { sendMailToBo,sendCredentialToBo } = require('./emailService');
+const { generateUniqueId, generateRandomPassword } = require('../../fbo/generateCredentials');
 const { default: mongoose } = require('mongoose');
 const fboModel = require('../../models/fboModels/fboSchema');
 const { sendBOVerificationSMS, sendBOOnBoardSMS } = require('../../config/gupshupsms');
@@ -9,39 +11,45 @@ const { sendBOVerificationSMS, sendBOOnBoardSMS } = require('../../config/gupshu
 //methord for creating business owners
 exports.createBusinessOwner = async (req, res) => {
     try {
-        const {
-            owner_name,
-            business_entity,
-            business_category,
-            business_ownership_type,
-            manager_name,
-            contact_no,
-            email,
-            onboard_by } = req.body; //destructuring req body
+        console.log("STEP 1: Data Received", req.body);
 
-        const { idNumber, generatedUniqueCustomerId } = await generateUniqueId(); //generating unique customer id for a bo
+        const { owner_name, business_entity, business_category, business_ownership_type, manager_name, contact_no, email, onboard_by } = req.body;
 
-        //preceding lines will terminate the api and send exsisting mail error in response
-        const exsistingMail = await boModel.findOne({ email: email });
-        console.log(exsistingMail);
-
-        if (exsistingMail) {
-            return res.status(401).json({ success: false, emailErr: true });
+        if (!owner_name || !contact_no || !email) {
+            return res.status(400).json({ message: 'Missing required fields' });
         }
 
-        //preceding lines will terminate the api and send exsisting contact error in response
-        const exsistingContact = await boModel.findOne({ contact_no: contact_no });
-
-        if (exsistingContact) {
-            return res.status(401).json({ success: false, contactErr: true });
+        // Check Existing Email (Case Insensitive)
+        const existingMail = await boModel.findOne({ email: { $regex: new RegExp(`^${email}$`, 'i') } });
+        if (existingMail) {
+            console.log("Email Already Exists");
+            return res.status(401).json({ success: false, message: 'Email already exists' });
         }
 
-        const employeeInfo = await employeeSchema.findOne({ employee_id: onboard_by }); //getting employee info the help of unique
-        //  employee id of a sales man (we are not using req.user in this case like our other api because we are not passing this api through middleware because we want to consumer to use onboard form witout being some one logged in)
+        // Check Existing Contact Number
+        const existingContact = await boModel.findOne({ contact_no: contact_no });
+        if (existingContact) {
+            console.log("Contact Number Already Exists");
+            return res.status(401).json({ success: false, message: 'Contact number already exists' });
+        }
 
+        // Check Employee
+        const employeeInfo = await employeeSchema.findOne({ employee_id: onboard_by });
+        if (!employeeInfo) {
+            console.log("Employee Not Found");
+            return res.status(404).json({ message: 'Employee not found' });
+        }
+        console.log("STEP 2: Employee Found", employeeInfo);
+
+        // Generate Unique ID
+        const { idNumber, generatedUniqueCustomerId } = await generateUniqueId();
+        console.log("STEP 3: Unique ID Generated:", idNumber, generatedUniqueCustomerId);
+
+        // Create Business Owner
         const newBo = await boModel.create({
             id_num: idNumber,
             customer_id: generatedUniqueCustomerId,
+            iiest_member_id: generatedUniqueCustomerId,
             owner_name,
             business_entity,
             business_category,
@@ -51,25 +59,64 @@ exports.createBusinessOwner = async (req, res) => {
             manager_name,
             onboard_by: employeeInfo._id,
             is_contact_verified: false,
-            is_email_verified: false //setting contact and email verification initially false beacuse we want consumer to verify both by mail or contact
-        }); // creating new bo in db
+            is_email_verified: false
+        });
+        console.log("STEP 4: Business Owner Created", newBo);
 
+        // Generate Random Password
+        // const newPassword = await generateRandomPassword();
+        
+        // // Create Customer
+        // const newCustomer = await customerModel.create({
+        //     business_owner_ref_id: newBo._id,
+        //     customer_name: manager_name, 
+        //     iiest_member_id: generatedUniqueCustomerId,
+        //     username: email.toLowerCase(),
+        //     password: newPassword,
+        //     email: email.toLowerCase(),
+        //     contact_no,
+        //     created_by: employeeInfo._id
+        // });
+        // console.log("STEP 6: Customer Created", newCustomer);
 
+        // Send Verification Mail
         const mailInfo = {
-            purpose: 'verification',// purpose of the mail
+            purpose: 'verification',
             id: newBo._id,
             email: newBo.email,
             contact_no: newBo.contact_no
-        }//collecting data relate to mail in mail info and next pass into send mail
+        };
 
-        await sendMailToBo(email, mailInfo); //sending verification mail
 
-        return res.status(200).json({ message: 'Business owner created successfully', data: newBo });
+        // const customerMailInfo = {
+        //     id: newBo._id,
+        //     email: newBo.email,
+        //     contact_no: newBo.contact_no,
+        //     password: newPassword // Add the password here
+        // };
+        try {
+            await sendMailToBo(email, mailInfo);
+        //    await sendCredentialToBo(email,customerMailInfo);
+
+            console.log("STEP 7: Verification Mail Sent");
+        } catch (mailError) {
+            console.error("Mail Error:", mailError);
+        }
+
+        return res.status(200).json({ message: 'Business Owner Registered Successfully', data: newBo });
+
     } catch (error) {
-        console.error('Error creating business owner:', error);
+        if (error.name === 'ValidationError') {
+            console.error("Validation Error:", error);
+            return res.status(400).json({ message: error.message });
+        }
+        console.error("Internal Server Error:", error);
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+
+
 
 //get list of all business owner from bo registers whose both contact and email are verified
 exports.getAllBusinessOwners = async (_req, res) => {
@@ -132,19 +179,36 @@ exports.verifyEmail = async (req, res) => {
             }
 
 
+      
+            const employee = await employeeSchema.findOne({_id: idExsists.onboard_by});
+
+            const newPassword = await generateRandomPassword();
+
+            // ✅ STEP 2: Create Customer
+            const newCustomer = await customerModel.create({
+                business_owner_ref_id: idExsists._id,
+                customer_name: idExsists.manager_name,
+                iiest_member_id: idExsists.customer_id,
+                username: idExsists.customer_id,
+                password: newPassword,
+                email: idExsists.email,
+                contact_no: idExsists.contact_no,
+                created_by: employee._id
+            });
             const mailInfo = { //aggregating mail info for sending mail to bo with his or her customer id
                 boName: idExsists.owner_name,
                 purpose: 'onboard',
                 customerId: verifiedMail.customer_id,
                 email: idExsists.email,
                 contact_no: idExsists.contact_no,
-                managerName: idExsists.manager_name
-            }
+                managerName: idExsists.manager_name,
+                password: newPassword 
 
-            const employee = await employeeSchema.findOne({_id: idExsists.onboard_by});
+            }
 
             //checking for is admin or not
             const isAdmin = employee.employee_name.toLowerCase().includes('admin');
+
 
             console.log('isAdmin', isAdmin);
 
@@ -153,8 +217,7 @@ exports.verifyEmail = async (req, res) => {
                     await sendBOOnBoardSMS(idExsists.owner_name, idExsists.manager_name, idExsists.customer_id, idExsists.contact_no)
                 }
     
-                await sendMailToBo(verifiedMail.email, mailInfo);//sending onboard mail when bo verifies mail and contact by clicking on verify mail button 
-
+                await sendMailToBo(verifiedMail.email, mailInfo);
                 return res.status(200).json({ success: true, message: "Email Verified" });
             }
         }

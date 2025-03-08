@@ -125,6 +125,49 @@ exports.getDocList = async (req, res) => { //gertting list of all docs relate to
     }
 }
 
+
+
+exports.getDocListById = async (id) => { //gertting list of all docs relate to a id
+    try {
+
+        const handlerId = id.replace(/slash/g, '/'); // remove all word slash with /
+
+        const docs = await docsModel.findOne({ handlerId: handlerId });
+        
+        console.log("docs",docs);
+
+        if (!docs) {
+            return res.status(204).json({ message: 'record no found', noDocErr: true })
+        }
+
+        const promises = [];
+
+        //generating presigned urls for each src
+        docs.documents.forEach((doc) => {
+            const promise = (async () => {
+                if (doc.multipleDoc) {
+                    doc.src = await Promise.all(doc.src.map(async (src) => await getDocObject(src)));
+                } else {
+                    doc.src = await getDocObject(doc.src);
+                }
+            })();
+            promises.push(promise);
+        });
+
+        await Promise.all(promises);
+
+        
+        if (!docs) {
+            return null;
+        }
+
+        return docs.documents;
+      
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
 exports.deleteDocs = async (req, res) => { //function for delertng a particular doc from a object of documents relarted to aparticilar id and with a specific name 
     try {
 

@@ -103,6 +103,10 @@ const shopSchema = new Schema({
         required: true,
         trim: true
     },
+    boId: {
+        type: String,
+        required: true
+    },
     // isVerificationLinkSend: {
     //     type: Boolean,
     //     required: true

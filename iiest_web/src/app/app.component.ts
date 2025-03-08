@@ -13,6 +13,8 @@ import { HeaderComponent } from 'src/app/shared/header/header.component';
 export class AppComponent implements OnInit {
   title = 'iiest_new';
   showHeader: boolean = true;
+  showConsumerHeader: boolean = false;
+
   empName: string = '';
   loggedInUserData: any = {};
   isToken:boolean;
@@ -29,10 +31,22 @@ export class AppComponent implements OnInit {
     router.events.subscribe((val) => {
       const route:any = window.location.hash;
       if (val instanceof NavigationEnd) {
+
+        const consumerData = localStorage.getItem("consumer");
+        
+        if (consumerData) {
+          const consumer = JSON.parse(consumerData);
+          if (consumer.userType === 'consumer') {
+            this.showConsumerHeader = true;
+            this.showHeader = false; 
+          }
+        }
+        
         if (val.url == '/' || val.url == '/main' || route == "#about" || route == "#contact" || route.split('/')[1] == "verifyonboard"
        || val.url == "/privacy-policy" || val.url == "/refund-policy" || val.url == "/terms-and-conditions")  {
           this.showHeader = false;
           this.largeDisplay = false;
+          this.showConsumerHeader=false;
         } else {
           this.showHeader = true;
           const bodyElement = document.body;
@@ -43,7 +57,6 @@ export class AppComponent implements OnInit {
     this.isToken = this._registerService.isLoggedIn();
     if(!this.isToken){
     sessionStorage.setItem('issLoggedIn','false');
-  
     sessionStorage.setItem('token','')
     }
   }
@@ -53,6 +66,16 @@ export class AppComponent implements OnInit {
     if(this.loggedInUserData){
     this.empName = this.loggedInUserData.employee_name;
     }
+
+    // const consumerData = localStorage.getItem("consumer");
+    // if (consumerData) {
+    //   const consumer = JSON.parse(consumerData);
+    //   if (consumer.userType === 'consumer') {
+    //     this.showConsumerHeader = true; // Hide common header
+    //     this.showHeader = false;
+
+    //   }
+    // }
   }
 
   onSidebarToggle(obj:any){

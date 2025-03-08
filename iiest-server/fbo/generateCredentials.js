@@ -147,4 +147,17 @@ const generateInvoiceCode = async (business_type) => {  //methord for generating
   return invoice_code;
 }
 
-module.exports = { generateUniqueId, generatedInfo, generateRecipientInfo, generateInvoiceCode };
+
+const generateRandomPassword = async (length = 8) => { 
+
+
+  const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#&!";
+  let password = "";
+  for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * charset.length);
+      password += charset[randomIndex];
+  }
+  return password;
+};
+
+module.exports = { generateUniqueId, generatedInfo, generateRecipientInfo, generateInvoiceCode, generateRandomPassword};

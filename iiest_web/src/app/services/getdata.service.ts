@@ -13,6 +13,27 @@ export class GetdataService {
   constructor(private http: HttpClient, private router: Router) { }
 
 
+
+
+
+  //api for getting statistics data
+  public getConsumerStatisticsData(): Observable<any> {
+    const url = `${this.url}/compliance-statistics`;
+    return this.http.get<any>(url).pipe(catchError(this.handleError));
+  }
+
+  public getShopLicensesData(boId:any): Observable<any> {
+    const url = `${this.url}/shop-licenses?boId=${boId}`;
+    return this.http.get<any>(url).pipe(catchError(this.handleError));
+  }
+
+  public getDocs1(oid: string): Observable<any> { // for getting batchlist data from training
+    oid = oid.replace(/\//g, 'slash'); // replace '/' by word slash so we can pass it to as api endpoint
+    const url: string = `${this.url}/getdocs/${oid}`;
+    return this.http.get<any>(url).pipe(catchError(this.handleError));
+  }
+
+
   //api for getting lsit of all employees and their details
   public getEmployeeData(): Observable<any> {
     const url = `${this.url}/allemployees`;

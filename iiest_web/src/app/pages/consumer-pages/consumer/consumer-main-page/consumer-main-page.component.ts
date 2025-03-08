@@ -1,0 +1,37 @@
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { GetdataService } from 'src/app/services/getdata.service';
+
+@Component({
+  selector: 'app-consumer-main-page',
+  templateUrl: './consumer-main-page.component.html',
+  styleUrls: ['./consumer-main-page.component.scss']
+})
+export class ConsumerMainPageComponent {
+  constructor(private router: Router, private getDataService: GetdataService) {}
+  navigateToDashboard() {
+    this.router.navigate(['/consumer-dashboard']);
+  }
+  statistics: any = {
+    completedCompliances: 0,
+    pendingCompliances: 0,
+    durationInMonths: 0
+  }
+
+  ngOnInit(): void {
+    this.fetchStatistics();
+  }
+
+  fetchStatistics(): void {
+    this.getDataService.getConsumerStatisticsData().subscribe(
+      (response) => {
+        if (response.success) {
+          this.statistics = response.statistics;
+        }
+      },
+      (error) => {
+        console.error('Error fetching statistics:', error);
+      }
+    );
+  }
+}

@@ -1,0 +1,48 @@
+<div class="min-h-screen bg-light">
+    <!-- Background gradient -->
+    <div class="position-absolute top-0 start-0 end-0 bottom-0 bg-gradient-light opacity-50"></div>
+    
+    <div class="container  position-relative" style="margin-bottom: 85px;" >
+      <div class="text-center mb-4">
+        <h1 class="display-5 fw-bold d-flex align-items-center justify-content-center">
+          <span class="text-black py-1 rounded me-2" style="font-size: 5rem; line-height: 1;">9</span>
+          <span class="text-dark text-start" style="font-size: 18px; line-height: 1.2; font-weight: 700;">
+            MANDATORY REGULATORY<br>COMPLIANCES ON YOUR SHOP
+          </span>
+        </h1>
+      </div>
+      
+      <div class="row row-cols-3 g-4 mx-auto" style="max-width: 1200px;">
+        <div class="col" *ngFor="let item of complianceItems">
+          <div class="compliance-card"   [style.background-color]="item.color">
+            <div class="icon-box">
+              <!-- <div class="icon">{{ item.icon }}</div> -->
+              <div>
+                <img  [src]="getImageForItem(item.name)" 
+
+                alt="Shop Image" 
+                class="rounded shadow mt-1" 
+                width="70" 
+                height="70">
+            </div>
+            </div>
+            <div class="card-title mt-3">{{ item.name }}    </div>
+            <div  *ngIf="item.object" class="remaining-time">
+              ({{ calculateRemaningDays(item.docObject?.createdAt, item.object?.license_duration) }} are Remaining)
+            </div>
+            <div class="arrow-circle">
+            <fa-icon    *ngIf="item.object" (click)="viewDocument(item.docObject.name, item.docObject.src, item.docObject.format.toLowerCase(), item.docObject.multipleDoc)"
+            class="fa-1xl text-[#0d6ef] cursor-pointer" [icon]="faFile"></fa-icon></div>
+          
+
+          </div>
+        
+        </div>
+      </div>
+      
+      
+      <div class="text-center mt-4 text-secondary">
+        <p>CONNECT</p>
+      </div>
+    </div>
+  </div>

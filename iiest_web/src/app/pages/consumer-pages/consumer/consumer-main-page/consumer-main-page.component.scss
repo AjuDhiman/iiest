@@ -1,0 +1,46 @@
+.chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+  }
+  
+  .circle-chart {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: conic-gradient(
+      #dc3545 0% 60%, /* Red for Pending */
+      #198754 60% 100% /* Green for Completed */
+    );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  
+  .circle-content {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .legend-circle {
+    width: 18px;
+    height: 12px;
+    border-radius: 50%;
+  }
+  
+  .img-fluid {
+    object-fit: cover;
+    height: 200px;
+    width: 100%;
+  }
+  

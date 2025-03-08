@@ -34,6 +34,9 @@ export class FoscosComponent implements OnInit {
   ngOnInit(): void {
     this.foscos_training = this.rootFormGroup.control.get(this.formGroupName) as FormGroup;
     this.foscos_training.patchValue({ 'shops_no': this.minValue });
+    if (this.licenceType.Duration.length > 0) {
+      this.foscos_training.patchValue({ 'license_duration': this.licenceType.Duration[0] });
+    }
   }
  
 

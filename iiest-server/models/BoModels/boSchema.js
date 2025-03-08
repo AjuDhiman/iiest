@@ -20,6 +20,12 @@ const boSchema = new Schema({
         unique: true,
         trim: true
     },
+    iiest_member_id: {
+        type: String, 
+        required: true,
+        unique: true,
+        trim: true
+    },
     owner_name: {
         type: String,
         required: true,
@@ -69,3 +75,4 @@ const boSchema = new Schema({
 
 const boModel = mongoose.model('bo_registers', boSchema);
 module.exports = boModel;
+

@@ -169,6 +169,11 @@ export class RegisterService {
     return this.http.post<any>(url, loginemployee).pipe(catchError(this.handleError));
   }
 
+  public loginConsumer(loginemployee: loginEmployee): Observable<any> {
+    const url = `${this.url}/consumer-login`;
+    return this.http.post<any>(url, loginemployee).pipe(catchError(this.handleError));
+  }
+
   //route for uplading  doc to s3 on the given presigned url
   public uplaodDocstoS3(url: string, docFile: File): Observable<any> {
     console.log(url);

@@ -11,6 +11,8 @@ import { ExportAsModule } from 'ngx-export-as';
 import { MultiSelectComponent } from 'src/app/shared/multi-select/multi-select.component';
 import { ViewDocumentComponent } from 'src/app/pages/modals/view-document/view-document.component';
 import { InrAmountPipe } from 'src/app/pipes/inr-amount.pipe';
+import { ConsumerSidebarComponent } from './consumer-sidebar/consumer-sidebar.component';
+import { ConsumerFooterComponent } from './consumer-footer/consumer-footer.component';
 
 
 
@@ -18,7 +20,9 @@ import { InrAmountPipe } from 'src/app/pipes/inr-amount.pipe';
   declarations: [
     MultiSelectComponent,
     ViewDocumentComponent,
-    InrAmountPipe
+    InrAmountPipe,
+    ConsumerSidebarComponent,
+    ConsumerFooterComponent
   ],
   imports: [
     CommonModule,
@@ -39,7 +43,8 @@ import { InrAmountPipe } from 'src/app/pipes/inr-amount.pipe';
     FormsModule,
     ReactiveFormsModule,
     FontAwesomeModule,
-    ExportAsModule
+    ExportAsModule,
+    
   ],
   exports: [
     NgxLoadingModule,
@@ -53,7 +58,10 @@ import { InrAmountPipe } from 'src/app/pipes/inr-amount.pipe';
     ExportAsModule,
     ViewDocumentComponent,
     MultiSelectComponent,
-    InrAmountPipe
+    InrAmountPipe,
+    ConsumerSidebarComponent,
+    ConsumerFooterComponent
+
   ],
   providers: [
     InrAmountPipe

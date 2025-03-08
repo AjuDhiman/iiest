@@ -66,8 +66,6 @@ exports.sendMailToBo = async (boMail, mailInfo) => {
         throw error;
     }
 };
-
-
 //this function decides the content of a mail on the basis of pupose comming from mailInfo
 function getMailContent(mailInfo) {
     let englishContent = '';
@@ -130,7 +128,10 @@ function getMailContent(mailInfo) {
         <br>
         BO Name - ${mailInfo.boName}<br>
         Manager Name - ${mailInfo.managerName}<br>
-        BO ID No - ${mailInfo.customerId}<br>`;
+        BO ID No - ${mailInfo.customerId}<br>
+        Password - ${mailInfo.password}<br>`;
+        
+        
 
         hindiContent = `<p>कनेक्ट भारत परियोजना में पंजीकरण के लिए धन्यवाद। आपका व्यवसायिक संचालन (बीओ) नंबर उत्पन्न किया गया है और आपको इस मेल के माध्यम से भेजा गया है, कृपया जब भी हमसे संपर्क करें तो इसका उपयोग करें।<br>आप विभिन्न सरकारी लाभों के पात्र हो गए हैं, अपने व्यवसाय नियमों के अनुसार, व्यवसाय की वृद्धि के लिए एसएमई के लिए जारी योजनाओं के तहत।<br>आपको अपना विवरण सत्यापित करने के लिए 7 दिनों के भीतर एक कॉल प्राप्त होगा। कृपया आवश्यक कार्रवाई करें।
         कंपनी कारोबार गतिविधियों में किसी भी घूस, भ्रष्टाचार और धोखाधड़ी के प्रति शून्य सहनशीलता की नीति रखती है।</p>
@@ -143,3 +144,55 @@ function getMailContent(mailInfo) {
     }
     return { englishContent, hindiContent }
 }
+
+
+exports.sendCredentialToBo = async (boMail, mailInfo) => {
+    try {
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: mailData.email,
+                pass: mailData.pass
+            }
+        });
+
+        const { englishContent, hindiContent } = getCredentialMailContent(mailInfo);
+
+        if (!englishContent || !hindiContent) {
+            return;
+        }
+
+        let info = await transporter.sendMail({
+            from: mailData.email,
+            to: boMail,
+            subject: `${CB_BRAND_NAME.english} -- Login Credentials`,
+            html: `
+            <p>Welcome to ${CB_BRAND_NAME.english},</p>
+            <p>Your account has been successfully created. Below are your login credentials:</p>
+            
+            ${englishContent}
+            <p>This email is system generated, please do not reply.</p>`
+        });
+
+        console.log('Credential Email sent: %s', info.messageId);
+    } catch (error) {
+        console.error('Error sending credential email:', error);
+        throw error;
+    }
+};
+function getCredentialMailContent(mailInfo) {
+    let englishContent = `
+    <p><strong>Username:</strong>abcd@gmail.com</p>
+    <p><strong>Password:</strong> ${mailInfo.password}</p>
+    <p>Please use the above credentials to log in to our portal.</p>
+    <a href='${FRONT_END.VIEW_URL}#/login'>
+        <button style="background: #20DA9C; color: #fff; padding: 10px; border: none; border-radius: 5px; cursor: pointer;">
+            Login Now
+        </button>
+    </a>`;
+
+
+
+    return { englishContent };
+}
+
