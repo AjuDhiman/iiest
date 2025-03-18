@@ -26,3 +26,13 @@
 .download-icon fa-icon:hover {
     color: rgb(211, 211, 211);
 }
+
+.remaining-time{
+    font-size: 10px;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Added shadow */
+    align-items: flex-end;
+    display: flex;
+    justify-content: end;
+    color:#1957a9;
+    font-weight:bold
+  }

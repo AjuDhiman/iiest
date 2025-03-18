@@ -49,7 +49,18 @@ const customerSchemaObject = new mongoose.Schema({
     created_at: {
         type: Date,
         default: Date.now
-    }
+    },
+    business_category_ID: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    city_Id: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    
 });
 
 const customerSchema = mongoose.model('customer', customerSchemaObject);

@@ -17,16 +17,28 @@ export class GetdataService {
 
 
   //api for getting statistics data
-  public getConsumerStatisticsData(): Observable<any> {
-    const url = `${this.url}/compliance-statistics`;
+  public getConsumerStatisticsData(boId:any): Observable<any> {
+    const url = `${this.url}/compliance-statistics?boId=${boId}`;
     return this.http.get<any>(url).pipe(catchError(this.handleError));
   }
 
-  public getShopLicensesData(boId:any): Observable<any> {
-    const url = `${this.url}/shop-licenses?boId=${boId}`;
+  public getLicensesData(business_type_id:any,city_id:any): Observable<any> {
+    const url = `${this.url}/licenses?business_type_id=${business_type_id}&city_id=${city_id}`;
     return this.http.get<any>(url).pipe(catchError(this.handleError));
   }
 
+  public getShopLicensesData(boId: any, city_Id: any, business_category_ID: any): Observable<any> {
+    const url = `${this.url}/shop-licenses?boId=${boId}&city_id=${city_Id}&business_type_id=${business_category_ID}`;
+    return this.http.get(url);
+  }
+  
+  public getAllSalesData(boId:any): Observable<any> {
+    const url = `${this.url}/allSales?boId=${boId}`;
+    return this.http.get<any>(url).pipe(catchError(this.handleError));
+  }
+
+
+  
   public getDocs1(oid: string): Observable<any> { // for getting batchlist data from training
     oid = oid.replace(/\//g, 'slash'); // replace '/' by word slash so we can pass it to as api endpoint
     const url: string = `${this.url}/getdocs/${oid}`;
@@ -40,6 +52,20 @@ export class GetdataService {
     return this.http.get<any>(url).pipe(catchError(this.handleError));
   }
 
+  public getAllBusinessTypes(): Observable<any> {
+    const url = `${this.url}/businessTypes`;
+    return this.http.get<any>(url).pipe(catchError(this.handleError));
+  }
+
+  public getAllCities(): Observable<any> {
+    const url = `${this.url}/cities`;
+    return this.http.get<any>(url).pipe(catchError(this.handleError));
+  }
+
+  public getAllLicense(): Observable<any> {
+    const url = `${this.url}/all-licenses`;
+    return this.http.get<any>(url).pipe(catchError(this.handleError));
+  }
   //api for getting general data related to eployee registration
   public getGeneralData(): Observable<any> {
     const url = `${this.url}/empgeneraldata`;
@@ -195,7 +221,10 @@ export class GetdataService {
     const url = `${this.url}/fbo/invoice/${invoiceId}`;
     return this.http.get<any>(url).pipe(catchError(this.handleError));
   }
-
+  public getConsumerInvoice(invoiceId: string): Observable<any> {
+    const url = `${this.url}/consumer-fbo/invoice/${invoiceId}`;
+    return this.http.get<any>(url).pipe(catchError(this.handleError));
+  }
   //service for getting cowork invoice 
   public getCoworkInvoice(invoiceId: string) {
     const url = `${this.url}/getcoworkinvoice/${invoiceId}`;

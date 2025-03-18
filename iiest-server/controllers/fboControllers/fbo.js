@@ -53,10 +53,10 @@ exports.fboPayment = async (req, res) => {
 
     const signExists = await doesFileExist(`${employeeDocsPath}${signatureFile}`);
     console.log('sign Exsists:', signExists)
-
-    if (!signExists) {
-      return res.status(404).json({ success, noSignErr: true })
-    }
+     //  **************
+    // if (!signExists) {
+    //   return res.status(404).json({ success, noSignErr: true })
+    // }
 
 
     const formBody = req.body;
@@ -438,7 +438,7 @@ exports.fboPayReturn = async (req, res) => {
         //creating shop details obj in case of HRA and Foscos
         product_name.forEach(async (product) => {
           const addShop = await shopModel.create({
-            salesInfo: selectedProductInfo._id, managerName: boData.manager_name, address: address, state: state, district: district, pincode: pincode, shopId: generatedCustomerId, product_name: product, village: village,
+            salesInfo: selectedProductInfo._id, managerName: boData.manager_name, address: address, state: state, district: district, pincode: pincode, shopId: generatedCustomerId, product_name: product, village: village, boId:boData.customer_id,
             tehsil: tehsil, isVerificationLinkSend: false
           }); //create shop after sale for belongs  tohis sale
 
@@ -963,6 +963,8 @@ exports.saleInvoice = async (req, res) => {
   }
 }
 
+//method getting invoice  in 
+
 exports.getClientList = async (req, res) => {
   try {
 
@@ -1112,6 +1114,9 @@ exports.updateFboBasicDocStatus = async (req, res) => {
             format: doc.format,
             multipleDoc: doc.isMultiDoc,
             src: src,
+            issuedDate: doc.issuedDate,
+            licenseDuration:doc.licenseDuration 
+            
           }
         }
       });
@@ -1442,8 +1447,6 @@ exports.verifyFbo = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(fboObjId)) { //sending error message in case of wrong format of objet id send in parameter
       return res.status(404).json({ success: false, message: "Not A Valid Request" }); //this message will be shown in verifing mail frontend
     }
-
-
 
     const idExsists = await fboModel.findOne({ _id: fboObjId });
 

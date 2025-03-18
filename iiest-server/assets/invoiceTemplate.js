@@ -335,14 +335,9 @@ console.log('**************8FboDATA*************',fboInfo)
                             <p>
                                 ${fboInfo.chosenService === 'Khadya Paaln' ? 
                                     `<b>T&C:<br>
-                                    1. Total Amount does not include any government charges. Incurred government fee is to be paid directly to the government during filing by the customer.<br>
-                                    2. Service includes auto renewal filing of ${
-                                        fboInfo.totalAmount > 20000 
-                                        ? 'Fostac Certificate (2) + Foscos License (1) + Health Trade License (1) + Shop and Establishment Certificate (1) + Medical Certificate (2) + Water Test Report (2) + HRA + On-Site Staff Training (1) per shop.<br>'
-                                        : 'Fostac Certificate (1) + Foscos License (1) + Health Trade License (1) + Shop and Establishment Certificate (1) + Medical Certificate (1) + Water Test Report (2) per shop.<br>'
-                                    }
-                                    3. Food technical visit (${fboInfo.totalAmount > 20000 ? '3' : '1'}) per shop per annum.
-                                    </b>`
+                                     1. The Mention Amount is Security Amount. <br>
+                                     2. The Mention Amount is subject to Cashback & other promotional scheme.
+                                     </b>`
                                     : ''
                                 }
                             </p>

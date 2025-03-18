@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faShoppingCart, faBell, faPhone, faChalkboardTeacher, faBars } from '@fortawesome/free-solid-svg-icons';
 
@@ -8,7 +9,22 @@ import { faShoppingCart, faBell, faPhone, faChalkboardTeacher, faBars } from '@f
   styleUrls: ['./consumer-footer.component.scss']
 })
 export class ConsumerFooterComponent {
-  constructor(library: FaIconLibrary) {
+  phoneNumber: string = '9289310979'; 
+
+  constructor(library: FaIconLibrary,private router: Router) {
     library.addIcons(faShoppingCart, faBell, faPhone, faChalkboardTeacher, faBars);
+  }
+
+  navigateToOtherOptions() {
+    this.router.navigate(['/consumer-other-option']);
+  }
+
+  
+  navigateToInVoice() {
+    this.router.navigate(['/consumer-invoice']);
+  }
+
+  makeCall() {
+    window.location.href = 'tel:' + this.phoneNumber;
   }
 }

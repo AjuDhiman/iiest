@@ -36,7 +36,7 @@ const boSchema = new Schema({
         required: true,
         trim: true
     },
-    business_category: {
+    business_category_ID: {
         type: String,
         required: true,
         trim: true
@@ -69,7 +69,11 @@ const boSchema = new Schema({
     is_contact_verified: {
         type: Boolean,
         required: true
-    }
+    },
+    city_Id: {
+        type: String,
+        required: true,
+    },
 
 }, { timestamps: true })
 

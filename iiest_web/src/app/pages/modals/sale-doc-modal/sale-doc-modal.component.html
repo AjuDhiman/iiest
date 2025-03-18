@@ -74,6 +74,92 @@
             <div *ngIf="docform['managerAadhar'].errors['invalidFileNumber']">Max 2 files are allowed</div>
           </div>
         </div>
+
+
+        <div formArrayName="licenses">
+          <div *ngFor="let license of licenses.controls; let i = index" [formGroupName]="i" class="row align-items-end mb-3">
+            
+            <!-- License Dropdown -->
+            <div class="col-md-3">
+              <label class="form-label">Select License<sup>*</sup></label>
+              <select 
+                class="form-select form-control-sm"
+                formControlName="licenseType"
+                [ngClass]="{ 'is-invalid': submitted && license.get('licenseType')?.errors }">
+                
+                <option value="" disabled selected>Select License</option>
+                <option *ngFor="let license of Licenses" [value]="license._id">
+                  {{ license.name }}
+                </option>
+              </select>
+              <div *ngIf="submitted && license.get('licenseType')?.errors" class="invalid-feedback">
+                <div *ngIf="license.get('licenseType')?.errors?.['required']">Please select a license</div>
+              </div>
+            </div>
+        
+            <!-- Issued Date -->
+            <div class="col-md-3">
+              <label class="form-label">Issued Date<sup>*</sup></label>
+              <input type="date" class="form-control form-control-sm"
+                formControlName="createdDate"
+                [ngClass]="{ 'is-invalid': submitted && license.get('createdDate')?.errors }" />
+              <div *ngIf="submitted && license.get('createdDate')?.errors" class="invalid-feedback">
+                <div *ngIf="license.get('createdDate')?.errors?.['required']">Issued Date is required</div>
+              </div>
+            </div>
+        
+            <!-- License Duration -->
+            <div class="col-md-2">
+              <label class="form-label">Number of Years<sup>*</sup></label>
+              <input type="number" class="form-control form-control-sm"
+                formControlName="licenseDuration"
+                min="1"
+                [ngClass]="{ 'is-invalid': submitted && license.get('licenseDuration')?.errors }" />
+              <div *ngIf="submitted && license.get('licenseDuration')?.errors" class="invalid-feedback">
+                <div *ngIf="license.get('licenseDuration')?.errors?.['required']">Number of Years is required</div>
+                <div *ngIf="license.get('licenseDuration')?.errors?.['min']">Must be at least 1 year</div>
+              </div>
+            </div>
+        
+            <!-- Upload License -->
+            <div class="col-md-3 ">
+              <label class="form-label">Upload License<sup>*</sup></label>
+              <input type="file" (change)="onLicenseFileChange($event, i)" 
+                class="form-control form-control-sm" 
+                [ngClass]="{ 'is-invalid': submitted && license.get('licensePhoto')?.errors }" />
+              <div *ngIf="submitted && license.get('licensePhoto')?.errors" class="invalid-feedback">
+                <div *ngIf="license.get('licensePhoto')?.errors?.['required']">License is required. (jpeg or png)</div>
+              </div>
+            </div>
+        
+            <!-- Remove License Button -->
+
+            <div class="col-md-1 d-flex justify-content-end gap-2 align-items-center">
+              <!-- Add Another License Button -->
+              <button type="button" class="btn btn-sm btn-success d-flex align-items-center gap-1" (click)="addLicense()">
+                <fa-icon [icon]="faPlus"></fa-icon>            
+              </button>
+            
+              <!-- Remove License Button -->
+              <button type="button" class="btn btn-sm btn-danger d-flex align-items-center gap-1" (click)="removeLicense(i)">
+                <fa-icon [icon]="faMinus"></fa-icon><!-- Minus Icon -->
+              </button>
+            </div>
+            
+            
+        
+          </div>
+        </div>
+        
+        
+        <!-- Add License Button -->
+        <!-- <div class="col-12 mt-3">
+          <button type="button" class="btn btn-sm btn-primary" (click)="addLicense()">
+            <i class="fa fa-plus"></i> Add Another License
+          </button>
+        </div> -->
+        
+        
       </div>
       <p style="font-size: 16px; margin: 0; padding: 0; margin-top: 15px;">(Note: only .jpeg, .jpg, and .png files are
         allowed) </p>
@@ -106,6 +192,8 @@
                 <th class="cell text-center">Manager Photo</th>
                 <th class="cell text-center">Shop Photo</th>
                 <th class="cell text-center">Manager Aadhar</th>
+                <th class="cell text-center">Foscos License</th>
+
               </thead>
               <tbody>
                 <tr>
@@ -124,8 +212,13 @@
                         [icon]="faFile"></fa-icon>
                     </span></td>
                   <td class="cell text-center"><span class="truncate">
-                      <fa-icon class="fa-2xl text-success cursor-pointer"
+                      <fa-icon class="fa-2xl text-success cursor-pointer"                                                                                                                               
                         (click)="viewDocument(managerAadharObj.name, managerAadharObj.src, managerAadharObj.format.toLowerCase(), managerAadharObj.multipleDoc)"
+                        [icon]="faFile"></fa-icon>
+                    </span></td>
+                    <td class="cell text-center"><span class="truncate">
+                      <fa-icon class="fa-2xl text-success cursor-pointer"
+                        (click)="viewDocument(licenseObj.name, licenseObj.src, licenseObj.format.toLowerCase(), licenseObj.multipleDoc)"
                         [icon]="faFile"></fa-icon>
                     </span></td>
                 </tr>

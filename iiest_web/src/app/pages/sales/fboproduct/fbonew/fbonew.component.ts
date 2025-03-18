@@ -32,6 +32,7 @@ export class FbonewComponent implements OnInit, OnChanges {
   servicesNames: any = {};
   minValue: number = 1;
   loggedUser: any;
+  businessTypes:any[];
   objId: string;
   foscosFixedCharges: number
   foscosGST: number;
@@ -245,7 +246,7 @@ export class FbonewComponent implements OnInit, OnChanges {
     const item = localStorage.getItem('LoggedInUser');
   }
   ngOnInit(): void {
-
+    this.fetchBuisnessType();
     this.userData = this._registerService.LoggedInUserData();
     this.parsedUserData = JSON.parse(this.userData)
     this.userName = this.parsedUserData.employee_name;
@@ -417,7 +418,15 @@ export class FbonewComponent implements OnInit, OnChanges {
       this.fboPlaceholder = "Enter FBO Name";
     }
   }
+  fetchBuisnessType(): void {
+    this._getFboGeneralData.getAllBusinessTypes().subscribe(response => {
+      if (response.success) {
+        console.log("response===>",response);
+        this.businessTypes = response.businessTypes;
 
+      }
+    });
+  }
   //hide the exsisting fbo and open exsisting bo search
   existingUserBo($event: any) {
     // this.existingUserBoForm.reset();
@@ -530,7 +539,10 @@ export class FbonewComponent implements OnInit, OnChanges {
     this.fbo['owner_name'].setValue(fboObj.owner_name);
     this.fbo['owner_contact'].setValue(fboObj.owner_contact);
     this.fbo['business_entity'].setValue(fboObj.boInfo.business_entity);
-    this.fbo['business_category'].setValue(fboObj.boInfo.business_category);
+    console.log("businessTypes=========>",this.businessTypes)
+    const selectedBusiness = this.businessTypes.find(business => business._id === fboObj.boInfo.business_category_ID);
+
+    this.fbo['business_category'].setValue(selectedBusiness ? selectedBusiness.name : '');
     this.fbo['manager_name'].setValue(fboObj.boInfo.manager_name);
     this.fbo['business_ownership_type'].setValue(fboObj.boInfo.business_ownership_type);
     this.fbo['email'].setValue(fboObj.email);
@@ -583,7 +595,10 @@ export class FbonewComponent implements OnInit, OnChanges {
     this.isSearchEmptyBO = true;
     this.fbo['owner_name'].setValue(fboObj.owner_name);
     this.fbo['business_entity'].setValue(fboObj.business_entity);
-    this.fbo['business_category'].setValue(fboObj.business_category);
+    
+    const selectedBusiness = this.businessTypes.find(business => business._id === fboObj.business_category_ID);
+
+    this.fbo['business_category'].setValue(selectedBusiness ? selectedBusiness.name : '');
     this.fbo['business_ownership_type'].setValue(fboObj.business_ownership_type);
     this.fbo['owner_contact'].setValue(fboObj.contact_no);
     this.fbo['email'].setValue(fboObj.email);
@@ -938,8 +953,8 @@ export class FbonewComponent implements OnInit, OnChanges {
            // console.log(this.userDesignation);
             if (this.userDesignation === 'Sales Agent') {
               // Enable only the "Khadya Paaln" option, disable others
-              //return item.key !== 'Khadya Paaln';
-              return !item.value.enabled;
+              return item.key !== 'Khadya Paaln';
+              // return !item.value.enabled;
             }
             // For Area Officer: disable "Khadya Paaln" specifically
             else if (this.userDesignation === 'Area Officer(District Head)') {

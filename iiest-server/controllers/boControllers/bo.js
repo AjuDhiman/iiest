@@ -2,7 +2,7 @@ const boModel = require('../../models/BoModels/boSchema');
 const customerModel = require('../../models/customerModel/customerModel');
 
 const employeeSchema = require('../../models/employeeModels/employeeSchema')
-const { sendMailToBo,sendCredentialToBo } = require('./emailService');
+const { sendMailToBo, sendCredentialToBo } = require('./emailService');
 const { generateUniqueId, generateRandomPassword } = require('../../fbo/generateCredentials');
 const { default: mongoose } = require('mongoose');
 const fboModel = require('../../models/fboModels/fboSchema');
@@ -13,7 +13,7 @@ exports.createBusinessOwner = async (req, res) => {
     try {
         console.log("STEP 1: Data Received", req.body);
 
-        const { owner_name, business_entity, business_category, business_ownership_type, manager_name, contact_no, email, onboard_by } = req.body;
+        const { owner_name, business_entity, business_category_Id, business_ownership_type, manager_name, contact_no, email, onboard_by,cityID } = req.body;
 
         if (!owner_name || !contact_no || !email) {
             return res.status(400).json({ message: 'Missing required fields' });
@@ -52,33 +52,17 @@ exports.createBusinessOwner = async (req, res) => {
             iiest_member_id: generatedUniqueCustomerId,
             owner_name,
             business_entity,
-            business_category,
+            business_category_ID:business_category_Id,
             business_ownership_type,
             contact_no,
             email: email.toLowerCase(),
             manager_name,
-            onboard_by: employeeInfo._id,
+            onboard_by: employeeInfo._id,   
             is_contact_verified: false,
-            is_email_verified: false
+            is_email_verified: false,
+            city_Id:cityID
         });
         console.log("STEP 4: Business Owner Created", newBo);
-
-        // Generate Random Password
-        // const newPassword = await generateRandomPassword();
-        
-        // // Create Customer
-        // const newCustomer = await customerModel.create({
-        //     business_owner_ref_id: newBo._id,
-        //     customer_name: manager_name, 
-        //     iiest_member_id: generatedUniqueCustomerId,
-        //     username: email.toLowerCase(),
-        //     password: newPassword,
-        //     email: email.toLowerCase(),
-        //     contact_no,
-        //     created_by: employeeInfo._id
-        // });
-        // console.log("STEP 6: Customer Created", newCustomer);
-
         // Send Verification Mail
         const mailInfo = {
             purpose: 'verification',
@@ -86,17 +70,8 @@ exports.createBusinessOwner = async (req, res) => {
             email: newBo.email,
             contact_no: newBo.contact_no
         };
-
-
-        // const customerMailInfo = {
-        //     id: newBo._id,
-        //     email: newBo.email,
-        //     contact_no: newBo.contact_no,
-        //     password: newPassword // Add the password here
-        // };
         try {
             await sendMailToBo(email, mailInfo);
-        //    await sendCredentialToBo(email,customerMailInfo);
 
             console.log("STEP 7: Verification Mail Sent");
         } catch (mailError) {
@@ -179,12 +154,10 @@ exports.verifyEmail = async (req, res) => {
             }
 
 
-      
-            const employee = await employeeSchema.findOne({_id: idExsists.onboard_by});
 
+            const employee = await employeeSchema.findOne({ _id: idExsists.onboard_by });
             const newPassword = await generateRandomPassword();
 
-            // ✅ STEP 2: Create Customer
             const newCustomer = await customerModel.create({
                 business_owner_ref_id: idExsists._id,
                 customer_name: idExsists.manager_name,
@@ -193,8 +166,11 @@ exports.verifyEmail = async (req, res) => {
                 password: newPassword,
                 email: idExsists.email,
                 contact_no: idExsists.contact_no,
-                created_by: employee._id
+                created_by: employee._id,
+                business_category_ID:idExsists.business_category_ID,
+                city_Id:idExsists.city_Id
             });
+            console.log("newCustomer---->",newCustomer)
             const mailInfo = { //aggregating mail info for sending mail to bo with his or her customer id
                 boName: idExsists.owner_name,
                 purpose: 'onboard',
@@ -202,7 +178,7 @@ exports.verifyEmail = async (req, res) => {
                 email: idExsists.email,
                 contact_no: idExsists.contact_no,
                 managerName: idExsists.manager_name,
-                password: newPassword 
+                password: newPassword
 
             }
 
@@ -212,11 +188,11 @@ exports.verifyEmail = async (req, res) => {
 
             console.log('isAdmin', isAdmin);
 
-            if(verifiedMail){
-                if(isAdmin){
+            if (verifiedMail) {
+                if (isAdmin) {
                     await sendBOOnBoardSMS(idExsists.owner_name, idExsists.manager_name, idExsists.customer_id, idExsists.contact_no)
                 }
-    
+
                 await sendMailToBo(verifiedMail.email, mailInfo);
                 return res.status(200).json({ success: true, message: "Email Verified" });
             }
@@ -315,7 +291,7 @@ exports.getClientList = async (req, res) => {
                             $options: "i"
                         }
                     }
-                } 
+                }
             },
             {
                 $lookup: {
@@ -325,8 +301,8 @@ exports.getClientList = async (req, res) => {
                     as: 'boInfo'
                 }
             },
-            { 
-                $unwind: "$boInfo" 
+            {
+                $unwind: "$boInfo"
             },
             {
                 $group: {
@@ -362,11 +338,11 @@ exports.getClientList = async (req, res) => {
             {
                 $sort: { "createdAt": -1 }
             },
-            { 
-                $skip: (page - 1) * limit 
+            {
+                $skip: (page - 1) * limit
             },
-            { 
-                $limit: parseInt(limit) 
+            {
+                $limit: parseInt(limit)
             }
         ], {
             allowDiskUse: true
@@ -382,8 +358,8 @@ exports.getClientList = async (req, res) => {
             }
         });
 
-        return res.status(200).json({ 
-            clientList, 
+        return res.status(200).json({
+            clientList,
             totalRecords,
             totalPages: Math.ceil(totalRecords / limit),
             currentPage: page

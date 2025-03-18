@@ -1,0 +1,28 @@
+<div class="container">
+    <h2 class="title">Employee Sales Details</h2>
+  
+    <div class="card-container" *ngIf="employeeSales.length > 0; else noData">
+      <div class="card" *ngFor="let sale of employeeSales">
+        <div class="card-header" (click)="viewInvoice(sale)">
+            <h3>Invoice ID: {{ sale.invoiceId.length > 0 ? sale.invoiceId[0] : 'N/A' }}</h3>
+        </div>
+  
+        <div class="card-body">
+            <p><strong>Business Name:</strong> {{ sale.fboInfo?.fbo_name || 'N/A' }}</p>
+            <p><strong>Owner Name:</strong> {{ sale.fboInfo?.owner_name || 'N/A' }}</p>
+            <p><strong>Employee Name:</strong> {{ sale.employeeInfo?.employee_name || 'N/A' }}</p>
+          <p><strong>Check Status:</strong> <span [ngClass]="{'pending': sale.checkStatus === 'Pending', 'completed': sale.checkStatus === 'Completed'}">{{ sale.checkStatus }}</span></p>
+          <p><strong>Grand Total:</strong> ₹{{ sale.grand_total }}</p>
+        </div>
+  
+        <div class="card-footer">
+          <span class="date">Created On: {{ sale.createdAt | date:'medium' }}</span>
+        </div>
+      </div>
+    </div>
+  
+    <ng-template #noData>
+      <p class="no-data">No Sales Data Available</p>
+    </ng-template>
+  </div>
+  

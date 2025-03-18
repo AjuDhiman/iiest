@@ -1,13 +1,19 @@
 <div class="container text-center py-3">
     <!-- Image Grid -->
     <div class="row g-2 mb-3">
-      <div class="col-12">
-        <img src="../../../../../assets/images/doc-thumb-1.jpg" alt="Shop Image" class="img-fluid rounded shadow">
+      <!-- Show dynamic image if srcObject is available -->
+      <div class="col-12" *ngIf="statistics?.srcObject; else defaultImage">
+        <img [src]="statistics?.srcObject" alt="Shop Image" class="img-fluid rounded shadow">
       </div>
-      <!-- <div class="col-12">
-        <img src="assets/shop2.jpg" alt="Shop Image" class="img-fluid rounded shadow">
-      </div> -->
+      
+      <!-- Default static image (this will be used when srcObject is NOT available) -->
+      <ng-template #defaultImage>
+        <div class="col-12">
+          <img src="../../../../../assets/images/doc-thumb-2.jpg" alt="Default Shop Image" class="img-fluid rounded shadow">
+        </div>
+      </ng-template>
     </div>
+    
   
     <!-- Compliance Title -->
     <h4 class="fw-bold text-dark mb-3">COMPLIANCE TIMELINE CHART</h4>

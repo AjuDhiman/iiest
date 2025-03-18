@@ -83,7 +83,7 @@ export class FbolistComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
-    this.intailize() //do initial configurations
+    this.intailize();
     this.fetchAllFboData();
   }
 
@@ -97,7 +97,6 @@ export class FbolistComponent implements OnInit {
     this.loading = true
     this.sales$.subscribe({
       next: (res) => {
-        
         if (res.length) {
           this.loading = false;
           this.allFBOEntries = res.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
@@ -242,6 +241,8 @@ export class FbolistComponent implements OnInit {
 
   //View FBO Details
   viewFboDetails($event: Event, res: any) {
+    console.log("res================>",res)
+
     $event.stopPropagation();
     const modalRef = this.modalService.open(ViewFboComponent, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.fboData = res;

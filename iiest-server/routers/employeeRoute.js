@@ -51,10 +51,6 @@ router.get('/getclienttypesaledata', authMiddleware , getClientTypeSalesData); /
 router.get('/getmothwisesale', authMiddleware, getMonthWiseSaleData); //route for getting data for Month Wise or time interval wise chart
 router.get('/getrepeatedcustdata',authMiddleware, getRepeactCustomerData); //route for getting data for customer repetition chart
 router.get('/getticketdeliverychartdata', authMiddleware, ticketDeviveryChartData); //route for getting data for ticket delivery chart
-
-
-
-
 //----------------------------------------------------------routes for Statlist APIs-------------------------------------------------------------
 router.get('/gettopsalespersons', authMiddleware, getTopSalesPersons);//route for getting to sales person list
 router.get('/gettopproducts', authMiddleware, getTopProducts);//route for getting to to product list

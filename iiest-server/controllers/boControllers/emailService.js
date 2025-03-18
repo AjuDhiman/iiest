@@ -146,53 +146,53 @@ function getMailContent(mailInfo) {
 }
 
 
-exports.sendCredentialToBo = async (boMail, mailInfo) => {
-    try {
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: mailData.email,
-                pass: mailData.pass
-            }
-        });
+// exports.sendCredentialToBo = async (boMail, mailInfo) => {
+//     try {
+//         const transporter = nodemailer.createTransport({
+//             service: 'gmail',
+//             auth: {
+//                 user: mailData.email,
+//                 pass: mailData.pass
+//             }
+//         });
 
-        const { englishContent, hindiContent } = getCredentialMailContent(mailInfo);
+//         const { englishContent, hindiContent } = getCredentialMailContent(mailInfo);
 
-        if (!englishContent || !hindiContent) {
-            return;
-        }
+//         if (!englishContent || !hindiContent) {
+//             return;
+//         }
 
-        let info = await transporter.sendMail({
-            from: mailData.email,
-            to: boMail,
-            subject: `${CB_BRAND_NAME.english} -- Login Credentials`,
-            html: `
-            <p>Welcome to ${CB_BRAND_NAME.english},</p>
-            <p>Your account has been successfully created. Below are your login credentials:</p>
+//         let info = await transporter.sendMail({
+//             from: mailData.email,
+//             to: boMail,
+//             subject: `${CB_BRAND_NAME.english} -- Login Credentials`,
+//             html: `
+//             <p>Welcome to ${CB_BRAND_NAME.english},</p>
+//             <p>Your account has been successfully created. Below are your login credentials:</p>
             
-            ${englishContent}
-            <p>This email is system generated, please do not reply.</p>`
-        });
+//             ${englishContent}
+//             <p>This email is system generated, please do not reply.</p>`
+//         });
 
-        console.log('Credential Email sent: %s', info.messageId);
-    } catch (error) {
-        console.error('Error sending credential email:', error);
-        throw error;
-    }
-};
-function getCredentialMailContent(mailInfo) {
-    let englishContent = `
-    <p><strong>Username:</strong>abcd@gmail.com</p>
-    <p><strong>Password:</strong> ${mailInfo.password}</p>
-    <p>Please use the above credentials to log in to our portal.</p>
-    <a href='${FRONT_END.VIEW_URL}#/login'>
-        <button style="background: #20DA9C; color: #fff; padding: 10px; border: none; border-radius: 5px; cursor: pointer;">
-            Login Now
-        </button>
-    </a>`;
+//         console.log('Credential Email sent: %s', info.messageId);
+//     } catch (error) {
+//         console.error('Error sending credential email:', error);
+//         throw error;
+//     }
+// };
+// function getCredentialMailContent(mailInfo) {
+//     let englishContent = `
+//     <p><strong>Username:</strong>abcd@gmail.com</p>
+//     <p><strong>Password:</strong> ${mailInfo.password}</p>
+//     <p>Please use the above credentials to log in to our portal.</p>
+//     <a href='${FRONT_END.VIEW_URL}#/login'>
+//         <button style="background: #20DA9C; color: #fff; padding: 10px; border: none; border-radius: 5px; cursor: pointer;">
+//             Login Now
+//         </button>
+//     </a>`;
 
 
 
-    return { englishContent };
-}
+//     return { englishContent };
+// }
 

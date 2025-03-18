@@ -24,6 +24,8 @@ import { InvoiceListComponent } from './pages/accounts/invoice-list/invoice-list
 import { CreateInvoiceComponent } from './pages/coworks/create-invoice/create-invoice.component';
 import { ConsumerDashboardComponent } from './pages/consumer-pages/consumer/consumer-dashboard/consumer-dashboard.component';
 import { ConsumerMainPageComponent } from './pages/consumer-pages/consumer/consumer-main-page/consumer-main-page.component';
+import { ConsumerOthersOptionComponent } from './pages/consumer-pages/consumer/consumer-others-option/consumer-others-option.component';
+import { ConsumerInvoiceComponent } from './pages/consumer-pages/consumer/consumer-invoice/consumer-invoice.component';
 // import { ConsumerHomeComponent } from './pages/consumer-pages/consumer-home-page/consumer-home';
 
 const routes: Routes = [
@@ -55,6 +57,10 @@ const routes: Routes = [
 //  { path: 'consumer-home', component: ConsumerHomeComponent, canActivate:[authGuard]},
   { path: 'consumer-main-page', component:ConsumerMainPageComponent,canActivate:[consumerAuthGuard]},
  { path: 'consumer-dashboard', component: ConsumerDashboardComponent,canActivate:[consumerAuthGuard]},
+ { path: 'consumer-other-option', component: ConsumerOthersOptionComponent,canActivate:[consumerAuthGuard]},
+ { path: 'consumer-invoice', component: ConsumerInvoiceComponent,canActivate:[consumerAuthGuard]},
+
+
 
 
 ];

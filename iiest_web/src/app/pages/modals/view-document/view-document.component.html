@@ -1,5 +1,5 @@
 <div class="modal-header bg-secondary">
-    <h6 class="modal-title text-white" id="modal-basic-title">{{doc.name}}</h6>
+<h6 class="modal-title text-white" id="modal-basic-title">{{doc.name}}</h6>
     <a class="download-icon">
         <fa-icon class="fa-md cursor-pointer" [icon]="faDownload" title="Download"
           (click)="downloadDoc(doc.src, doc.format)"></fa-icon>
@@ -12,8 +12,14 @@
       </a>
     <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="activeModal.close()"></button>
 </div>
+<div  *ngIf="doc.issuedDate && doc?.licenseDuration " class="remaining-time mt-2 me-2">
+    ({{ calculateRemaningDays(doc.issuedDate, doc?.licenseDuration) }} are Remaining)
+  </div >
+  <div class="remaining-time mt-2 me-2">
+    🗓️ Renew before : <strong>{{ calculateRenewalDate(doc.issuedDate, doc?.licenseDuration) }}</strong>
+  </div>
+  
 <div class="modal-body">
-
     <div *ngIf="!doc.multipleDoc" class="">
         <div class="img-viewer" *ngIf="doc.format.toLowerCase() === 'image'">
             <img [src]="doc.src" class="rounded float-left img-fluid" alt="User Document">

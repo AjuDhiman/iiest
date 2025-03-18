@@ -9,13 +9,21 @@
         
         <div class="col-md-3">
             <label for="khadya_paaln_service_name" class="form-label">Service Name<sup>*</sup></label>
+
             <select id="khadya_paaln_service_name" formControlName="khadya_paaln_service_name" [ngClass]="{ 'is-invalid': submitted && khadya_paaln.get('khadya_paaln_service_name')?.errors}"
                 class="form-select form-select-sm" (change)="onServiceSelect()">
                 <option value="" disabled selected>Select the Service</option>                               
-                <option *ngFor="let servicename of khadya_paaln_serviceName | keyvalue"
+                <!-- <option *ngFor="let servicename of khadya_paaln_serviceName | keyvalue"
                     [value]="servicename.key">{{servicename.value}}
-                </option>
+                </option> -->
+
+                <option *ngFor="let servicename of khadya_paaln_serviceName | keyvalue" 
+                [value]="servicename.key" 
+                [disabled]="servicename.value === 'Standard'">
+            {{ servicename.value }}
+        </option>
             </select>
+
              <div *ngIf="submitted && khadya_paaln.get('khadya_paaln_service_name')?.errors"
                 class="invalid-feedback">
                 <div *ngIf="khadya_paaln.get('khadya_paaln_service_name')?.errors?.['required']">Service is
@@ -40,7 +48,7 @@
         </div>
         <div class="col-md-3">
             <label for="khadya_paaln_total" class="form-label">Khadya Paaln Total<sup>*</sup>
-                <span style="font-size: x-small;">(18% GST Inc.)</span></label>
+                <span style="font-size: x-small;">(0% GST Inc.)</span></label>
             <input type="number" placeholder="Khadya Paaln Total" [readonly]="isReadOnly"
                 formControlName="khadya_paaln_total" class="form-control form-control-sm"
                 [readOnly]="true"

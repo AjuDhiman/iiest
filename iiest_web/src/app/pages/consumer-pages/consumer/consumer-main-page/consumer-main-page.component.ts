@@ -8,22 +8,20 @@ import { GetdataService } from 'src/app/services/getdata.service';
   styleUrls: ['./consumer-main-page.component.scss']
 })
 export class ConsumerMainPageComponent {
+  consumer = JSON.parse(localStorage.getItem('consumer') || '{}');
+
   constructor(private router: Router, private getDataService: GetdataService) {}
   navigateToDashboard() {
     this.router.navigate(['/consumer-dashboard']);
   }
-  statistics: any = {
-    completedCompliances: 0,
-    pendingCompliances: 0,
-    durationInMonths: 0
-  }
+  statistics: any ;
 
   ngOnInit(): void {
-    this.fetchStatistics();
+    this.fetchStatistics(this.consumer.iiest_member_id);
   }
 
-  fetchStatistics(): void {
-    this.getDataService.getConsumerStatisticsData().subscribe(
+  fetchStatistics(boId:any): void {
+    this.getDataService.getConsumerStatisticsData(boId).subscribe(
       (response) => {
         if (response.success) {
           this.statistics = response.statistics;

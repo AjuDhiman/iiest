@@ -1,0 +1,39 @@
+<div class="min-h-screen bg-light">
+    <!-- Background gradient -->
+    <div class="position-absolute top-0 start-0 end-0 bottom-0 bg-gradient-light opacity-50"></div>
+    
+    <div class="container  position-relative" style="margin-bottom: 85px;" >
+        <div class="text-center mb-4">
+            <h1 class="display-5 fw-bold d-flex align-items-center justify-content-center">
+              <span class="text-dark text-center" style="font-size: 30px; line-height: 1.2; font-weight: 700; text-align: center;">
+                OTHER REGULATORY<br> COMPLIANCES
+              </span>
+            </h1>
+          </div>
+          
+      
+      <div class="row row-cols-3 g-4 mx-auto" style="max-width: 1200px;" style="margin-bottom: 50px;">
+        <div class="col" *ngFor="let item of VoluntaryItems">
+          <div class="compliance-card"   [style.background-color]="item.color">
+            <div class="icon-box">
+              <!-- <div class="icon">{{ item.icon }}</div> -->
+              <div>
+                <img  [src]="getImageForItem(item.title)" 
+                alt="Shop Image" 
+                class="rounded shadow mt-1" 
+                width="50" 
+                height="50">
+            </div>
+            </div>
+            <div class="card-title mt-3">{{ item.name }}    </div>
+              <!-- <div  *ngIf="item.object" class="remaining-time">
+              ({{ calculateRemaningDays(item.docObject?.createdAt, item.object?.license_duration) }} are Remaining)
+            </div> -->
+     
+          </div>
+        
+        </div>
+      </div>
+  
+    </div>
+  </div>

@@ -37,7 +37,6 @@ export class LandingpageComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
 
   }
-
   ngAfterViewInit(): void {
     // this.headRef.nativeElement.style.height = this.backgroundVidRef.nativeElement.style.height;
     const bodyElement = document.body;
@@ -45,28 +44,28 @@ export class LandingpageComponent implements OnInit, AfterViewInit {
     this.isToken = this._resiterService.isLoggedIn();
   }
 
-  openModal(type:string) {
+  openModal(type: string) {
+    const consumerData = localStorage.getItem("consumer");
     console.log(type);
-    if (!this.isToken) {
+    if (!this.isToken && !consumerData) {
       const modalRef = this.modalService.open(LoginComponent, { size: 'md', backdrop: 'static' });
-      modalRef.componentInstance.userType = { userType: type }; 
+      modalRef.componentInstance.userType = { userType: type };
     } else {
       const bodyElement = document.body;
       bodyElement.classList.add('app');
-      if(type == "company")
-      this.router.navigateByUrl('/home');
+      if (type == "company")
+        this.router.navigateByUrl('/home');
     }
-    if(type == "consumer"){
-      this.router.navigateByUrl('/consumer-main-page')
-
+    if (consumerData) {
+      if (type == "consumer") {
+        this.router.navigateByUrl('/consumer-main-page')
+      }
     }
   }
-
+  
   //methord opens the onboard ,modal if user if user is loggedin this runs on click of onboard button on landing page view
   openOnboardModal() {
-
-      this.modalService.open(OnboardModalComponent, { size: 'md', backdrop: 'static' });
-
+    this.modalService.open(OnboardModalComponent, { size: 'md', backdrop: 'static' });
   }
 
   routeTo(str: string) {
