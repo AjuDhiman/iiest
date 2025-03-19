@@ -51,12 +51,12 @@ const customerSchemaObject = new mongoose.Schema({
         default: Date.now
     },
     business_category_ID: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         unique: true
     },
     city_Id: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         unique: true
     },
