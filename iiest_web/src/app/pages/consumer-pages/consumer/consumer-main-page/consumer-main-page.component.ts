@@ -18,14 +18,15 @@ export class ConsumerMainPageComponent {
   statistics: any ;
 
   ngOnInit(): void {
+    console.log("consumer==>",this.consumer)
     this.shopId = this.route.snapshot.paramMap.get('shopId') || '';
     console.log('Shop ID:', this.shopId);
 
-    this.fetchStatistics(this.shopId);
+    this.fetchStatistics(this.consumer.iiest_member_id);
   }
 
-  fetchStatistics(shopId:any): void {
-    this.getDataService.getConsumerStatisticsData(shopId).subscribe(
+  fetchStatistics(boId:any): void {
+    this.getDataService.getConsumerStatisticsData(boId).subscribe(
       (response) => {
         if (response.success) {
           this.statistics = response.statistics;

@@ -53,12 +53,12 @@ const customerSchemaObject = new mongoose.Schema({
     business_category_ID: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        unique: true
+        // unique: true
     },
     city_Id: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        unique: true
+        // unique: true
     },
     
 });

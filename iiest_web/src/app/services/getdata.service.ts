@@ -33,8 +33,8 @@ export class GetdataService {
     return this.http.get<any>(`${this.url}/get-chat-by-sender?shopId=${shopId}`);
   }
   //api for getting statistics data
-  public getConsumerStatisticsData(shopId:any): Observable<any> {
-    const url = `${this.url}/compliance-statistics?shopId=${shopId}`;
+  public getConsumerStatisticsData(boId:any): Observable<any> {
+    const url = `${this.url}/compliance-statistics?boId=${boId}`;
     return this.http.get<any>(url).pipe(catchError(this.handleError));
   }
 

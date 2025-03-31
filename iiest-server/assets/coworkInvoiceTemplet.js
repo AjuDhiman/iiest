@@ -9,7 +9,7 @@ const coworksStamp = require('./coworkStamp');
 
 
 const coworkInvoiceTemplate = (data) => {
-
+console.log("data===>",data)
     const quantity = data.qty;
     const rate = data.amount;
     const subTotal = quantity * rate;
@@ -61,7 +61,7 @@ const coworkInvoiceTemplate = (data) => {
     const signatureName = data.signatureName;
 
     console.log('signaturename', signatureName);
-
+console.log("data===>",data)
     const toWords = new ToWords({
         localeCode: 'en-IN',
         converterOptions: {

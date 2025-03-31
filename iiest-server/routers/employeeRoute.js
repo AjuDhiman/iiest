@@ -42,7 +42,6 @@ router.get('/getemployeedocuploadurl/:name', authMiddleware, getEmployeeDocUploa
 router.post('/deletedfroms3', authMiddleware, deleteDocFromS3); //route for deleting image from s3
 router.post('/generatepresignedgeturl', authMiddleware, generatePresignedGetUrl); //route for getting presigned url for a key comming from client
 
-
 // ---------------------------------------------------------routes for Highcharts APIs ----------------------------------------------------------
 router.get('/getproductsaledata',authMiddleware, getProductSaleData); //route for getting data for productwise chart
 router.get('/getareawisesaledata', authMiddleware, getAreaWiseSalesData); //route for getting data for Area Wise chart

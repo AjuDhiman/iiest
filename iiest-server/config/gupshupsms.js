@@ -3,22 +3,18 @@
 const GUPSHUP_CONFIG = JSON.parse(process.env.GUPSHUP_CONFIG);
 const DLT_CONFIG = JSON.parse(process.env.DLT_CONFIG);
 var request = require("request");
+const axios = require('axios');
+const https = require('https');
+const qs = require('qs')
 
 
 // methord for sending bo verification sms
-exports.sendBOVerificationSMS = async (manager_contact, email, verificationtion_link, phoneNo) => {
+exports.sendBOVerificationSMS = async (manager_contact, email, verification_link, phoneNo) => {
+    const dltTempletID = '1007928778645796672';
+    const message = `Thanks for registering in the Connect Bharat. To complete the registration process and activate your account, Please verify your email address ${email} and your phone number ${manager_contact}.by clicking the link below. ${verification_link}For any query call us on 9289310979 - Connect Bharat (IIEST)`;
+    await sendSMS(message, phoneNo, dltTempletID);
+};
 
-    const dltTempletID = '1007352532729271833';
-
-    const message = `Thanks for registering in the Connect Bharat. To complete the registration process
-                     and activate your account, Please verify your email address ${email} and your phone 
-                     number ${manager_contact}.by clicking the link below. ${verificationtion_link}For any query call us 
-                     on 9289310979 - Connect Bharat (IIEST)`;
-
-    //sending sms
-    await sendSMS(message, phoneNo);
-
-}
 
 
 
@@ -27,17 +23,20 @@ exports.sendBOVerificationSMS = async (manager_contact, email, verificationtion_
 exports.sendBOOnBoardSMS = async (owner_name, manager_name, bo_id, phoneNo) => {
 
     console.log(owner_name, manager_name, bo_id, phoneNo);
-
+    console.log("owner_name==============>",owner_name, manager_name, bo_id, phoneNo);
     const dltTempletID = '1007928778645796672';
+    // const message = `Thanks for registering in the Connect Bharat.Your Business Operation(BO) Number is
+    //                  generated and sent to you via message and email. You will receive a call within 3 
+    //                  days to verify your details. Please use it for reference whenever you contact us . 
+    //                  BO Name - ${owner_name}, Manager Name - ${manager_name}, BO ID No - ${bo_id}. For any query call us
+    //                  on 9289310979 - Connect Bharat (IIESTF)`;
 
-    const message = `Thanks for registering in the Connect Bharat.Your Business Operation(BO) Number is
-                     generated and sent to you via message and email. You will receive a call within 3 
-                     days to verify your details. Please use it for reference whenever you contact us . 
-                     BO Name - ${owner_name}, Manager Name - ${manager_name}, BO ID No - ${bo_id}. For any query call us
-                     on 9289310979 - Connect Bharat (IIESTF)`;
+
+    const message = `Thanks for registering in the Connect Bharat.Your Business Operation(BO) Number is generated and sent to you via message and email. You will receive a call within 3 days to verify your details. Please use it for reference whenever you contact us . BO Name - ${owner_name}, Manager Name - ${manager_name}, BO ID No - ${bo_id}. For any query call us on 9289310979 -Connect Bharat (IIESTF)`;
+
 
     //sending sms
-    const messageSent =  await sendSMS(message, phoneNo);
+    const messageSent =  await sendSMS(message, phoneNo,dltTempletID);
 
     return messageSent
 
@@ -58,10 +57,6 @@ exports.sendFostacVerificationSMS = async (owner_name, manager_name, manager_con
     await sendSMS(message, phoneNo);
 
 }
-
-
-
-
 
 // methord for sending verification sms for foscos
 exports.SendFoscosVerificationSMS = async (owner_name, manager_name, manager_contact, email, phoneNo) => {
@@ -108,42 +103,97 @@ exports.foscosVerificationSMS = async (owner_name, manager_name, manager_contact
     await sendSMS(dltTempletID, message, phoneNo);
 }
 
-//async function sendSMS(dltTempletID, message, phoneNo)
-async function sendSMS(message, phoneNo) {
-    const params = new URLSearchParams()
-    params.append('destination', phoneNo);
-    params.append('message', message);
+//async function sendSMS(dltTempletID, message, phoneNo)======
+// async function sendSMS(message, phoneNo,dltTempletID) 
+// {
+//     console.log("message====>",message);
+//     console.log("phoneNo====>",phoneNo);
 
-    var options = {
-        method: 'POST',
-        url: 'https://enterprise.smsgupshup.com/GatewayAPI/rest',
-        form:
-        {
-            method: 'sendMessage',
-            send_to: phoneNo,
-            msg: message,
-            msg_type: 'text',
-            userid: GUPSHUP_CONFIG.userid, auth_scheme: 'plain',
-            password: GUPSHUP_CONFIG.password,
-            v:1.1,
-            format: 'text',
-           // principalEntityId: DLT_CONFIG.principalEntityId,
-            //dltTempletID: dltTempletID
-        }
-    };
+//     const params = new URLSearchParams()
+//     params.append('destination', phoneNo);
+//     params.append('message', message);
 
-    return new Promise((resolve, reject) => {
-        request(options, function (error, response, body) {
-            if (error){
-                // throw new Error(error);
-                reject(error);
-            };
-            console.log(body);
-            resolve(body)
-        });
-    })
+//     var options = {
+//         method: 'POST',
+//         url: 'https://enterprise.smsgupshup.com/GatewayAPI/rest',
+//         form:
+//         {
+//             method: 'sendMessage',
+//             send_to: phoneNo,
+//             msg: message,
+//             msg_type: 'text',
+//             userid: GUPSHUP_CONFIG.userid, auth_scheme: 'plain',
+//             password: GUPSHUP_CONFIG.password,
+//             v:1.1,
+//             format: 'text',
+//            principalEntityId: DLT_CONFIG.principalEntityId,
+//             dltTempletID: dltTempletID
+//         }
+//     };
+ 
+    
+//     return new Promise((resolve, reject) => {
+//         request(options, function (error, response, body) {
+//             if (error){
+//                 // throw new Error(error);
+//                 reject(error);
+//             };
+//             console.log("body=====>",body);
+//             resolve(body)
+//         });
+//     })
 
-}
+// }
+
+
+
+
+    async function sendSMS(message, phoneNo,dltTempletID,) {
+            console.log("message====>", message);
+            console.log("phoneNo====>", phoneNo);
+            console.log("userid==>",GUPSHUP_CONFIG.userid);
+            console.log("password==>",GUPSHUP_CONFIG.password);
+            console.log("dlt_template_id==>",dltTempletID);
+            console.log("pe_id==>",DLT_CONFIG.principalEntityId)
+  const payload = {
+                method: 'sendMessage',
+                send_to: phoneNo,
+                msg: message,
+                msg_type: 'text',
+                userid: GUPSHUP_CONFIG.userid,
+                auth_scheme: 'plain',
+                password: GUPSHUP_CONFIG.password,
+                v: '1.1',
+                format: 'text',
+                dlt_template_id:dltTempletID, 
+                pe_id: DLT_CONFIG.principalEntityId 
+            }            
+            const httpsAgent = new https.Agent({
+                rejectUnauthorized: false,
+                secureOptions: require('constants').SSL_OP_LEGACY_SERVER_CONNECT || 0x00000004
+            });
+        
+            try {
+                const response = await axios({
+                    method: 'post',
+                    url: 'https://enterprise.smsgupshup.com/GatewayAPI/rest',
+                    data: qs.stringify(payload),
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    httpsAgent
+                });
+                console.log("body=====>", response.data);
+                return response.data;
+            } catch (error) {
+                console.error("SMS sending error:", error.response?.data || error.message || error);
+                throw error;
+            }
+    }
+
+
+
+
 
 
 

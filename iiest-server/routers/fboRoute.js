@@ -6,7 +6,7 @@ const { existingFboCash, existingFboPayReturn, existingFboPayPage, existingFboBy
 const authMiddleware = require('../middleware/auth');
 const multer = require('multer');
 const { foscosDocuments, hraDocuments, chequeImage } = require('../config/storage');
-const { createBusinessOwner, getAllBusinessOwners, getClientList } = require('../controllers/boControllers/bo');
+const { createBusinessOwner, getAllBusinessOwners, getClientList, updateBusinessOwner } = require('../controllers/boControllers/bo');
 const { getTicketsDocs } = require('../controllers/employeeControllers/employeeRecord');
 const { fostacRecpVerification } = require('../controllers/operationControllers/formSections');
 const { trainingBatch } = require('../controllers/trainingControllers/trainingBatch');
@@ -55,5 +55,7 @@ router.get('/getchequepresignedurl/:id', authMiddleware, getChequeImagePresigned
 router.put('/sendfboverificationlink/:fboid', authMiddleware, sendFboVerificationLink); //roure for sending verification link by mail and sms
 router.put('/verifyfbo/:fboid', verifyFbo); //route for updating verification info of a fbo
 router.put('/updatefboinfo/:id', authMiddleware, updateFboInfo); //route for updating fbo info
+router.put('/updatebusinessowner', authMiddleware, updateBusinessOwner); 
+
 
 module.exports = router;

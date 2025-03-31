@@ -13,6 +13,8 @@ const employeeDocsPath = 'employee/';
 const fboBasicDocsPath = 'basicsalesdoc/';
 const requiredDocsPath = 'requireddocs/'
 const fostacDocPath = 'fostac/';
+const chatFilePath = 'chat/';
+
 const foscosDocPath = 'foscos/';
 const hraDocPath = 'hra/';
 const chequePath = 'cheque/';
@@ -137,6 +139,18 @@ exports.doesFileExist = async (key) => {
     }
 };
 
+exports.uploadChatFile = multer({
+    storage: multerS3({
+      s3: s3Client,
+      bucket: AWS_S3.bucket,
+      metadata: function (req, file, cb) {
+        cb(null, { fieldName: file.fieldname });
+      },
+      key: function (req, file, cb) {
+        cb(null, `${chatFilePath}${Date.now()}-${file.originalname.split(' ').join('')}`);
+      }
+    })
+  });
 
 //multer s3 storages for documents
 exports.uploadFostacDoc = multer({

@@ -37,7 +37,9 @@ app.use('/iiest', require('./routers/employeeRoute.js'));
 app.use('/iiest', require('./routers/fboRoute.js'));
 app.use('/iiest', require('./routers/operationRoute.js'));
 // app.use('/iiest', require('./routers/trainingRoute.js'));
-app.use('/iiest', require('./routers/consumerRoute.js'))
+app.use('/iiest', require('./routers/accountsRoute.js'));
+
+app.use('/iiest', require('./routers/consumerRoute.js'));
 
 connectToMongo();
 

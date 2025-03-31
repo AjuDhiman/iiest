@@ -11,9 +11,7 @@ exports.createInvoie = async (req, res) => {
     try {
 
         let success = false;
-
         const { security, business_name, address, state, district, pincode, email, contact_no, product_code, invoice_date, gst_amount, gst_number, total_amount, product, processing_amount, invoice_type, behalf_of, narration, qty } = req.body;
-
         success = true;
 
         const user = req.user;

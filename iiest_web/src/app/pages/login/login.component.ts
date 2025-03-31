@@ -144,7 +144,7 @@ export class LoginComponent implements OnInit {
             this.activeModal.close();
             console.log("Token and Customer Schema saved successfully.");
           }
-          this.route.navigateByUrl('/consumer-shop-details');
+          this.route.navigateByUrl('/consumer-main-page');
         }
       },
       error: (err) => {

@@ -59,7 +59,7 @@ const routes: Routes = [
   { path: 'lms', component: LmsComponent, canActivate:[authGuard]},
 
 //  { path: 'consumer-home', component: ConsumerHomeComponent, canActivate:[authGuard]},
- { path: 'consumer-main-page/:shopId', component:ConsumerMainPageComponent,canActivate:[consumerAuthGuard]},
+ { path: 'consumer-main-page', component:ConsumerMainPageComponent,canActivate:[consumerAuthGuard]},
  { path: 'consumer-dashboard', component: ConsumerDashboardComponent,canActivate:[consumerAuthGuard]},
  { path: 'consumer-other-option', component: ConsumerOthersOptionComponent,canActivate:[consumerAuthGuard]},
  { path: 'consumer-invoice', component: ConsumerInvoiceComponent,canActivate:[consumerAuthGuard]},

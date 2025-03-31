@@ -91,9 +91,9 @@ const shopDetails = await shopModel.findOne({ boId });
       pendingCompliances: 8,
       durationInMonths: 6,
     };
-
+console.log("shopDetails--->",shopDetails)
     if(shopDetails){
-      const shopDocumentDetails = await docsModel.findOne({ handlerId: shopDetails.shopId }).lean();
+      const shopDocumentDetails = await docsModel.findOne({ handlerId:shopDetails.shopId }).lean();
       const shopPhotoDoc = shopDocumentDetails?.documents.find(doc => doc.name === "Shop Photo");
       if (shopPhotoDoc && shopPhotoDoc.src) {
         const srcObject = await getDocObject(shopPhotoDoc.src);
@@ -104,9 +104,7 @@ const shopDetails = await shopModel.findOne({ boId });
     if (!shopDetails) {
       return res.status(404).json({ success: false, message: "Shop not found" });
     }
-    // Fetch `srcObject` only if shopPhotoDoc exists
-   
-    }
+  }
 
     console.log("statistics===>", statistics);
 
@@ -269,6 +267,9 @@ exports.getShopLicenses = async (req, res) => {
 
     const processLicense = async (license) => {
       let status = "Pending";
+      if (shopDetails && license.name.includes("FSSAI")) {
+        status = "Initiated";
+      }
       let licenseObject = {
         id: license._id,
         name: license.name,
@@ -278,7 +279,8 @@ exports.getShopLicenses = async (req, res) => {
         // description: license.description,
         status,
       };
-
+      console.log("shopDetails==>",shopDetails)
+  
       if (shopDocumentDetails && shopDocumentDetails.documents) {
         const matchingDocument = shopDocumentDetails.documents.find(doc => doc.name === license.name);
 
@@ -315,13 +317,13 @@ exports.getShopLicenses = async (req, res) => {
 exports.getAllEmployeeSales = async (req, res) => {
   try {
     let success = true;
-    const { boId } = req.query;
+    const { shopId } = req.query;
 
-    if (!boId) {
+    if (!shopId) {
       return res.status(400).json({ success: false, message: "boId is required" });
     }
 
-    let shopDetails = await shopModel.findOne({ boId });
+    let shopDetails = await shopModel.findOne({ shopId });
 
     if (!shopDetails || !shopDetails.salesInfo) {
       return res.status(404).json({ success: false, message: "No sales data found for this shop" });
@@ -464,7 +466,6 @@ exports.getAllLicense = async (req, res) => {
   try {
     let success = true;
     
-    // Fetch all business types
     const Licenses = await License.find();
 
     console.log("Licenses=====>", Licenses);
@@ -490,24 +491,21 @@ exports.getLicensesByBusinessAndCity = async (req, res) => {
         message: "Missing required parameters: business_type_id and city_id",
       });
     }
-    // Convert to ObjectId for querying
     const businessTypeId = new mongoose.Types.ObjectId(business_type_id);
     const cityId = new mongoose.Types.ObjectId(city_id);
-    // Fetch data with full license details
-    const licenseData = await BusinessCityLicense.find({ 
-      business_type_id: businessTypeId, 
+    const licenseData = await BusinessCityLicense.findOne ({
+      business_type_id: businessTypeId,
       city_id: cityId
     })
-    .populate({
-      path: "mandatory_licenses",
-      model: "License", 
-    })
-    .populate({
-      path: "compulsory_licenses",
-      model: "License", 
-    });
+      .populate({
+        path: "mandatory_licenses",
+        model: "License",
+      })
+      .populate({
+        path: "voluntary_licenses",
+        model: "License",
+      });
 
-    console.log("licenseData==>", licenseData);
 
     if (!licenseData) {
       return res.status(404).json({
@@ -519,8 +517,8 @@ exports.getLicensesByBusinessAndCity = async (req, res) => {
     return res.status(200).json({
       success,
       licenses: {
-       mandatory: licenseData.mandatory_licenses,
-      compulsory: licenseData.compulsory_licenses
+       mandatory_licenses: licenseData.mandatory_licenses,
+       voluntary_licenses:licenseData.voluntary_licenses
       },
       message: "Licenses fetched successfully",
     });
@@ -529,3 +527,65 @@ exports.getLicensesByBusinessAndCity = async (req, res) => {
     return res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
+
+
+exports.getShopsByBoId = async (req, res) => {
+  const { boId } = req.query;
+
+  if (!boId) {
+    return res.status(400).json({ success: false, message: "boId is required" });
+  }
+
+  try {
+    const shops = await shopModel.aggregate([
+      { $match: { boId } }, 
+      {
+        $lookup: {
+          from: "fbo_registers", 
+          localField: "shopId",
+          foreignField: "customer_id",
+          as: "fboInfo",
+        },
+      },
+      {
+        $addFields: {
+          fbo_name: { $arrayElemAt: ["$fboInfo.fbo_name", 0] },
+        },
+      },
+      { $project: { fboInfo: 0 } },
+    ]);
+
+    if (!shops.length) {
+      return res.status(404).json({ success: false, message: "No shops found for the given boId" });
+    }
+
+    // Add shop photo src to each shop object
+    const enrichedShops = await Promise.all(
+      shops.map(async (shop) => {
+        const shopDocumentDetails = await docsModel.findOne({ handlerId: shop.shopId }).lean();
+        const shopPhotoDoc = shopDocumentDetails?.documents?.find(doc => doc.name === "Shop Photo");
+
+        if (shopPhotoDoc && shopPhotoDoc.src) {
+          const srcObject = await getDocObject(shopPhotoDoc.src);
+          if (srcObject) {
+            shop.shopPhoto = srcObject; 
+          }
+        }
+
+        return shop;
+      })
+    );
+
+    return res.status(200).json({
+      success: true,
+      shops: enrichedShops,
+      message: "Shops fetched successfully",
+    });
+
+  } catch (error) {
+    console.error("Error fetching shops:", error);
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+

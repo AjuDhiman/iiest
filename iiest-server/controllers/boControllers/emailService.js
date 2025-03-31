@@ -7,6 +7,7 @@ const CB_ADDRESS = JSON.parse(process.env.CB_ADDRESS);
 const CB_BRAND_NAME = JSON.parse(process.env.CB_BRAND_NAME);
 
 exports.sendMailToBo = async (boMail, mailInfo) => {
+    console.log("mailInfo23==>",mailInfo)
     try {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -33,7 +34,7 @@ exports.sendMailToBo = async (boMail, mailInfo) => {
 
             Brand Name - ${CB_BRAND_NAME.english},<br/>
             Address - ${CB_ADDRESS.english}<br/>
-            Email = customerrelations@iiest.org<br>
+            Email - customerrelations@iiest.org<br>
             Contact no - ${CONTACT_NUMBERS.connect_bharat}<br>
             Landline - ${LANDLINES.landline1}, ${LANDLINES.landline2}<br>
             Website - <a href='https://connectonline.world'>connectonline.world</a><br>
@@ -142,6 +143,63 @@ function getMailContent(mailInfo) {
         मैनेजर नाम - ${mailInfo.managerName}<br>
         बीओ आईडी नंबर - ${mailInfo.customerId}<br>`
     }
+    
+    else if (mailInfo.purpose === 'update_account') {
+        englishContent = `
+          <p>Dear ${mailInfo.boName},</p>
+          <p>As part of the Connect Bharat initiative, we are launching new features and improvements to better serve our business community.</p>
+          <p>We request you to update your account details to unlock access to new services, government scheme benefits, and compliance support.</p>
+          <p>Please click the button below to update your business information:</p>
+          <br/>
+          <a href='${FRONT_END.VIEW_URL}#/updateaccount/bo/${mailInfo.customerId}' style="text-decoration: none;">
+              <button style="display: block;
+                width: 100%;
+                max-width: 300px;
+                background: #007bff;
+                border-radius: 8px;
+                color: #fff;
+                font-size: 18px;
+                padding: 12px 0;
+                margin: 20px auto;
+                text-decoration: none;
+                cursor: pointer;">
+                Update My Account
+              </button>
+          </a>
+          <p>If you have already updated your account, you can ignore this message.</p>
+          <br>
+          <p><b>Disclaimer: This is a system-generated email, please do not reply.</b></p>
+          <p>Thank You</p>
+        `;
+      
+        hindiContent = `
+          <p>प्रिय ${mailInfo.boName},</p>
+          <p>कनेक्ट भारत पहल के तहत, हम अपने व्यापारिक समुदाय के लिए नए फीचर्स और सेवाएं शुरू कर रहे हैं।</p>
+          <p>कृपया अपने खाते को अपडेट करें ताकि आप नई सुविधाओं, सरकारी योजनाओं और अनुपालन सहायता का लाभ उठा सकें।</p>
+          <p>नीचे दिए गए बटन पर क्लिक करके अपने व्यावसायिक विवरण को अपडेट करें:</p>
+          <br/>
+          <a href='${FRONT_END.VIEW_URL}#/updateaccount/bo/${mailInfo.customerId}' style="text-decoration: none;">
+              <button style="display: block;
+                width: 100%;
+                max-width: 300px;
+                background: #007bff;
+                border-radius: 8px;
+                color: #fff;
+                font-size: 18px;
+                padding: 12px 0;
+                margin: 20px auto;
+                text-decoration: none;
+                cursor: pointer;">
+                मेरा खाता अपडेट करें
+              </button>
+          </a>
+          <p>यदि आपने पहले ही अपडेट कर लिया है, तो कृपया इस संदेश को अनदेखा करें।</p>
+          <br>
+          <p><b>अस्वीकृति: यह मेल प्रणाली द्वारा उत्पन्न किया गया है, कृपया उत्तर न दें।</b></p>
+          <p>धन्यवाद</p>
+        `;
+    }
+      
     return { englishContent, hindiContent }
 }
 
