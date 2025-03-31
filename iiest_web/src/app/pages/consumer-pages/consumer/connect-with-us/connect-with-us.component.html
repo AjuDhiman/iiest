@@ -1,0 +1,50 @@
+   <div class="chat-container">
+    <div class="chat-header">
+      <h3>Connect with Us</h3>
+    </div>
+  
+    <div class="chat-messages" #chatBox>
+      <div
+        *ngFor="let msg of messages"
+        [ngClass]="{
+          'user-message': msg.senderType === 'shop',
+          'agent-message': msg.senderType === 'agent'
+        }"
+      >
+        <div class="message">
+          <p *ngIf="msg.message">{{ msg.message }}</p>
+  
+          <ng-container *ngIf="msg.file">
+            <a
+              [href]="'https://your-s3-domain/' + msg.file.fileUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              📄 {{ msg.file.fileName }}
+            </a>
+          </ng-container>
+  
+          <span class="timestamp">{{ msg.timestamp | date: 'shortTime' }}</span>
+        </div>
+      </div>
+    </div>
+  
+    <div class="chat-input">
+      <input
+        type="text"
+        [(ngModel)]="userInput"
+        placeholder="Type your message..."
+        (keyup.enter)="sendMessage()"
+      />
+  
+      <label class="upload-btn mt-1">
+        📤
+        <input type="file" (change)="onFileSelected($event)" hidden />
+      </label>
+  
+      <button (click)="sendMessage()">
+        <i class="send-icon">➤</i>
+      </button>
+    </div>
+  </div>
+  

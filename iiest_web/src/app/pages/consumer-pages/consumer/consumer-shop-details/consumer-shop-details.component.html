@@ -1,0 +1,28 @@
+<div class="container py-4 top-0 margin-container">
+    <div class="row g-4">
+      <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let shop of shops">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body text-center">
+  
+            <!-- Shop Photo Circle -->
+            <div class="shop-photo-wrapper mx-auto mb-3">
+              <img
+                [src]="shop.shopPhoto || '../../../../../assets/images/doc-thumb-2.jpg'"
+                class="shop-photo"
+                alt="Shop Photo"
+              />
+            </div>
+  
+            <h5 class="card-title">{{ shop.product_name }}</h5>
+            <span class="shop_id_size">{{ shop.shopId }}</span>
+
+            <p class="card-subtitle text-muted mb-2">{{ shop.fbo_name }}</p>
+            <button class="btn btn-outline-primary btn-sm" (click)="navigateToOther(shop)">View Details</button>
+
+          </div>
+        
+        </div>
+      </div>
+    </div>
+  </div>
+  

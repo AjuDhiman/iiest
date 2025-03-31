@@ -45,7 +45,7 @@ export class ConsumerDashboardComponent {
             icon: this.getIcon(license.name),
             color: license.status === 'Completed' ? '#15803D' : 
                    license.status === 'Pending' ? '#E63946' : 
-                   license.status === 'initiated' ? '#FFA500' : 'transparent',
+                   license.status === 'Initiated' ? '#FFA500' : 'transparent',
             docObject: license.docObject,  
             object: license.object 
           };
@@ -116,11 +116,11 @@ export class ConsumerDashboardComponent {
     src: isMultiDoc ? res : [res.toString()], 
     format: format,
     multipleDoc: isMultiDoc,
-    issuedDate: issuedDate,  // ✅ Now correctly passed
-    licenseDuration: licenseDuration // ✅ Now correctly passed
+    issuedDate: issuedDate, 
+    licenseDuration: licenseDuration 
   };
-      console.log("obj=======================>",obj)
-      const modalRef = this.ngbModal.open(ViewDocumentComponent, { size: 'lg', backdrop: 'static' });
+  
+  const modalRef = this.ngbModal.open(ViewDocumentComponent, { size: 'lg', backdrop: 'static' });
       modalRef.componentInstance.doc = obj;
     }
 

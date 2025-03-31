@@ -15,7 +15,7 @@
 <div  *ngIf="doc.issuedDate && doc?.licenseDuration " class="remaining-time mt-2 me-2">
     ({{ calculateRemaningDays(doc.issuedDate, doc?.licenseDuration) }} are Remaining)
   </div >
-  <div class="remaining-time mt-2 me-2">
+  <div class="renew-text mt-2 me-2" *ngIf="doc.issuedDate && doc?.licenseDuration ">
     🗓️ Renew before : <strong>{{ calculateRenewalDate(doc.issuedDate, doc?.licenseDuration) }}</strong>
   </div>
   

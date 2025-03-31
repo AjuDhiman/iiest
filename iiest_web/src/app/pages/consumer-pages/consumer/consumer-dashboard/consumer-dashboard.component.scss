@@ -39,23 +39,21 @@
 
 .card-title {
   max-width: 100%;
-  /* Ensures text doesn't overflow */
   white-space: normal;
-  /* Allows text to wrap */
   word-wrap: break-word;
-  /* Breaks long words */
   display: block;
-  /* Ensures block-level behavior */
   line-height: 1.2;
-  /* Adjust line spacing */
   font-size: 10px;
+  align-items: center;
+    display: flex;
+    justify-content: center;
 
 }
 
 
 .compliance-card {
-  width: 105px;
-  height: 160px;
+  width: 100px;
+  height: 100px;
   border-radius: 50px;
   display: flex;
   flex-direction: column;
@@ -91,6 +89,9 @@
     text-align: center;
     padding: 0 10px;
     margin-bottom: 27px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
 
   }
 
@@ -98,8 +99,8 @@
 }
 
 .arrow-circle {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   background-color: #002a66;
   border-radius: 50%;
   display: flex;
@@ -110,7 +111,7 @@
   position: absolute;
   // margin-top: -27px;
   // margin-right: -74px;
-  margin-top: 112px
+  margin-top: 60px
 }
 
 .fa-icon {
@@ -120,7 +121,7 @@
 @media (min-width: 1024px) {
   .compliance-card {
     width: 150px;
-    /* Increased width */
+    border-radius: 80px;
     height: 195px;
     /* Increased height */
     padding: 25px 0;
@@ -148,8 +149,7 @@
   .arrow-circle {
     width: 45px;
     height: 45px;
-    margin-top: -27px;
-    margin-right: -107px;
+    margin-top: 140px;
   }
 
   .fa-icon {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Employee, bo, fbo, fboRecipient, loginEmployee, fboShop, areaAllocation, editUserFiles, fostacVerification, fostacEnrollment, operGeneralSection, fostacAttendance, reportingManager, foscosVerification, hraVerification, invoiceCreation } from 'src/app/utils/registerinterface';
-import { Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators'
 import { config } from 'src/app/utils/config'
 import { Router } from '@angular/router';
@@ -13,7 +13,8 @@ export class RegisterService {
   msg: string = "Hello Welcome";
   url = config.API_URL
   constructor(private http: HttpClient, private router: Router) { }
-
+  private shopIdSource = new BehaviorSubject<string | null>(null);
+  public shopId$ = this.shopIdSource.asObservable();
   //api for registering new employee
   public addEmployee(addemployee: Employee): Observable<any> {
     const url = `${this.url}/empregister`
@@ -527,5 +528,14 @@ export class RegisterService {
   signout() {
     sessionStorage.clear();
     this.router.navigate([''])
+  }
+  setShopId(id: string) {
+    localStorage.setItem('selectedShopId', id);
+    this.shopIdSource.next(id);
+  }
+  
+  getShopId(): string | null {
+    const id = this.shopIdSource.value;
+    return id ?? localStorage.getItem('selectedShopId'); 
   }
 }

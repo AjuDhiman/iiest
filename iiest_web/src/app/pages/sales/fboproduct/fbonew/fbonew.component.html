@@ -493,7 +493,7 @@
                             class="form-select form-select-sm" (change)="ModeofPayment($event)">
                             <option value="" disabled selected>Select Mode of Payment</option>
                             <!-- [disabled]="mode === 'By Cheque' || mode === 'Pay Later'" -->
-                            <option *ngFor="let mode of paymentMode"  [value]="mode"  [disabled]="this.userDesignation === 'Sales Agent' && (mode === 'By Cheque' || mode === 'Pay Later')">{{ mode }}</option>
+                            <option *ngFor="let mode of paymentMode"  [value]="mode"  >{{ mode }}</option>
                         </select>
                         
                         <div *ngIf="submitted && fbo['payment_mode'].errors" class="invalid-feedback">

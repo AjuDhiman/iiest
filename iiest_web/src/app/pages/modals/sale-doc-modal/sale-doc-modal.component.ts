@@ -36,6 +36,7 @@ export class SaleDocModalComponent implements OnInit {
   shopPhoto: string = '';
   licensePhoto:string='';
 
+
   //var that will containg generated file name and save it in documents schema
   docObjects: { name: string, format: string, isMultiDoc: boolean, src: string[],issuedDate?: string ,licenseDuration?:string,licenseId?:string }[] = [];
   Licenses: any[] = []; // Store business types
@@ -84,8 +85,11 @@ export class SaleDocModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+console.log("city_Id----->",this.fboData.fboInfo.boInfo.city_Id);
+console.log("business_category_ID----->",this.fboData.fboInfo.boInfo.business_category_ID);
+
     this.setFormValidation();
-    this.fetchAllLicense();
+    this.fetchAllLicense(this.fboData.fboInfo.boInfo.city_Id,this.fboData.fboInfo.boInfo.business_category_ID );
     this.docForm.patchValue({
       managerName: this.fboData.fboInfo.boInfo.manager_name,
       address: this.fboData.fboInfo.address,
@@ -206,16 +210,16 @@ export class SaleDocModalComponent implements OnInit {
       createdDate: ['', Validators.required],  // Ensure it's included
     licenseDuration: ['', [Validators.required, Validators.min(1)]]
     });
-
+    
     this.getDocsObjs();
   }
 
 
-  fetchAllLicense(): void {
-    this._getdataService.getAllLicense().subscribe(response => {
+  fetchAllLicense(city_id:any,business_type_id:any): void {
+    this._getdataService.getLicenseByCityIdBusinesstypeid(city_id,business_type_id).subscribe(response => {
       if (response.success) {
         console.log("response===>",response);
-        this.Licenses = response.Licenses;
+        this.Licenses = response.licenses.mandatory_licenses;        ;
 
       }
     });

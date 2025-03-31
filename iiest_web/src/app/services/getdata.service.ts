@@ -13,12 +13,28 @@ export class GetdataService {
   constructor(private http: HttpClient, private router: Router) { }
 
 
+  updateBusinessOwner(boId: string, city_Id: string, business_category_ID: string): Observable<any> {
+    const url = `${this.url}/updatebusinessowner`;
+    const body = { boId, city_Id, business_category_ID };
+    return this.http.put<any>(url, body).pipe(catchError(this.handleError));
+  }
+  
+  saveChatMessage(info: FormData | { boId: string, senderId: string, senderType: string, message: string }): Observable<any> {
+    const url = `${this.url}/save-chat`;
+    return this.http.post<any>(url, info).pipe(
+      catchError(this.handleError)
+    );
+  }
 
-
-
+  getShopsByBoId(boId: string) {
+    return this.http.get<any>(`${this.url}/shops-By-BoId?boId=${boId}`);
+  }
+  getMessagesBySender(shopId: string) {
+    return this.http.get<any>(`${this.url}/get-chat-by-sender?shopId=${shopId}`);
+  }
   //api for getting statistics data
-  public getConsumerStatisticsData(boId:any): Observable<any> {
-    const url = `${this.url}/compliance-statistics?boId=${boId}`;
+  public getConsumerStatisticsData(shopId:any): Observable<any> {
+    const url = `${this.url}/compliance-statistics?shopId=${shopId}`;
     return this.http.get<any>(url).pipe(catchError(this.handleError));
   }
 
@@ -32,8 +48,8 @@ export class GetdataService {
     return this.http.get(url);
   }
   
-  public getAllSalesData(boId:any): Observable<any> {
-    const url = `${this.url}/allSales?boId=${boId}`;
+  public getAllSalesData(shopId:any): Observable<any> {
+    const url = `${this.url}/allSales?shopId=${shopId}`;
     return this.http.get<any>(url).pipe(catchError(this.handleError));
   }
 
@@ -61,7 +77,10 @@ export class GetdataService {
     const url = `${this.url}/cities`;
     return this.http.get<any>(url).pipe(catchError(this.handleError));
   }
-
+  public getLicenseByCityIdBusinesstypeid(city_id:any,business_type_id:any): Observable<any> {
+    const url = `${this.url}/licenses?city_id=${city_id}&business_type_id=${business_type_id}`;
+    return this.http.get<any>(url).pipe(catchError(this.handleError));
+  }
   public getAllLicense(): Observable<any> {
     const url = `${this.url}/all-licenses`;
     return this.http.get<any>(url).pipe(catchError(this.handleError));

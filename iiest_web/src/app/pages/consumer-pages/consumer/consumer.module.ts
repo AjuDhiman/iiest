@@ -5,20 +5,28 @@ import { ConsumerDashboardComponent } from './consumer-dashboard/consumer-dashbo
 import { ConsumerMainPageComponent } from './consumer-main-page/consumer-main-page.component';
 import { ConsumerOthersOptionComponent } from './consumer-others-option/consumer-others-option.component';
 import { ConsumerInvoiceComponent } from './consumer-invoice/consumer-invoice.component';
+import { ConsumerNotificationsComponent } from './consumer-notifications/consumer-notifications.component';
+import { ConnectWithUsComponent } from './connect-with-us/connect-with-us.component';
+import { ConsumerShopDetailsComponent } from './consumer-shop-details/consumer-shop-details.component';
 
 @NgModule({
   declarations: [
     ConsumerDashboardComponent,
     ConsumerMainPageComponent,
     ConsumerOthersOptionComponent,
-    ConsumerInvoiceComponent, 
+    ConsumerInvoiceComponent,
+    ConsumerNotificationsComponent,
+    ConnectWithUsComponent,
+    ConsumerShopDetailsComponent, 
   ],
   imports: [
     CommonModule,
-    SharedModule
+    SharedModule,
   ],
   exports: [
-    ConsumerDashboardComponent
+    
+    ConsumerDashboardComponent,
+    ConnectWithUsComponent
   ]
 })
 export class ConsumerModule { }

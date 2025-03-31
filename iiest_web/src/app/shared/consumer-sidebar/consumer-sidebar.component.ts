@@ -14,8 +14,15 @@ export class ConsumerSidebarComponent {
     this.isCollapsed = !this.isCollapsed;
   }
  consumerLogout() {
+  localStorage.removeItem('selectedShopId');
     localStorage.removeItem("consumerAuthToken");
     localStorage.removeItem("consumer");
     this.router.navigate(['']); 
   }
+
+  navigateToConnectWithUs() {
+    this.router.navigate(['/consumer-chat']);
+    this.isCollapsed=true;
+  }
+  
 }

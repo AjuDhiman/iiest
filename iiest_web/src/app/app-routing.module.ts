@@ -26,6 +26,9 @@ import { ConsumerDashboardComponent } from './pages/consumer-pages/consumer/cons
 import { ConsumerMainPageComponent } from './pages/consumer-pages/consumer/consumer-main-page/consumer-main-page.component';
 import { ConsumerOthersOptionComponent } from './pages/consumer-pages/consumer/consumer-others-option/consumer-others-option.component';
 import { ConsumerInvoiceComponent } from './pages/consumer-pages/consumer/consumer-invoice/consumer-invoice.component';
+import { ConsumerNotificationsComponent } from './pages/consumer-pages/consumer/consumer-notifications/consumer-notifications.component';
+import { ConnectWithUsComponent } from './pages/consumer-pages/consumer/connect-with-us/connect-with-us.component';
+import { ConsumerShopDetailsComponent } from './pages/consumer-pages/consumer/consumer-shop-details/consumer-shop-details.component';
 // import { ConsumerHomeComponent } from './pages/consumer-pages/consumer-home-page/consumer-home';
 
 const routes: Routes = [
@@ -55,10 +58,16 @@ const routes: Routes = [
   { path: 'emplist', component: EmployeelistComponent, canActivate:[authGuard, routeGuard], data: {allowedRoles:empRegister_roles}},
   { path: 'lms', component: LmsComponent, canActivate:[authGuard]},
 //  { path: 'consumer-home', component: ConsumerHomeComponent, canActivate:[authGuard]},
-  { path: 'consumer-main-page', component:ConsumerMainPageComponent,canActivate:[consumerAuthGuard]},
+  {  path: 'consumer-main-page/:shopId', component:ConsumerMainPageComponent,canActivate:[consumerAuthGuard]},
  { path: 'consumer-dashboard', component: ConsumerDashboardComponent,canActivate:[consumerAuthGuard]},
  { path: 'consumer-other-option', component: ConsumerOthersOptionComponent,canActivate:[consumerAuthGuard]},
  { path: 'consumer-invoice', component: ConsumerInvoiceComponent,canActivate:[consumerAuthGuard]},
+ { path: 'consumer-notification', component: ConsumerNotificationsComponent,canActivate:[consumerAuthGuard]},
+ { path: 'consumer-chat', component: ConnectWithUsComponent,canActivate:[consumerAuthGuard]},
+ { path: 'consumer-shop-details', component:ConsumerShopDetailsComponent,canActivate:[consumerAuthGuard]},
+
+
+
 
 
 

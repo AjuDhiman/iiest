@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { GetdataService } from 'src/app/services/getdata.service';
 import { RegisterService } from 'src/app/services/register.service';
-import { faEye, faPencil, faTrash, faEnvelope, faXmark, faMagnifyingGlass, faFileCsv, faFilePdf, faIndianRupeeSign, faArrowUp, faArrowDown, IconDefinition, faArrowRotateForward } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faPencil, faTrash, faEnvelope, faXmark, faMagnifyingGlass, faFileCsv, faFilePdf, faIndianRupeeSign, faArrowUp, faArrowDown, IconDefinition, faArrowRotateForward, faComments } from '@fortawesome/free-solid-svg-icons';
 import { ExportAsService, ExportAsConfig } from 'ngx-export-as';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RecipientComponent } from 'src/app/pages/modals/recipient/recipient.component';
@@ -14,6 +14,7 @@ import { SaleDocModalComponent } from '../../modals/sale-doc-modal/sale-doc-moda
 import { ConformationModalComponent } from '../../modals/conformation-modal/conformation-modal.component';
 import { ToastrService } from 'ngx-toastr';
 import { FbonewComponent } from '../fboproduct/fbonew/fbonew.component';
+import { SendMailBoComponent } from '../send-mail-bo/send-mail-bo.component';
 
 @Component({
   selector: 'app-fbolist',
@@ -59,6 +60,11 @@ export class FbolistComponent implements OnInit {
   faIndianRupeeSign: IconDefinition = faIndianRupeeSign;
   faMagnifyingGlass: IconDefinition = faMagnifyingGlass;
   faArrowRotateForward: IconDefinition = faArrowRotateForward;
+  selectedBoId: string ;
+   selectedShopId: string ;
+
+  showChatPopup = false;
+  faComments = faComments;
 
 
   //Booleans
@@ -231,7 +237,8 @@ export class FbolistComponent implements OnInit {
   }
 
   //upload shop identification documents
-  uploadSaleDoc(res: any, serviceType: string) { //func for uploading sale doc by opening sale doc modal
+  uploadSaleDoc(res: any, serviceType: string) {
+    
     const modalRef = this.modalService.open(SaleDocModalComponent, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.fboData = res;
     modalRef.componentInstance.serviceType = serviceType;
@@ -241,7 +248,6 @@ export class FbolistComponent implements OnInit {
 
   //View FBO Details
   viewFboDetails($event: Event, res: any) {
-    console.log("res================>",res)
 
     $event.stopPropagation();
     const modalRef = this.modalService.open(ViewFboComponent, { size: 'lg', backdrop: 'static' });
@@ -449,5 +455,23 @@ export class FbolistComponent implements OnInit {
   checkString(str: any): boolean{
     return typeof str === 'string';
   }
+  sendUpdateEmail(fbo: any) {
+    const modalRef = this.modalService.open(SendMailBoComponent, {
+      size: 'lg',
+      backdrop: 'static',
+      centered: true
+    });
+
+    // Optional: pass fbo to modal
+    modalRef.componentInstance.fbo = fbo;
+  }
+
+openChatPopup(fbo: any) {
+  console.log("fbo===>",fbo)
+  this.selectedBoId = fbo.fboInfo.boInfo.customer_id; 
+  this.selectedShopId = fbo.fboInfo.customer_id; 
+
+  this.showChatPopup = true;
+}
 
 }

@@ -18,7 +18,9 @@ export class ConsumerFooterComponent {
   navigateToOtherOptions() {
     this.router.navigate(['/consumer-other-option']);
   }
-
+  navigateToNotification() {
+    this.router.navigate(['/consumer-notification']);
+  }
   
   navigateToInVoice() {
     this.router.navigate(['/consumer-invoice']);

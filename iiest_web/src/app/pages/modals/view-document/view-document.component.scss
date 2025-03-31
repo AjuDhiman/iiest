@@ -27,9 +27,34 @@
     color: rgb(211, 211, 211);
 }
 
-.remaining-time{
-    font-size: 10px;
-    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Added shadow */
+.renew-text{
+    font-size: 12px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    align-items: flex-end;
+    display: flex;
+    justify-content: flex-end;
+    color: #d62828;
+    font-weight: bold;
+    font-size: 12px;
+    animation: flash 1s infinite;
+  }
+
+
+
+  @keyframes flash {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  .remaining-time{
+    font-size: 12px;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
     align-items: flex-end;
     display: flex;
     justify-content: end;
