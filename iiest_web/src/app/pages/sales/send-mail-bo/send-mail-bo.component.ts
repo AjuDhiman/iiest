@@ -43,7 +43,7 @@ export class SendMailBoComponent implements OnInit {
 
   sendMail(): void {
     console.log("fbo==>",this.fbo);
-    if (!this.fbo?. fboInfo.boInfo.customer_id) {
+    if (!this.fbo?.customer_id) {
       console.error('Missing Business Owner ID');
       return;
     }
@@ -53,7 +53,7 @@ export class SendMailBoComponent implements OnInit {
       return;
     }
   
-    this._getDataService .updateBusinessOwner(this.fbo?.fboInfo.boInfo.customer_id, this.selectedCityId, this.selectedCategoryId)
+    this._getDataService .updateBusinessOwner(this.fbo?.customer_id, this.selectedCityId, this.selectedCategoryId)
       .subscribe({
         next: (res) => {
           console.log('Update Success:', res);

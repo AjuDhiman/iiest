@@ -455,16 +455,7 @@ export class FbolistComponent implements OnInit {
   checkString(str: any): boolean{
     return typeof str === 'string';
   }
-  sendUpdateEmail(fbo: any) {
-    const modalRef = this.modalService.open(SendMailBoComponent, {
-      size: 'lg',
-      backdrop: 'static',
-      centered: true
-    });
 
-    // Optional: pass fbo to modal
-    modalRef.componentInstance.fbo = fbo;
-  }
 
 openChatPopup(fbo: any) {
   console.log("fbo===>",fbo)

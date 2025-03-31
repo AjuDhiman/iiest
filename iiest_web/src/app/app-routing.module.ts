@@ -57,21 +57,15 @@ const routes: Routes = [
   { path: 'createinvoice', component: CreateInvoiceComponent, canActivate:[authGuard, routeGuard], data: {allowedRoles: director_roles, allowedPanels: ['DPIIT Sales Panel']}},
   { path: 'emplist', component: EmployeelistComponent, canActivate:[authGuard, routeGuard], data: {allowedRoles:empRegister_roles}},
   { path: 'lms', component: LmsComponent, canActivate:[authGuard]},
+
 //  { path: 'consumer-home', component: ConsumerHomeComponent, canActivate:[authGuard]},
-  {  path: 'consumer-main-page/:shopId', component:ConsumerMainPageComponent,canActivate:[consumerAuthGuard]},
+ { path: 'consumer-main-page/:shopId', component:ConsumerMainPageComponent,canActivate:[consumerAuthGuard]},
  { path: 'consumer-dashboard', component: ConsumerDashboardComponent,canActivate:[consumerAuthGuard]},
  { path: 'consumer-other-option', component: ConsumerOthersOptionComponent,canActivate:[consumerAuthGuard]},
  { path: 'consumer-invoice', component: ConsumerInvoiceComponent,canActivate:[consumerAuthGuard]},
  { path: 'consumer-notification', component: ConsumerNotificationsComponent,canActivate:[consumerAuthGuard]},
  { path: 'consumer-chat', component: ConnectWithUsComponent,canActivate:[consumerAuthGuard]},
  { path: 'consumer-shop-details', component:ConsumerShopDetailsComponent,canActivate:[consumerAuthGuard]},
-
-
-
-
-
-
-
 ];
 
 @NgModule({
