@@ -37,11 +37,6 @@
             (emitVerifiedStatus)="getVerifiedStatus($event)" (emitDocuments)="getDocuments($event)"
             (refreshAuditLog)="generalsec.getCaseNotes()" (emitVerifiedData)="getVerifiedData($event)">
           </app-verification-section>
-
-
-
-
-
            <!-- Product verifiaction section -->
           <app-verification-section class="g-1 p-3 border border-1 rounded-3 pb-3" [candidateId]="candidateId"
             [isForProductVerification]="true" [isTrainer]="isTrainer" [productType]="productType" [caseData]="caseData"
@@ -50,12 +45,7 @@
             (emitVerifiedStatus)="getVerifiedStatus($event)" (emitDocuments)="getDocuments($event)"
             (refreshAuditLog)="generalsec.getCaseNotes()" (emitVerifiedData)="getVerifiedData($event)">
           </app-verification-section>
-
-
-
-
-
-          <!-- Docments Verification section -->
+         <!-- Docments Verification section -->
           <app-verification-section class="g-1 p-3 border border-1 rounded-3 pb-3" [candidateId]="candidateId"
             [isForDocVerification]="true" [isTrainer]="isTrainer" [productType]="productType" [verifiedShopData]="verifiedData"
             [caseData]="caseData" #docVerificationSec [prevSecVerifiedStatus]="productSecVerifedStatus"

@@ -32,10 +32,10 @@ import { ConsumerModule } from './consumer-pages/consumer/consumer.module';
   imports: [
     CommonModule,
     SharedModule,
-    ConsumerModule,
     GeneralModule,
     SalesModule,
     OperationModule,
+    ConsumerModule,
     HRModule,
     AccountsModule,
     CoworksModule,

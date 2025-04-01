@@ -43,8 +43,8 @@ export class GetdataService {
     return this.http.get<any>(url).pipe(catchError(this.handleError));
   }
 
-  public getShopLicensesData(boId: any, city_Id: any, business_category_ID: any): Observable<any> {
-    const url = `${this.url}/shop-licenses?boId=${boId}&city_id=${city_Id}&business_type_id=${business_category_ID}`;
+  public getShopLicensesData(boId: any,shopId:any, city_Id: any, business_category_ID: any): Observable<any> {
+    const url = `${this.url}/shop-licenses?boId=${boId}&shopId=${shopId}&city_id=${city_Id}&business_type_id=${business_category_ID}`;
     return this.http.get(url);
   }
   

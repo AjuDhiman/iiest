@@ -8,6 +8,7 @@ import { ConsumerInvoiceComponent } from './consumer-invoice/consumer-invoice.co
 import { ConsumerNotificationsComponent } from './consumer-notifications/consumer-notifications.component';
 import { ConnectWithUsComponent } from './connect-with-us/connect-with-us.component';
 import { ConsumerShopDetailsComponent } from './consumer-shop-details/consumer-shop-details.component';
+import { OperationformModule } from '../../operation/modules/operationform.module';
 
 @NgModule({
   declarations: [

@@ -171,14 +171,14 @@
                               [ngClass]="{'text-danger': fbo.saleApprovel == 'Pending', 'text-success': fbo.saleApprovel == 'Approved'}">{{
                               fbo.saleApprovel }}</span></td>
                           <td class="cell text-center">
-                            <fa-icon class="fa-l selector mx-2" style="margin-right: 7px; color: #1957a9;"
+                            <!-- <fa-icon class="fa-l selector mx-2" style="margin-right: 7px; color: #1957a9;"
                               (click)="viewFboDetails($event, fbo)" [icon]="faEye" title="View Detail"></fa-icon>
                               <fa-icon class="fa-l mx-2"
                               style="color: green; cursor: pointer;"
                               [icon]="faComments"
                               title="Open Chat"
                               (click)="openChatPopup(fbo)">
-                            </fa-icon>
+                            </fa-icon> -->
 
 
                             <!-- Open fbo sale Model by clicking the button only avilable to  the verifier -->
@@ -232,7 +232,6 @@
           [boId]="selectedBoId"
           [senderId]="userData._id"
           [shopId]="selectedShopId"
-          
           ></app-connect-with-us>
         </div>
       </div>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { OperationformModule } from 'src/app/pages/operation/modules/operationform.module';
 import { SalesModule } from '../sales/sales.module';
+import { ConsumerModule } from '../consumer-pages/consumer/consumer.module';
 
 
 
@@ -11,7 +12,8 @@ import { SalesModule } from '../sales/sales.module';
   imports: [
     CommonModule,
     SharedModule,
-    OperationformModule
+    OperationformModule,
+    ConsumerModule,
   ],
   exports: [
     OperationformModule

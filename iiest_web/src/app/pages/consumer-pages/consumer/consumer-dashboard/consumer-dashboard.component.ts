@@ -4,6 +4,7 @@ import { faChevronRight, IconDefinition ,faFile} from '@fortawesome/free-solid-s
 import { ViewDocumentComponent } from 'src/app/pages/modals/view-document/view-document.component';
 import { GetdataService } from 'src/app/services/getdata.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { RegisterService } from 'src/app/services/register.service';
 
 
 interface ComplianceItem {
@@ -28,14 +29,16 @@ export class ConsumerDashboardComponent {
 
   faChevronRight = faChevronRight;
   complianceItems:any[];
-  constructor(private getDataService: GetdataService,    private ngbModal: NgbModal
+  constructor(private getDataService: GetdataService,private ngbModal: NgbModal,private registerService: RegisterService
   ) {  }
 
   ngOnInit(): void {
-    this.fetchShopLicenses(this.consumer.iiest_member_id,this.consumer.city_Id,this.consumer.business_category_ID);
+    const shopId = this.registerService.getShopId();
+
+    this.fetchShopLicenses(this.consumer.iiest_member_id,shopId,this.consumer.city_Id,this.consumer.business_category_ID);
   }
-  fetchShopLicenses(boId: any, city_Id: any, business_category_ID: any): void {
-    this.getDataService.getShopLicensesData(boId, city_Id, business_category_ID).subscribe(response => {
+  fetchShopLicenses(boId: any,shopId:any, city_Id: any, business_category_ID: any): void {
+    this.getDataService.getShopLicensesData(boId, shopId,city_Id, business_category_ID).subscribe(response => {
       if (response.success) {
         // Access only the mandatory licenses
         this.complianceItems = response.licenses.mandatory.map((license: any) => {

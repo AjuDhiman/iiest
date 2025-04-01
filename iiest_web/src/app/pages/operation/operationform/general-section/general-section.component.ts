@@ -17,7 +17,7 @@ export class GeneralSectionComponent implements OnInit, OnChanges {
   @Input() caseData: any;
 
   @Input() productType: string = '';
-
+  selectedShopId:string;
   caseNote: string[] = [];
 
   unformatedLogsArr: any = [];
@@ -37,6 +37,8 @@ export class GeneralSectionComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    this.selectedShopId = this.caseData?.shopId || '';
+
     this.generalForm = this.formBuilder.group({
       recipient_status: ['ongoing'],
       officer_note: ['']

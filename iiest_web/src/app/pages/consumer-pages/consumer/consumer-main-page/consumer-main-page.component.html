@@ -1,4 +1,4 @@
-<div class="container text-center py-3">
+<div class="container text-center py-3 shop-container">
     <!-- Image Grid -->
     <div class="row g-2 mb-3">
       <!-- Show dynamic image if srcObject is available -->
@@ -11,13 +11,43 @@
         <div class="col-12">
           <img src="../../../../../assets/images/doc-thumb-2.jpg" alt="Default Shop Image" class="img-fluid rounded shadow">
         </div>
-      </ng-template>
+      </ng-template>  
     </div>
     
   
     <!-- Compliance Title -->
     <h4 class="fw-bold text-dark mb-3">COMPLIANCE TIMELINE CHART</h4>
+
+ <div
+ role="button"
+  class="d-inline-flex align-items-center rounded mb-3 position-relative"
+  (mouseenter)="showDropdown = true"
+  (mouseleave)="showDropdown = false"
+>
+  <fa-icon [icon]="faStore" class="fa-lg text-primary me-2"></fa-icon>
+  <h5 class="mb-0 me-2 text-dark" style="cursor: pointer;">Shops</h5>
+  <span class="badge bg-primary rounded-pill">{{ shops.length }}</span>
+
+  <!-- Dropdown content -->
+  <div
+    class="dropdown-menu-custom"
+    *ngIf="showDropdown"
+  >
   
+    <div *ngFor="let shop of shops" class="dropdown-item-custom" (click)="navigateToDashboard(shop)">
+      <img
+      [src]="shop.shopPhoto || '../../../../../assets/images/doc-thumb-2.jpg'"
+      class="shop-photo rounded-circle"
+      alt="Shop Photo"
+    />
+      {{ shop.shopId }}
+    </div>
+  </div>
+</div>
+
+    
+    
+
     <div class="row align-items-center justify-content-center">
       <!-- Compliance Legends (Left Side) -->
       <div class="col-6 text-start">
@@ -33,7 +63,7 @@
   
       <!-- Compliance Chart (Right Side) -->
       <div class="col-6 text-end" role="button">
-        <div class="chart-container" (click)="navigateToDashboard()">
+        <div class="chart-container" >
           <div class="circle-chart">
             <div class="circle-content">
               <h5 class="text-primary fw-bold">{{statistics.durationInMonths}}</h5>
