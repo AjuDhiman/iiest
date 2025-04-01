@@ -25,8 +25,21 @@ exports.employeeRecord = async (req, res) => {
         const startOfPrevMonth = new Date(todayDate.getFullYear(), todayDate.getMonth() - 1, 1);//getting time of start of prev month
         const startOfThisMonth = new Date(todayDate.getFullYear(), todayDate.getMonth(), 1);//getting time of start of this month
         const startOfThisFinancialYear = new Date(todayDate.getFullYear(), 3, 1); //getting time of start of this year
+        console.log("startOfThisFinancialYear=====>",startOfThisFinancialYear);
+      // Last Financial Year (1 year before)
+        const startOfLastFinancialYear = new Date(startOfThisFinancialYear.getFullYear() - 1, 3, 1);
+        const endOfLastFinancialYear = new Date(startOfThisFinancialYear.getFullYear(), 2, 31, 23, 59, 59, 999);
+        
+       
+        
+        // Optional: log in readable format (dd-mm-yyyy)
+        const format = (d) => d.toLocaleDateString('en-GB');
+        
+        console.log("🟡 Last FY:", format(startOfLastFinancialYear), "→", format(endOfLastFinancialYear));
+        
 
         let pipeLineArr
+
 
         if (user.designation == 'Director') {
             pipeLineArr = [ // creating pipeline array for performing aggregation on sales model and getting data in required format
@@ -317,6 +330,17 @@ exports.employeeRecord = async (req, res) => {
                         },
                         ...pipeLineArr
                     ],
+                    last_year: [  // ✅ Add this block
+                        {
+                          $match: {
+                            createdAt: {
+                              $gte: startOfLastFinancialYear,
+                              $lt: endOfLastFinancialYear
+                            }
+                          }
+                        },
+                        ...pipeLineArr
+                      ],
                     till_now: [  //filetering only those data which are created till now
                         ...pipeLineArr
                     ],

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { RegisterService } from 'src/app/services/register.service';
 
 
 @Component({
@@ -8,8 +9,15 @@ import { Router } from '@angular/router';
   styleUrls: ['./consumer-sidebar.component.scss']
 })
 export class ConsumerSidebarComponent {
+  shopId: string | null = null;
+
   isCollapsed = true;
-  constructor(private router: Router) { }
+  constructor(private router: Router,private registerService: RegisterService) { 
+
+  }
+  ngOnInit(): void {
+    this.shopId = this.registerService.getShopId();
+  }
  toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
   }

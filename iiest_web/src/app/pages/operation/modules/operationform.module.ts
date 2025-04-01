@@ -13,6 +13,7 @@ import { GeneralSectionComponent } from 'src/app/pages/operation/operationform/g
 import { SharedModule } from 'src/app/shared/shared.module';
 import { DocumentationModalComponent } from 'src/app/pages/modals/documentation-modal/documentation-modal.component';
 import { SalesModule } from '../../sales/sales.module';
+import { ConsumerModule } from '../../consumer-pages/consumer/consumer.module';
 
 
 
@@ -33,7 +34,8 @@ import { SalesModule } from '../../sales/sales.module';
   imports: [
     CommonModule,
     SharedModule,
-    SalesModule
+    SalesModule,
+    ConsumerModule
   ],
   exports: [
     OperationformComponent,

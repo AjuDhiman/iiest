@@ -21,6 +21,7 @@ export class ConnectWithUsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log("senderType==>",this.senderType)
     if (!this.shopId) {
       this.shopId = this.registerService.getShopId();
     }

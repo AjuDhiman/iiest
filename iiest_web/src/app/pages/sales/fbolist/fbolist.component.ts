@@ -14,7 +14,6 @@ import { SaleDocModalComponent } from '../../modals/sale-doc-modal/sale-doc-moda
 import { ConformationModalComponent } from '../../modals/conformation-modal/conformation-modal.component';
 import { ToastrService } from 'ngx-toastr';
 import { FbonewComponent } from '../fboproduct/fbonew/fbonew.component';
-import { SendMailBoComponent } from '../send-mail-bo/send-mail-bo.component';
 
 @Component({
   selector: 'app-fbolist',
@@ -458,7 +457,6 @@ export class FbolistComponent implements OnInit {
 
 
 openChatPopup(fbo: any) {
-  console.log("fbo===>",fbo)
   this.selectedBoId = fbo.fboInfo.boInfo.customer_id; 
   this.selectedShopId = fbo.fboInfo.customer_id; 
 

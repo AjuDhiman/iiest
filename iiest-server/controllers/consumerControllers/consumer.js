@@ -105,9 +105,6 @@ console.log("shopDetails--->",shopDetails)
       return res.status(404).json({ success: false, message: "Shop not found" });
     }
   }
-
-    console.log("statistics===>", statistics);
-
     return res.status(200).json({
       success,
       statistics,
@@ -214,7 +211,7 @@ console.log("shopDetails--->",shopDetails)
 exports.getShopLicenses = async (req, res) => {
   try {
     let success = true;
-    const { boId, city_id, business_type_id } = req.query;
+    const { boId,shopId, city_id, business_type_id } = req.query;
 
     if (!boId || !city_id || !business_type_id) {
       return res.status(400).json({ success: false, message: "boId, city_id, and business_type_id are required" });
@@ -240,7 +237,7 @@ exports.getShopLicenses = async (req, res) => {
       foscosStatus = "initiated";
       foscosObject = employeeSales.foscosInfo;
 
-      shopDocumentDetails = await docsModel.findOne({ handlerId: shopDetails.shopId }).lean();
+      shopDocumentDetails = await docsModel.findOne({ handlerId: shopId }).lean();
     }
 
     const businessTypeId = new mongoose.Types.ObjectId(business_type_id);

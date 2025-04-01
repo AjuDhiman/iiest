@@ -25,13 +25,17 @@
         <div *ngFor="let comment of officerComments" class="note">{{comment}}</div>
       </div>
     </div>
+
     <div class="">
       <label for="officer_note" class="form-label">Officer Note</label>
       <input type="text" class="form-control form-control-sm" id="officer_note" formControlName="officer_note">
     </div>
   </div>
 
-  <div class="col-md-6"></div>
+  <div class="col-md-6">
+
+    
+  </div>
 
  
 
@@ -40,6 +44,16 @@
       <button type="submit" class="btn btn-sm btn-primary">Update</button>
     </div>
   </div>
+  <div class="mt-2">
+  <app-connect-with-us [senderType]="'agent'"
+  [shopId]="caseData?.shopId"
+  [boId]="caseData.salesInfo?.fboInfo?.boInfo?.customer_id"
+  [senderId]="candidateId"
+  
+  ></app-connect-with-us>
+  </div>
+
+
 
   <!-- <div class="col-6 d-grid gap-2 d-md-flex justify-content-md-end">
         <button type="button" (click)="onReset()" class="btn btn-sm btn-warning">Reset</button>

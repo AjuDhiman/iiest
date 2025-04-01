@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { GetdataService } from 'src/app/services/getdata.service';
+import { RegisterService } from 'src/app/services/register.service';
 interface otherItems {
   id: number;
   title: string;
@@ -19,7 +20,7 @@ interface otherItems {
 export class ConsumerOthersOptionComponent {
   consumer = JSON.parse(localStorage.getItem('consumer') || '{}');
   VoluntaryItems:any[]
-   constructor(private getDataService: GetdataService
+   constructor(private getDataService: GetdataService,private registerService: RegisterService
     ) {  }
 
   otherItems: otherItems[] = [
@@ -74,11 +75,13 @@ export class ConsumerOthersOptionComponent {
   ];
   
   ngOnInit(): void {
-    this.fetchShopLicenses(this.consumer.iiest_member_id,this.consumer.city_Id,this.consumer.business_category_ID);
+    const shopId = this.registerService.getShopId();
+
+    this.fetchShopLicenses(this.consumer.iiest_member_id,shopId,this.consumer.city_Id,this.consumer.business_category_ID);
   }
 
-  fetchShopLicenses(boId: any, city_Id: any, business_category_ID: any): void {
-    this.getDataService.getShopLicensesData(boId, city_Id, business_category_ID).subscribe(response => {
+  fetchShopLicenses(boId: any,shopId:any, city_Id: any, business_category_ID: any): void {
+    this.getDataService.getShopLicensesData(boId,shopId, city_Id, business_category_ID).subscribe(response => {
       if (response.success) {
         this.VoluntaryItems = response.licenses.Voluntary.map((license: any) => {
           return {
