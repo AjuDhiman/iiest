@@ -413,3 +413,62 @@ exports.updateBusinessOwner = async (req, res) => {
     }
   };
   
+
+
+  exports.createCustomerForBo = async (req, res) => {
+    try {
+      const { boId } = req.body;
+      console.log("📌 Received BO ID:", boId);
+  
+      if (!boId) {
+        return res.status(400).json({ success: false, message: "Business Owner ID is required" });
+      }
+  
+      const bo = await boModel.findOne({ customer_id: boId });
+  
+      if (!bo) {
+        return res.status(404).json({ success: false, message: "Business Owner not found" });
+      }
+  
+      const existingCustomer = await customerModel.findOne({ business_owner_ref_id: bo._id });
+  
+      if (existingCustomer) {
+        return res.status(409).json({ success: false, message: "Customer already exists for this Business Owner" });
+      }
+  
+      const employee = await employeeSchema.findById(bo.onboard_by);
+      const newPassword = await generateRandomPassword();
+  
+      const newCustomer = await customerModel.create({
+        business_owner_ref_id: bo._id,
+        customer_name: bo.manager_name,
+        iiest_member_id: bo.customer_id,
+        username: bo.customer_id,
+        password: newPassword,
+        email: bo.email,
+        contact_no: bo.contact_no,
+        created_by: employee?._id,
+        business_category_ID: bo.business_category_ID,
+        city_Id: bo.city_Id
+      });
+  
+      const mailInfo = {
+        boName: bo.owner_name,
+        purpose: 'onboard',
+        customerId: bo.customer_id,
+        email: bo.email,
+        contact_no: bo.contact_no,
+        managerName: bo.manager_name,
+        password: newPassword
+      };
+  
+      await sendMailToBo(bo.email, mailInfo);
+  
+      return res.status(201).json({ success: true, message: "Customer created successfully", customer: newCustomer });
+  
+    } catch (error) {
+      console.error("Create Customer Error:", error);
+      return res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+  };
+  
