@@ -14,6 +14,7 @@ import { SaleDocModalComponent } from './modals/sale-doc-modal/sale-doc-modal.co
 import { ShopsModalComponent } from './modals/shops-modal/shops-modal.component';
 import { AccountsModule } from './accounts/accounts.module';
 import { CoworksModule } from './coworks/coworks.module';
+import { PricePolicyComponent } from './price-policy/price-policy.component';
 
 
 
@@ -26,6 +27,7 @@ import { CoworksModule } from './coworks/coworks.module';
     RefundPolicyComponent,
     SaleDocModalComponent,
     ShopsModalComponent,
+    PricePolicyComponent,
   ],
   imports: [
     CommonModule,

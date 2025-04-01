@@ -22,6 +22,7 @@ import { TermsAndConditionsComponent } from './pages/terms-and-conditions/terms-
 import { ClientListComponent } from './pages/sales/client-list/client-list.component';
 import { InvoiceListComponent } from './pages/accounts/invoice-list/invoice-list.component';
 import { CreateInvoiceComponent } from './pages/coworks/create-invoice/create-invoice.component';
+import { PricePolicyComponent } from './pages/price-policy/price-policy.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'main', pathMatch: 'full' }, // Default route
@@ -31,6 +32,7 @@ const routes: Routes = [
   { path: 'privacy-policy', component: PrivacyPolicyComponent},
   { path: 'refund-policy', component: RefundPolicyComponent},
   { path: 'terms-and-conditions', component: TermsAndConditionsComponent},
+  { path: 'price-policy', component: PricePolicyComponent },
   { path: 'home', component: HomeComponent, canActivate:[authGuard]},
   { path: 'user', component: UserAccountComponent, canActivate:[authGuard]},
   { path: 'caselist', component: CaseListComponent, canActivate:[authGuard,routeGuard], data: {allowedRoles:caseList_roles}},

@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
       const route:any = window.location.hash;
       if (val instanceof NavigationEnd) {
         if (val.url == '/' || val.url == '/main' || route == "#about" || route == "#contact" || route.split('/')[1] == "verifyonboard"
-       || val.url == "/privacy-policy" || val.url == "/refund-policy" || val.url == "/terms-and-conditions")  {
+       || val.url == "/privacy-policy" || val.url == "/refund-policy" || val.url == "/terms-and-conditions" || val.url == "/price-policy" )  {
           this.showHeader = false;
           this.largeDisplay = false;
         } else {
