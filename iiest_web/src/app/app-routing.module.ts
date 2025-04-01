@@ -29,6 +29,7 @@ import { ConsumerInvoiceComponent } from './pages/consumer-pages/consumer/consum
 import { ConsumerNotificationsComponent } from './pages/consumer-pages/consumer/consumer-notifications/consumer-notifications.component';
 import { ConnectWithUsComponent } from './pages/consumer-pages/consumer/connect-with-us/connect-with-us.component';
 import { ConsumerShopDetailsComponent } from './pages/consumer-pages/consumer/consumer-shop-details/consumer-shop-details.component';
+import { UpdateBoCustomerComponent } from './pages/sales/update-bo-customer/update-bo-customer.component';
 // import { ConsumerHomeComponent } from './pages/consumer-pages/consumer-home-page/consumer-home';
 
 const routes: Routes = [
@@ -57,6 +58,8 @@ const routes: Routes = [
   { path: 'createinvoice', component: CreateInvoiceComponent, canActivate:[authGuard, routeGuard], data: {allowedRoles: director_roles, allowedPanels: ['DPIIT Sales Panel']}},
   { path: 'emplist', component: EmployeelistComponent, canActivate:[authGuard, routeGuard], data: {allowedRoles:empRegister_roles}},
   { path: 'lms', component: LmsComponent, canActivate:[authGuard]},
+  { path: 'update-bo-customer/:customerId', component: UpdateBoCustomerComponent },
+
 
 //  { path: 'consumer-home', component: ConsumerHomeComponent, canActivate:[authGuard]},
  { path: 'consumer-main-page', component:ConsumerMainPageComponent,canActivate:[consumerAuthGuard]},
@@ -69,7 +72,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { useHash: true })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

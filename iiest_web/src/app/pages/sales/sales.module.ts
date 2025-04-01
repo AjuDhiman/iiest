@@ -15,6 +15,7 @@ import { KhadyapaalnComponent } from './fboproduct/khadyapaaln/khadyapaaln.compo
 import { FoodlabelingComponent } from './fboproduct/foodlabeling/foodlabeling.component';
 import { ConsumerModule } from '../consumer-pages/consumer/consumer.module';
 import { SendMailBoComponent } from './send-mail-bo/send-mail-bo.component';
+import { UpdateBoCustomerComponent } from './update-bo-customer/update-bo-customer.component';
 @NgModule({
   declarations: [
     FbonewComponent,
@@ -28,7 +29,8 @@ import { SendMailBoComponent } from './send-mail-bo/send-mail-bo.component';
     ClientListComponent,
     KhadyapaalnComponent,
     FoodlabelingComponent,
-    SendMailBoComponent
+    SendMailBoComponent,
+    UpdateBoCustomerComponent
   ],
   imports: [
     CommonModule,

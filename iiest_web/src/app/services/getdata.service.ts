@@ -13,6 +13,14 @@ export class GetdataService {
   constructor(private http: HttpClient, private router: Router) { }
 
 
+  createCustomerForBo(boId: string): Observable<any> {
+    const url = `${this.url}/create-customer`;
+    return this.http.post<any>(url, { boId }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  
+
   updateBusinessOwner(boId: string, city_Id: string, business_category_ID: string): Observable<any> {
     const url = `${this.url}/updatebusinessowner`;
     const body = { boId, city_Id, business_category_ID };
