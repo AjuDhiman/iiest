@@ -28,10 +28,7 @@ exports.employeeRecord = async (req, res) => {
         console.log("startOfThisFinancialYear=====>",startOfThisFinancialYear);
       // Last Financial Year (1 year before)
         const startOfLastFinancialYear = new Date(startOfThisFinancialYear.getFullYear() - 1, 3, 1);
-        const endOfLastFinancialYear = new Date(startOfThisFinancialYear.getFullYear(), 2, 31, 23, 59, 59, 999);
-        
-       
-        
+        const endOfLastFinancialYear = new Date(startOfThisFinancialYear.getFullYear(), 2, 31, 23, 59, 59, 999); 
         // Optional: log in readable format (dd-mm-yyyy)
         const format = (d) => d.toLocaleDateString('en-GB');
         

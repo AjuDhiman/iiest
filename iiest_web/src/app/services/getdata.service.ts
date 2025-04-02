@@ -12,7 +12,9 @@ export class GetdataService {
   url = config.API_URL
   constructor(private http: HttpClient, private router: Router) { }
 
-
+  getChatDocByShopId(shopId: string) {
+    return this.http.get<any>(`${this.url}/shops-doc?shopId=${shopId}`);
+  }
   createCustomerForBo(boId: string): Observable<any> {
     const url = `${this.url}/create-customer`;
     return this.http.post<any>(url, { boId }).pipe(

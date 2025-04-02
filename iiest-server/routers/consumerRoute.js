@@ -1,6 +1,6 @@
 const express = require('express');
 const { consumerLogin,getComplianceStatistics,getShopLicenses,getAllEmployeeSales,getShopsByBoId,getAllBusinessTypes,getAllCities,getLicensesByBusinessAndCity,getAllLicense } = require('../controllers/consumerControllers/consumer');
-const { getChatMessages,saveMessage,getMessagesBySender } = require('../controllers/chatControllers/chat');
+const { getShopMessagesDoc,saveMessage,getMessagesBySender } = require('../controllers/chatControllers/chat');
 const { uploadChatFile } = require('../config/s3Bucket');
 
 
@@ -23,5 +23,7 @@ router.post(
   );
 router.get('/get-chat-by-sender', getMessagesBySender); 
 router.get("/shops-By-BoId", getShopsByBoId);
+router.get("/shops-doc", getShopMessagesDoc);
+
 
 module.exports = router;

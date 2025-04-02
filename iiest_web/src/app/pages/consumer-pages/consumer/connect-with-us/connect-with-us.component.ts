@@ -24,6 +24,8 @@ export class ConnectWithUsComponent implements OnInit {
     console.log("senderType==>",this.senderType)
     if (!this.shopId) {
       this.shopId = this.registerService.getShopId();
+            // this.shopId = "IIEST/SP/791422";
+
     }
 
     if (!this.senderId || !this.boId) {
@@ -42,6 +44,7 @@ export class ConnectWithUsComponent implements OnInit {
       }
     });
   }
+  
     // this.getDataService.getMessagesByBoId(this.boId).subscribe({
     //   next: (res: any) => {
     //     this.messages = res.messages || [];

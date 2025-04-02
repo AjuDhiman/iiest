@@ -1,3 +1,4 @@
+const { getDocObject } = require('../../config/s3Bucket');
 const ChatMessage = require('../../models/chatMessegeModels/chatMessegeModal');
 
 
@@ -63,6 +64,7 @@ exports.saveMessage = async (req, res) => {
 //       res.status(500).json({ success: false, message: 'Internal Server Error' });
 //     }
 //   };
+
   exports.getMessagesBySender = async (req, res) => {
     const { shopId } = req.query;
   
@@ -78,4 +80,44 @@ exports.saveMessage = async (req, res) => {
       return res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
   };
+  
+
+
+exports.getShopMessagesDoc = async (req, res) => {
+  const { shopId } = req.query;
+
+  if (!shopId) {
+    return res.status(400).json({ success: false, message: 'shopId is required' });
+  }
+
+  try {
+    let messages = await ChatMessage.find({
+      shopId,
+      senderType: 'shop'
+    }).sort({ timestamp: 1 });
+
+    // 🔁 Process each message to resolve file URLs using getDocObject
+    const enrichedMessages = await Promise.all(
+      messages.map(async (msg) => {
+        if (msg.file && msg.file.fileUrl) {
+          const docUrl = await getDocObject(msg.file.fileUrl);
+          return {
+            ...msg.toObject(),
+            file: {
+              ...msg.file,
+              src: docUrl  
+            }
+          };
+        }
+        return msg.toObject(); // return message as-is if no file
+      })
+    );
+
+    return res.status(200).json({ success: true, messages: enrichedMessages });
+  } catch (err) {
+    console.error('Error fetching shop messages:', err);
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
   
