@@ -4,11 +4,13 @@ const dotenv  = require('dotenv');
 const cors = require('cors');
 const connectToMongo = require('./config/db.js')
 const session = require('express-session'); 
+const https = require('https');
 const path = require('path');
+const fs = require('fs');
 
 dotenv.config();
 
-app.use(cors({credentials: true, origin: 'http://localhost:4200'}));
+app.use(cors({credentials: true, origin: 'https://connectbharat.org'}));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
@@ -40,8 +42,16 @@ app.use('/iiest', require('./routers/operationRoute.js'));
 app.use('/iiest', require('./routers/accountsRoute.js'));
 app.use('/iiest', require('./routers/consumerRoute.js'));
 
+
+
 connectToMongo();
 
-app.listen(port, () => {
- console.log(`Example app listening on port: ${port}`)
+const options = {
+  key: fs.readFileSync('./ssl/private.key'),
+  cert: fs.readFileSync('./ssl/5c5f5da101cb79fa.crt'),
+  ca: fs.readFileSync('./ssl/combined_new.crt')
+};
+
+https.createServer(options, app).listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
