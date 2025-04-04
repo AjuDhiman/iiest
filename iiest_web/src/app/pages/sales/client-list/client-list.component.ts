@@ -147,6 +147,9 @@ export class ClientListComponent implements OnInit, OnDestroy {
     this.bosLoadedSub.unsubscribe();
   }
   sendUpdateEmail(fbo: any) {
+    console.log("fbo---client-->",fbo)
+
+    
     const modalRef = this._modalService.open(SendMailBoComponent, {
       size: 'lg',
       backdrop: 'static',

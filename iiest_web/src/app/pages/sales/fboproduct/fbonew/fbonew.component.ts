@@ -606,6 +606,38 @@ export class FbonewComponent implements OnInit, OnChanges {
     this.fbo['boInfo'].setValue(fboObj._id);
   }
 
+  openRazorpayCheckout(paymentData: any) {
+    const options: any = {
+      key: paymentData.keyId,
+      amount: paymentData.amount,
+      currency: paymentData.currency,
+      name: "Your Company Name",
+      description: "FBO Payment",
+      order_id: paymentData.orderId,
+      handler: (response: any) => {
+        console.log("Payment Success:", response);
+        window.location.href = paymentData.redirectUrl;
+      },
+      prefill: {
+        name: this.fboForm.value.owner_name,
+        email: this.fboForm.value.email,
+        contact: this.fboForm.value.owner_contact
+      },
+      theme: {
+        color: "#3399cc"
+      }
+    };
+  
+    const razorpay = new (window as any).Razorpay(options);
+    razorpay.open();
+
+    razorpay.on('payment.failed', (response: any) => {
+      console.error("Payment Failed:", response.error);
+      this._toastrService.error('Payment failed. Please try again.');
+    });
+  }
+  
+  
 
   //Form Submit Method
   onSubmit() {
@@ -639,10 +671,19 @@ export class FbonewComponent implements OnInit, OnChanges {
       this.addFbo = this.fboForm.value;
       if (!this.isExistingFbo) {
         if (this.addFbo.payment_mode === 'Pay Page') {
-          this._registerService.fboPayment(this.objId, this.addFbo, this.foscosGST, this.fostacGST, this.hygieneGST, this.medicalGST, this.waterTestGST, this.khadyaPaalnGST, this.foscosFixedCharges).subscribe({
-            next: (res) => {
-              this.loading = false;
-              window.location.href = res.message;
+          this._registerService.fboPayment(
+            this.objId,
+            this.addFbo,
+            this.foscosGST,
+            this.fostacGST,
+            this.hygieneGST,
+            this.medicalGST,
+            this.waterTestGST,
+            this.khadyaPaalnGST,
+            this.foscosFixedCharges
+          ).subscribe({
+            next: (res: any) => {
+              this.openRazorpayCheckout(res);
             },
             error: (err) => {
               this.loading = false;
@@ -666,6 +707,8 @@ export class FbonewComponent implements OnInit, OnChanges {
               }
             }
           })
+
+
         } else if (this.addFbo.payment_mode === 'Cash') {
           this._registerService.addFbo(this.objId, this.addFbo, this.foscosGST, this.fostacGST, this.hygieneGST, this.medicalGST, this.waterTestGST, this.khadyaPaalnGST, this.foscosFixedCharges).subscribe({
             next: (res) => {
