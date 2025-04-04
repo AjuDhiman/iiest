@@ -14,6 +14,7 @@ import { SaleDocModalComponent } from '../../modals/sale-doc-modal/sale-doc-moda
 import { ConformationModalComponent } from '../../modals/conformation-modal/conformation-modal.component';
 import { ToastrService } from 'ngx-toastr';
 import { FbonewComponent } from '../fboproduct/fbonew/fbonew.component';
+import { SendMailBoComponent } from '../send-mail-bo/send-mail-bo.component';
 
 @Component({
   selector: 'app-fbolist',
@@ -84,6 +85,8 @@ export class FbolistComponent implements OnInit {
     private exportAsService: ExportAsService,
     private store: Store,
     private _toastrService: ToastrService,
+    private _modalService: NgbModal,
+
     private modalService: NgbModal) { }
 
   ngOnInit(): void {
@@ -91,6 +94,18 @@ export class FbolistComponent implements OnInit {
     this.intailize();
     this.fetchAllFboData();
   }
+
+   sendUpdateEmail(fbo: any) {
+    console.log("fbo===>",fbo)
+      const modalRef = this._modalService.open(SendMailBoComponent, {
+        size: 'lg',
+        backdrop: 'static',
+        centered: true
+      });
+  
+      // Optional: pass fbo to modal
+      modalRef.componentInstance.fbo = fbo;
+    }
 
   fetchAllFboData(): void {
 
