@@ -157,6 +157,6 @@ export class ClientListComponent implements OnInit, OnDestroy {
     });
 
     // Optional: pass fbo to modal
-    modalRef.componentInstance.fbo = fbo;
+    modalRef.componentInstance.boId = fbo.customer_id;
   }
 }

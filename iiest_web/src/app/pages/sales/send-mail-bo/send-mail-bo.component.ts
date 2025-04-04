@@ -8,7 +8,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./send-mail-bo.component.scss']
 })
 export class SendMailBoComponent implements OnInit {
-  @Input() fbo: any;  
+  @Input() boId: any;  
   cities: any[] = [];
   businessTypes: any[] = [];
 
@@ -40,10 +40,10 @@ export class SendMailBoComponent implements OnInit {
       }
     });
   }
-
+  
   sendMail(): void {
-    console.log("fbo==>",this.fbo);
-    if (!this.fbo?.customer_id) {
+    console.log("fbo==>",this.boId);
+    if (!this.boId) {
       console.error('Missing Business Owner ID');
       return;
     }
@@ -53,7 +53,7 @@ export class SendMailBoComponent implements OnInit {
       return;
     }
   
-    this._getDataService .updateBusinessOwner(this.fbo?.customer_id, this.selectedCityId, this.selectedCategoryId)
+    this._getDataService .updateBusinessOwner(this.boId, this.selectedCityId, this.selectedCategoryId)
       .subscribe({
         next: (res) => {
           console.log('Update Success:', res);
