@@ -88,4 +88,8 @@
     color: #17b26a;
     font-weight: bold;
   }
-  
+  @media (min-width: 1024px) {
+    .container-dash{
+      max-width: 450px;
+    }
+  }

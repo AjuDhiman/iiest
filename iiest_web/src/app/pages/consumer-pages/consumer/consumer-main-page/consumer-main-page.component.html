@@ -1,4 +1,4 @@
-<div class="container text-center py-3 shop-container">
+<div class="container text-center py-3 container-dash shop-container">
     <!-- Image Grid -->
     <div class="row g-2 mb-3">
       <!-- Show dynamic image if srcObject is available -->
@@ -40,13 +40,10 @@
       class="shop-photo rounded-circle"
       alt="Shop Photo"
     />
-      {{ shop.shopId }}
-    </div>
+      <span class="shop-tittle ms-2">{{ shop.shopId }}({{shop.district}})</span>
+ </div>
   </div>
 </div>
-
-    
-    
 
     <div class="row align-items-center justify-content-center">
       <!-- Compliance Legends (Left Side) -->

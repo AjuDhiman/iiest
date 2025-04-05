@@ -9,7 +9,7 @@ const coworksStamp = require('./coworkStamp');
 
 
 const coworkInvoiceTemplate = (data) => {
-console.log("data===>",data)
+
     const quantity = data.qty;
     const rate = data.amount;
     const subTotal = quantity * rate;
@@ -17,7 +17,7 @@ console.log("data===>",data)
     let invoiceType;
 
     //getting invoic type
-    if(data.receiptNo !== 'Performa'){
+    if (data.receiptNo !== 'Performa') {
         switch (data.invoiceType) {
             case 'Customer':
                 invoiceType = "C U S T O M E R";
@@ -35,7 +35,7 @@ console.log("data===>",data)
     } else {
         invoiceType = 'P E R F O R M A'
     }
-  
+
 
     let calculateTax = function (invoiceType, state) {
         if (invoiceType === 'TAX') {
@@ -61,7 +61,7 @@ console.log("data===>",data)
     const signatureName = data.signatureName;
 
     console.log('signaturename', signatureName);
-console.log("data===>",data)
+
     const toWords = new ToWords({
         localeCode: 'en-IN',
         converterOptions: {
@@ -337,7 +337,19 @@ console.log("data===>",data)
                         </div>
             <div style="display: flex; justify-content: space-between;">
                 <div>
-                
+           <div>
+
+                <p><b>Invoice is payable within 2 days *</b><br/>
+                <b>Please make invoice payment in our following bank account</b></p>
+                <br/>
+                <p><b>Account Name: </b>IIEST Incubation and Business Centre</p>
+                <p><b>Bank Name: </b>IndusInd Bank</p>
+                <p><b>Account No.: </b>250359359359</p>
+                <p><b>IFSC Code: </b>INDB0000005</p>
+                <p><b>Account Type: </b>Current</p>
+                </div>
+
+
                 <section style="position: relative; margin-top: 40px;">
                     <img src="${stampImg}" height=100 width=100 alt="iiest_stamp"> <br>
                     

@@ -86,4 +86,12 @@
   .dropdown-item-custom:hover {
     background-color: #f8f9fa;
   }
-  
+  .shop-tittle{
+    font-size: 10px;
+  }
+
+  @media (min-width: 1024px) {
+    .container-dash{
+      max-width: 450px;
+    }
+  }

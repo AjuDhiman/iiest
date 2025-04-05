@@ -56,3 +56,12 @@ footer {
 .modal-backdrop {
   display: none !important;
 }
+
+@media (min-width: 1024px) {
+  .fixed-bottom{
+      z-index: 0;
+      padding-left: 600px;
+      padding-right:500px;
+  }
+
+}
