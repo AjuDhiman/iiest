@@ -13,7 +13,7 @@ export const panIndiaAllowedEmpIds = [ //Employees with Pan India Employee Id
    'IIEST/FD/8234', //Rohit Kulshrestha Emp Id
 ]
 // export const chetanKapoorEmpId: string = 'IIEST/FD/0176';
-
+export const merchantId = "QCCV7hu7YN7vuo";
 //Water test Fee
 export const waterTestFee = [0, 1500, 2000, 2500];
 //Fostac Process Amount

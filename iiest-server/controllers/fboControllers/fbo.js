@@ -7,7 +7,7 @@ const salesModel = require('../../models/employeeModels/employeeSalesSchema');
 const employeeSchema = require('../../models/employeeModels/employeeSchema');
 const { ObjectId } = require('mongodb');
 const { createInvoiceBucket, empSignBucket } = require('../../config/buckets');
-const payRequest = require('../../fbo/phonePay');
+const razorPayRequest = require('../../fbo/razorPay');
 const areaAllocationModel = require('../../models/employeeModels/employeeAreaSchema');
 const { sendInvoiceMail, sendCheckMail, sendFboVerificationMail } = require('../../fbo/sendMail');
 const boModel = require('../../models/BoModels/boSchema');
@@ -25,74 +25,66 @@ let fboFormData = {};
 
 //method for initiating payment with phone pe
 exports.fboPayment = async (req, res) => {
+  let fboFormData;
   try {
-    let success = false;
-
     const userInfo = await employeeSchema.findById(req.params.id);
     const signatureFile = userInfo.signatureImage;
     const officerName = userInfo.employee_name;
     const panelType = userInfo.panel_type;
 
     if (!signatureFile) {
-      success = false;
-      return res.status(404).json({ success, signatureErr: true });
+      return res.status(404).json({ success: false, signatureErr: true });
     }
 
     const areaAlloted = await areaAllocationModel.findOne({ employeeInfo: req.params.id });
     const panIndiaAllowedIds = (await generalDataSchema.find({}))[0].pan_india_allowed_ids;
 
-    console.log(panIndiaAllowedIds);
-
     if (!panIndiaAllowedIds.includes(req.user.employee_id) && panelType !== 'FSSAI Relationship Panel') {
-
       if (!areaAlloted) {
-        success = false;
-        return res.status(404).json({ success, areaAllocationErr: true })
+        return res.status(404).json({ success: false, areaAllocationErr: true });
       }
     }
 
-    const signExists = await doesFileExist(`${employeeDocsPath}${signatureFile}`);
-    console.log('sign Exsists:', signExists)
-     //  **************
-    // if (!signExists) {
-    //   return res.status(404).json({ success, noSignErr: true })
-    // }
-
-
     const formBody = req.body;
-    const createrId = req.params.id
+    const createrId = req.params.id;
 
-    const fboFormData = await sessionModel.create({
+    fboFormData = await sessionModel.create({
       data: {
-        ...formBody, createrObjId: createrId, signatureFile, officerName: officerName,
-        apiCalled: false //this property in data chrecks if api for pay page return already called or not in case of payment link share
+        ...formBody,
+        createrObjId: createrId,
+        signatureFile,
+        officerName,
+        apiCalled: false
       }
     });
 
+
+
     if (!panIndiaAllowedIds.includes(req.user.employee_id) && panelType !== 'FSSAI Relationship Panel') {
       const pincodeCheck = areaAlloted.pincodes.includes(formBody.pincode);
-
       if (!pincodeCheck) {
-        success = false;
-        return res.status(404).json({ success, wrongPincode: true });
+        return res.status(404).json({ success: false, wrongPincode: true });
       }
     }
 
-    payRequest(formBody.grand_total, req.user, res, `${BACK_END}/fbo-pay-return/${fboFormData._id}`);
+    const paymentData = await razorPayRequest(formBody.grand_total, req.user, fboFormData._id);
+    return res.status(200).json(paymentData);
+    
 
   } catch (error) {
-    console.log(error);
-    await sessionModel.findByIdAndDelete(fboFormData._id);// delete session in any case of faliure
-    return res.status(500).json({ message: 'Internal Server Error' });
+    console.error(error);
+    // if (fboFormData) {
+    //   await sessionModel.findByIdAndDelete(fboFormData._id); // Cleanup session if error
+    // }
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
-}
+};
 
 //methord for creating fbo and sale entry and other task that should be done after payment cinfirmation from phone pe
 exports.fboPayReturn = async (req, res) => {
 
   let sessionId = req.params.id; //Disclaimer: This sessionId here is used to get stored data from sessionData Model from mongoose this used in place of session because of unaviliblity of session in case of redirect in pm2 server so do not take it as express-session
-
-  await new Promise(resolve => setTimeout(resolve, 500)); //wait fot 0.5 sec brfore proceeding for beating db update threshold for updating api called proprty of session data in case api call backed more than one time in amount of ms 
+  // await new Promise(resolve => setTimeout(resolve, 500)); //wait fot 0.5 sec brfore proceeding for beating db update threshold for updating api called proprty of session data in case api call backed more than one time in amount of ms 
 
   try {
 
@@ -165,7 +157,6 @@ exports.fboPayReturn = async (req, res) => {
         //generating customer id or rather say ShopId
         const { idNumber, generatedCustomerId } = await generatedInfo();
 
-        console.log('foscosFixedCharge', foscosFixedCharge);
 
         //getting boInfo
         const boData = await boModel.findOne({ _id: boInfo });
@@ -284,7 +275,6 @@ exports.fboPayReturn = async (req, res) => {
 
           const qty = hygiene_audit.shops_no;
           const invoice = await invoiceDataHandler(invoiceCode, email, fbo_name, address, state, district, pincode, owner_contact, email, total_processing_amount, extraFee, totalGST, qty, business_type, gst_number, hygiene_audit.hra_total, 'HRA', hygiene_audit, signatureFile, invoiceUploadStream, officerName, generatedCustomerId, boData);
-
           invoiceData.push(invoice);
           invoiceIdArr.push({ src: invoice.fileName, code: invoiceCode, product: 'HRA' });
 
@@ -445,16 +435,18 @@ exports.fboPayReturn = async (req, res) => {
           await logAudit(createrObjId, "fbo_registers", fboEntry._id, {}, fboEntry, `${product} sold by paypage`);
         })
 
+
         //lastly redirect user to fbo form
-        res.redirect(`${FRONT_END.VIEW_URL}/#/fbo`);
+        // res.redirect(`${FRONT_END.VIEW_URL}/#/fbo`);
 
         const isPayLaterMail = false;
         sendInvoiceMail(email, invoiceData, isPayLaterMail, {});
+        return res.status(200).json({ message: "Payment successfull" });
 
       }
     }
   } catch (error) {
-    console.log(error);
+    console.log("errorssss ====>",error);
     return res.status(500).json({ message: "Internal Server Error" });
   } finally {
     await sessionModel.findByIdAndDelete(sessionId);// delete session data at last in any case sucess or faliure

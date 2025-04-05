@@ -10,7 +10,7 @@ import { GetdataService } from 'src/app/services/getdata.service';
 import { RegisterService } from 'src/app/services/register.service';
 import { pincodeData } from 'src/app/utils/registerinterface';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-
+import {merchantId} from '../../../../utils/config'
 
 @Component({
   selector: 'app-fbonew',
@@ -39,6 +39,7 @@ export class FbonewComponent implements OnInit, OnChanges {
   fostacGST: number;
   hygieneGST: number;
   foodLableGST: number;
+  foodLabelingGST: number; // Added to fix the issue
   editedData: any;
   parsedUserData: any;
   submitted = false;
@@ -106,6 +107,7 @@ export class FbonewComponent implements OnInit, OnChanges {
   selectedFbo: any;
   byCheque: boolean = false;
   chequeImage: File; // var for cheque image
+  signatureFile: any; // var for signature file
   disabledOptions = []; // this var will contain all the options rom multiselect that have enabled false in db;
 
   //New variables by vansh on 16-01-2023
@@ -124,6 +126,7 @@ export class FbonewComponent implements OnInit, OnChanges {
   khadyaPaalnGST: number = 0;
   khadyaPaalnFixedCharges: number = 0;
   loading: boolean = false;
+  officerName: string = ''; // Declare the officerName property
   // new varable by chandan
   existingbos: Object[];
 
@@ -607,6 +610,8 @@ export class FbonewComponent implements OnInit, OnChanges {
   }
 
   openRazorpayCheckout(paymentData: any) {
+    const sessionId = paymentData.sessionId; // ✅ Save here in closure
+  
     const options: any = {
       key: paymentData.keyId,
       amount: paymentData.amount,
@@ -616,7 +621,28 @@ export class FbonewComponent implements OnInit, OnChanges {
       order_id: paymentData.orderId,
       handler: (response: any) => {
         console.log("Payment Success:", response);
-        window.location.href = paymentData.redirectUrl;
+
+        const payload = {
+          code: 'PAYMENT_SUCCESS',
+          merchantId: merchantId,
+          transactionId: response.razorpay_payment_id, 
+          providerReferenceId: response.razorpay_order_id 
+        };
+        // ✅ Use the sessionId from closure scope
+        this._registerService.callPaymentSuccessApi(sessionId, payload).subscribe({
+          next: (res: any) => {
+            this._toastrService.success('Payment successful and data saved successfully!', '');
+  
+            // Optional delay for UX
+            setTimeout(() => {
+              window.location.href = `#/fbolist`;
+            }, 1000);
+          },
+          error: (error) => {
+            console.error('Error calling payment success API:', error);
+            this._toastrService.error('Payment was successful, but data saving failed. Please contact support.');
+          }
+        });
       },
       prefill: {
         name: this.fboForm.value.owner_name,
@@ -630,12 +656,14 @@ export class FbonewComponent implements OnInit, OnChanges {
   
     const razorpay = new (window as any).Razorpay(options);
     razorpay.open();
-
+  
     razorpay.on('payment.failed', (response: any) => {
       console.error("Payment Failed:", response.error);
       this._toastrService.error('Payment failed. Please try again.');
     });
   }
+  
+  
   
   
 
@@ -848,7 +876,8 @@ export class FbonewComponent implements OnInit, OnChanges {
             }
           })
         }
-      } else {
+      }
+       else {
         if (this.addFbo.payment_mode === 'Cash') {
           this._registerService.existingFboSale(this.objId, this.addFbo, this.foscosGST, this.fostacGST, this.hygieneGST, this.medicalGST, this.waterTestGST, this.khadyaPaalnGST, this.foscosFixedCharges, this.existingFboId).subscribe({
             next: (res) => {

@@ -5,7 +5,7 @@ const areaAllocationModel = require("../../models/employeeModels/employeeAreaSch
 const salesModel = require("../../models/employeeModels/employeeSalesSchema");
 const employeeSchema = require("../../models/employeeModels/employeeSchema");
 const fboModel = require('../../models/fboModels/fboSchema');
-const payRequest = require("../../fbo/phonePay");
+const razorPayRequest = require("../../fbo/razorPay");
 const fboPaymentSchema = require("../../models/fboModels/fboPaymentSchema");
 const { sendInvoiceMail, sendCheckMail } = require("../../fbo/sendMail");
 const sessionModel = require("../../models/generalModels/sessionDataSchema");
@@ -427,7 +427,7 @@ exports.existingFboPayPage = async (req, res) => {
     }
 
     // Call the payment request function
-    await payRequest(formBody.grand_total, req.user, res, `${BACK_END}/existingfbo-pay-return/${fboFormData._id}`);
+    await razorPayRequest(formBody.grand_total, req.user, res, `${BACK_END}/existingfbo-pay-return/${fboFormData._id}`);
   } catch (error) {
     console.error(error);
     console.log('hi')

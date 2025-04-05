@@ -32,6 +32,12 @@ export class RegisterService {
         this.handleError
       ));
   }
+  callPaymentSuccessApi(sessionId: string, payload: any): Observable<any> {
+    return this.http.post(`${this.url}/fbo-pay-return/${sessionId}`, payload);
+  }
+  
+  
+  
 
     //service for fbo payment and creation by paylater
     public fboPaymentPayLater(objId: string, addFbo: fbo): Observable<any> {
