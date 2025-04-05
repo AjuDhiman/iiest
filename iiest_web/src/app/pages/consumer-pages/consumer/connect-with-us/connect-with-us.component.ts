@@ -24,8 +24,6 @@ export class ConnectWithUsComponent implements OnInit {
     console.log("senderType==>",this.senderType)
     if (!this.shopId) {
       this.shopId = this.registerService.getShopId();
-            // this.shopId = "IIEST/SP/791422";
-
     }
 
     if (!this.senderId || !this.boId) {
@@ -100,7 +98,6 @@ export class ConnectWithUsComponent implements OnInit {
 
   uploadChatFile() {
     if (!this.selectedFile) return;
-
     const formData = new FormData();
     formData.append('boId', this.boId);
     formData.append('senderId', this.senderId);
@@ -110,7 +107,6 @@ export class ConnectWithUsComponent implements OnInit {
     if(this.shopId){
     formData.append('shopId', this.shopId);
     }
-
 
     this.getDataService.saveChatMessage(formData).subscribe({
       next: (res: any) => {

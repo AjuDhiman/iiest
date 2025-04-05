@@ -3,14 +3,13 @@ const ChatMessage = require('../../models/chatMessegeModels/chatMessegeModal');
 
 
 exports.saveMessage = async (req, res) => {
-  const { shopId,boId, senderType, senderId, message } = req.body;
-
+  const { shopId, boId, senderType, senderId, message } = req.body;
   if (!boId || !senderType || !senderId) {
     return res.status(400).json({ success: false, message: 'Missing required fields' });
   }
 
   try {
-    const file = req.files?.['file']?.[0]; 
+    const file = req.files?.['file']?.[0];
 
     const chatPayload = {
       shopId,
@@ -22,12 +21,15 @@ exports.saveMessage = async (req, res) => {
 
     if (message) {
       chatPayload.message = message;
+    } else if (file) {
+      // If message is empty but file exists, use file name as message
+      chatPayload.message = `File: ${file.originalname}`;
     }
 
     if (file) {
       chatPayload.file = {
         fileName: file.originalname,
-        fileUrl: file.key, 
+        fileUrl: file.key,
         mimeType: file.mimetype
       };
     }
@@ -40,6 +42,7 @@ exports.saveMessage = async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
+
 
 
 // exports.saveMessage = async (req, res) => {

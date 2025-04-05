@@ -15,3 +15,53 @@ footer {
 .footer-text-size{
     font-size: 8px;
 }
+
+
+.notification-dialog {
+  position: fixed;
+  top: 19rem;
+  right: 0rem;
+  margin: 0;
+  max-width: 380px;
+  z-index: 1060;
+  animation: slideInRight 0.4s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slide-out-right {
+  animation: slideOutRight 0.4s ease-in forwards;
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+}
+
+.modal-backdrop {
+  display: none !important;
+}
+
+@media (min-width: 1024px) {
+  .fixed-bottom{
+      z-index: 0;
+      padding-left: 600px;
+      padding-right:500px;
+  }
+
+}

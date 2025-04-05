@@ -17,17 +17,16 @@
           <div class="footer-text-size text-muted fw-bold text-nowrap" style="height: 20px;">TRAINING</div>
         </div>
         <!-- Notification Icon -->
-        <div class="d-flex flex-column align-items-center text-center gap-1" (click)="navigateToNotification()">
+        <div class="d-flex flex-column align-items-center text-center gap-1" (click)="openNotificationModal()">
           <div class="d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
             <fa-icon [icon]="['fas', 'bell']" class="fa-2x text-dark"></fa-icon>
           </div>
           <div class="footer-text-size text-muted fw-bold text-nowrap" style="height: 20px;">NOTIFICATIONS</div>
         </div>
-  
         <!-- Call Icon -->
         <div class="d-flex flex-column align-items-center text-center gap-1" (click)="makeCall()">
           <div class="rounded-circle bg-dark d-flex align-items-center  justify-content-center"  style="width: 50px; height: 50px;" >
-            <fa-icon [icon]="['fas', 'phone']" class="fa-sm text-white"></fa-icon>
+            <fa-icon [icon]="['fas', 'phone']" class="fa-2x text-white"></fa-icon>
           </div>
           <div class="footer-text-size text-muted fw-bold text-nowrap"  style="height: 20px;">CALL</div>
         </div>
@@ -53,5 +52,29 @@
         </div>
       </div>
     </div>
+
+    <div class="modal fade" id="notificationModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog notification-dialog">
+        <div class="modal-content border border-secondary shadow-lg">
+          <div class="modal-body p-0">
+            <iframe
+              *ngIf="trustedVideoUrl"
+              [src]="trustedVideoUrl"
+              width="100%"
+              height="200"
+              frameborder="0"
+              allowfullscreen
+              class="w-100">
+            </iframe>
+          </div>
+          <div class="modal-footer py-1 px-2 justify-content-end">
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+
   </footer>
   

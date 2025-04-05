@@ -104,7 +104,7 @@ export class FbolistComponent implements OnInit {
       });
   
       // Optional: pass fbo to modal
-      modalRef.componentInstance.fbo = fbo;
+      modalRef.componentInstance.boId = fbo.boInfo.customer_id;
     }
 
   fetchAllFboData(): void {
