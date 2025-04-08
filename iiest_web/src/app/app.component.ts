@@ -11,6 +11,8 @@ import { HeaderComponent } from 'src/app/shared/header/header.component';
 
 
 export class AppComponent implements OnInit {
+  shopId: string | null = null;
+
   title = 'iiest_new';
   showHeader: boolean = true;
   showConsumerHeader: boolean = false;
@@ -61,11 +63,15 @@ export class AppComponent implements OnInit {
     }
   }
   ngOnInit(): void {
+    const previousShopId = this.shopId;
+
+    this.shopId = this._registerService.getShopId();
+console.log(" this.shopId==>", this.shopId)
     this.loggedInUserData = this._registerService.LoggedInUserData();
     this.loggedInUserData = JSON.parse(this.loggedInUserData)
     if(this.loggedInUserData){
     this.empName = this.loggedInUserData.employee_name;
-    }
+    } 
 
     // const consumerData = localStorage.getItem("consumer");
     // if (consumerData) {

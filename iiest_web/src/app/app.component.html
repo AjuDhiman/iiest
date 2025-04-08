@@ -4,4 +4,6 @@
 <router-outlet></router-outlet>
 </div> 
 <app-consumer-footer   *ngIf=" showHeader && showConsumerHeader"></app-consumer-footer>
+<app-consumer-right-sidebar   *ngIf="showHeader && showConsumerHeader && shopId">
+</app-consumer-right-sidebar>
 <app-footer *ngIf="showHeader  && !showConsumerHeader" [isSidebarVisible]="isSidebarVisible" [largeDisplay]="largeDisplay"></app-footer>   

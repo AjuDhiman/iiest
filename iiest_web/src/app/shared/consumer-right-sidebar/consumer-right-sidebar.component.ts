@@ -2,14 +2,13 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { RegisterService } from 'src/app/services/register.service';
 
-
 @Component({
-  selector: 'app-consumer-sidebar',
- templateUrl: './consumer-sidebar.component.html',
-  styleUrls: ['./consumer-sidebar.component.scss']
+  selector: 'app-consumer-right-sidebar',
+  templateUrl: './consumer-right-sidebar.component.html',
+  styleUrls: ['./consumer-right-sidebar.component.scss']
 })
-export class ConsumerSidebarComponent {
-  
+export class ConsumerRightSidebarComponent {
+
   shopId: string | null = null;
 
   isCollapsed = true;
@@ -34,4 +33,9 @@ export class ConsumerSidebarComponent {
     this.isCollapsed=true;
   }
   
+  navigateToOtherOptions() {
+    this.isCollapsed = true;
+
+    this.router.navigate(['/consumer-other-option']);
+  }
 }

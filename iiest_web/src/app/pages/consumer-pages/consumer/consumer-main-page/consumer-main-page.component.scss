@@ -1,36 +1,54 @@
 .chart-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 200px;
-  }
-  
-  .circle-chart {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    background: conic-gradient(
-      #dc3545 0% 60%, /* Red for Pending */
-      #198754 60% 100% /* Green for Completed */
-    );
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-  }
-  
-  .circle-content {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 220px; /* Increase height for text space */
+  position: relative;
+}
+
+.curved-text {
+  width: 192px; /* Adjust width */
+  height: 116px; /* Half of circle height */
+  top: 21px; /* Move SVG up */
+  left: 50%;
+  transform: translateX(-50%); /* Center horizontally */
+  pointer-events: none;
+}
+
+.curved-text text {
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  fill: #333;
+  font-family: Arial, sans-serif;
+}
+
+.circle-chart {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #dc3545 0% 60%, /* Red for Pending */
+    #198754 60% 100% /* Green for Completed */
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.circle-content {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
   
   .legend-circle {
     width: 18px;
@@ -95,3 +113,5 @@
       max-width: 450px;
     }
   }
+
+  

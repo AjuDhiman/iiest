@@ -336,8 +336,6 @@ const coworkInvoiceTemplate = (data) => {
                             </p>
                         </div>
             <div style="display: flex; justify-content: space-between;">
-                <div>
-           <div>
 
                 <p><b>Invoice is payable within 2 days *</b><br/>
                 <b>Please make invoice payment in our following bank account</b></p>
@@ -347,15 +345,12 @@ const coworkInvoiceTemplate = (data) => {
                 <p><b>Account No.: </b>250359359359</p>
                 <p><b>IFSC Code: </b>INDB0000005</p>
                 <p><b>Account Type: </b>Current</p>
-                </div>
 
+              <section style="position: relative; margin-top: 40px;">
+    <img src="${stampImg}" height=100 width=100 alt="iiest_stamp"> <br>
+    Piyush Sharma
+</section>
 
-                <section style="position: relative; margin-top: 40px;">
-                    <img src="${stampImg}" height=100 width=100 alt="iiest_stamp"> <br>
-                    
-                    Piyush Sharma
-                </section>
-            </div>
                     </div>
                 </div>
             

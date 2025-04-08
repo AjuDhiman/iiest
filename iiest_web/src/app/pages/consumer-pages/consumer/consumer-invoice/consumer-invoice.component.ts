@@ -21,12 +21,12 @@ export class ConsumerInvoiceComponent implements OnInit {
   ngOnInit(): void {
     const shopId = this.registerService.getShopId();
     console.log("shopId==>",shopId)
-    this.fetchShopLicenses(shopId);
+    this.fetchShopLicenses(this.consumer.iiest_member_id);
 
   }
 
-  fetchShopLicenses(shopId: any): void {
-    this.getDataService.getAllSalesData(shopId).subscribe(response => {
+  fetchShopLicenses(boId: any): void {
+    this.getDataService.getAllSalesData(boId).subscribe(response => {
       if (response.success && response.salesInfo) {
         this.employeeSales = response.salesInfo; // ✅ Corrected key
         console.log("employeeSales==>",this.employeeSales)

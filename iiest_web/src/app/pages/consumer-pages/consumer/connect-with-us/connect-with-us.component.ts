@@ -107,7 +107,7 @@ export class ConnectWithUsComponent implements OnInit {
     if(this.shopId){
     formData.append('shopId', this.shopId);
     }
-
+console.log("formdata=>")
     this.getDataService.saveChatMessage(formData).subscribe({
       next: (res: any) => {
         this.messages.push({

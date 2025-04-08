@@ -1,0 +1,41 @@
+<div class="sidebar" [class.collapsed]="isCollapsed">
+    <!-- <div class="logo" *ngIf="!isCollapsed">
+      <img src="../../../assets/images/logo.png" alt="Logo" class="logo-img" />
+      <h2  class="mt-2">CONNECT भारत</h2>
+    </div>  -->
+    
+    <nav style="margin-top: 80px;">
+      <ul>
+    
+     
+        <li>
+          <a (click)="navigateToOtherOptions()">
+            <span class="nav-item" *ngIf="!isCollapsed">OTHER VOLUNTARY COMPILANCES</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/expert-consultation">
+            <span class="nav-item" *ngIf="!isCollapsed">EXPERT RESOURCES</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/expert-consultation">
+            <span class="nav-item" *ngIf="!isCollapsed">EXPERT CONSULTATION</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/legal-help" (click)="navigateToConnectWithUs()">
+            <span class="nav-item" *ngIf="!isCollapsed">CONNECT WITH US
+            </span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  
+
+  
+    <div class="toggle-btn"  (click)="toggleSidebar()">
+        <span>{{ isCollapsed ? '←' : '→' }}</span>
+    </div>
+  </div>
+  

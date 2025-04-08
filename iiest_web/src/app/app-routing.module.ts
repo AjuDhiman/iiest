@@ -33,7 +33,7 @@ import { UpdateBoCustomerComponent } from './pages/sales/update-bo-customer/upda
 // import { ConsumerHomeComponent } from './pages/consumer-pages/consumer-home-page/consumer-home';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'main', pathMatch: 'full' }, // Default route
+  { path: '', component: LandingpageComponent }, // Default route
   { path: 'main', component: LandingpageComponent},
   { path: 'verifyonboard/:type/:id', component: OnboardVerificationComponent},
   { path: 'mainpage', component: MainPageComponent},
@@ -72,7 +72,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  imports: [RouterModule.forRoot(routes, { useHash: false })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

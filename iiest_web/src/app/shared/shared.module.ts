@@ -13,6 +13,7 @@ import { ViewDocumentComponent } from 'src/app/pages/modals/view-document/view-d
 import { InrAmountPipe } from 'src/app/pipes/inr-amount.pipe';
 import { ConsumerSidebarComponent } from './consumer-sidebar/consumer-sidebar.component';
 import { ConsumerFooterComponent } from './consumer-footer/consumer-footer.component';
+import { ConsumerRightSidebarComponent } from './consumer-right-sidebar/consumer-right-sidebar.component';
 
 
 
@@ -22,7 +23,8 @@ import { ConsumerFooterComponent } from './consumer-footer/consumer-footer.compo
     ViewDocumentComponent,
     InrAmountPipe,
     ConsumerSidebarComponent,
-    ConsumerFooterComponent
+    ConsumerFooterComponent,
+    ConsumerRightSidebarComponent
   ],
   imports: [
     CommonModule,
@@ -60,7 +62,8 @@ import { ConsumerFooterComponent } from './consumer-footer/consumer-footer.compo
     MultiSelectComponent,
     InrAmountPipe,
     ConsumerSidebarComponent,
-    ConsumerFooterComponent
+    ConsumerFooterComponent,
+    ConsumerRightSidebarComponent
 
   ],
   providers: [

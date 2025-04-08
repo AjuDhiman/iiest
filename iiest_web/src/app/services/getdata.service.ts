@@ -58,8 +58,8 @@ export class GetdataService {
     return this.http.get(url);
   }
   
-  public getAllSalesData(shopId:any): Observable<any> {
-    const url = `${this.url}/allSales?shopId=${shopId}`;
+  public getAllSalesData(boId:any): Observable<any> {
+    const url = `${this.url}/allSales?boId=${boId}`;
     return this.http.get<any>(url).pipe(catchError(this.handleError));
   }
 

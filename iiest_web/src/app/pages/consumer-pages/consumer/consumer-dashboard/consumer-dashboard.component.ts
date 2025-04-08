@@ -85,7 +85,6 @@ export class ConsumerDashboardComponent {
       'DPCC License': '../../../../../assets/images/licensesimg/dpcc.jpg',
       'Liquor License': '../../../../../assets/images/licensesimg/liquorLicense.jpg',
       'Eatinghouse': '../../../../../assets/images/licensesimg/DELHI EATING HOUSE.png',
-
       'Pollution': '../../../../../../assets/images/licensesimg/UPPCB.jpg',
 
     };

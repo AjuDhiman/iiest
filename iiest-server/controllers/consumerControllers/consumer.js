@@ -314,24 +314,39 @@ exports.getShopLicenses = async (req, res) => {
 exports.getAllEmployeeSales = async (req, res) => {
   try {
     let success = true;
-    const { shopId } = req.query;
+    const { boId } = req.query;
 
-    if (!shopId) {
+    if (!boId) {
       return res.status(400).json({ success: false, message: "boId is required" });
     }
 
-    let shopDetails = await shopModel.findOne({ shopId });
+    // Step 1: Find all shops under this BO
+    let shops = await shopModel.find({ boId });
 
-    if (!shopDetails || !shopDetails.salesInfo) {
-      return res.status(404).json({ success: false, message: "No sales data found for this shop" });
+    if (!shops || shops.length === 0) {
+      return res.status(404).json({ success: false, message: "No shops found for this BO" });
     }
 
-    // Ensure salesInfo is an array
-    let salesIds = Array.isArray(shopDetails.salesInfo) ? shopDetails.salesInfo : [shopDetails.salesInfo];
+    // Step 2: Collect all salesInfo from shops and flatten
+    let salesIds = shops.reduce((acc, shop) => {
+      if (shop.salesInfo) {
+        if (Array.isArray(shop.salesInfo)) {
+          acc.push(...shop.salesInfo);
+        } else {
+          acc.push(shop.salesInfo);
+        }
+      }
+      return acc;
+    }, []);
 
+    if (salesIds.length === 0) {
+      return res.status(404).json({ success: false, message: "No sales data found for this BO's shops" });
+    }
+
+    // Step 3: Run aggregation with collected sales IDs
     let employeeSales = await salesModel.aggregate([
       {
-        $match: { _id: { $in: salesIds } } 
+        $match: { _id: { $in: salesIds } }
       },
       {
         $lookup: {

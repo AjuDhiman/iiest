@@ -16,7 +16,7 @@
     
   
     <!-- Compliance Title -->
-    <h4 class="fw-bold text-dark mb-3">COMPLIANCE TIMELINE CHART</h4>
+    <h4 class="fw-bold text-dark mb-3">Single Window Tracking System</h4>
 
  <div
  role="button"
@@ -60,15 +60,35 @@
   
       <!-- Compliance Chart (Right Side) -->
       <div class="col-6 text-end" role="button">
-        <div class="chart-container" >
-          <div class="circle-chart">
+        <div class="chart-container position-relative">
+
+          <!-- ✅ Curved text SVG placed outside the main circle -->
+          <svg viewBox="0 0 120 60" class="position-absolute curved-text">
+            <defs>
+              <path id="topArc" d="M 10,50 A 50,50 0 0,1 110,50" />
+            </defs>
+            <text fill="#333" font-size="5" font-weight="bold">
+              <textPath href="#topArc" startOffset="50%" text-anchor="middle">
+                COMPLIANCE TIMELINE CHART
+              </textPath>
+            </text>
+          </svg>
+        
+          <!-- Main circle chart -->
+          <div class="circle-chart position-relative">
+        
+            <!-- Center content inside the circle -->
             <div class="circle-content">
-              <h5 class="text-primary fw-bold">{{statistics.durationInMonths}}</h5>
+              <h5 class="text-primary fw-bold">{{ statistics.durationInMonths }}</h5>
               <small>MONTHS</small>
             </div>
+        
           </div>
         </div>
+        
       </div>
+      
+      
     </div>
   </div>
   

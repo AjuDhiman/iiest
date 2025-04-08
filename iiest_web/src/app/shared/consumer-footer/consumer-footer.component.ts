@@ -12,7 +12,7 @@ import { Modal } from 'bootstrap';
   styleUrls: ['./consumer-footer.component.scss']
 })
 export class ConsumerFooterComponent {
-  
+  selectedMenu: string = 'home';
   phoneNumber: string = '9289310979'; 
   driveVideoUrl: string = 'https://drive.google.com/file/d/1isI_YuozFcDhLjV4IVgfmVCFVnrILZFx/view?usp=drive_link';
   trustedVideoUrl: SafeResourceUrl | null = null;
@@ -23,6 +23,8 @@ export class ConsumerFooterComponent {
   }
 
   navigateToOtherOptions() {
+    this.selectedMenu = 'other-options';
+
     this.router.navigate(['/consumer-other-option']);
   }
   getEmbedUrl(url: string): SafeResourceUrl | null {
@@ -37,8 +39,17 @@ export class ConsumerFooterComponent {
   navigateToNotification() {
     this.router.navigate(['/consumer-notification']);
   }
-  
+  selectMenu(menu: string) {
+    this.selectedMenu = menu;
+  }
+  navigateToHome() {
+    this.selectedMenu = 'home';
+
+    this.router.navigate(['/consumer-main-page']);
+  }
   navigateToInVoice() {
+    this.selectedMenu = 'invoice';
+
     this.router.navigate(['/consumer-invoice']);
   }
 
@@ -46,6 +57,8 @@ export class ConsumerFooterComponent {
     window.location.href = 'tel:' + this.phoneNumber;
   }
   openNotificationModal() {
+    this.selectedMenu = 'notification';
+
     const modalElement = document.getElementById('notificationModal');
     if (modalElement) {
       const modal = new Modal(modalElement, { backdrop: false });
