@@ -35,7 +35,8 @@ import { homeModule } from 'src/app/pages/general/modules/home.module';
     SettingPanelComponent,
     LmsComponent,
     CalendarComponent,
-    MainPageComponent
+    MainPageComponent,
+    ContactusformComponent
   ]
 })
 export class GeneralModule { }

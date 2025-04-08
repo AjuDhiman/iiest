@@ -45,7 +45,8 @@ export class AppComponent implements OnInit {
         }
         
         if (val.url == '/' || val.url == '/main' || route == "#about" || route == "#contact" || route.split('/')[1] == "verifyonboard"
-       || val.url == "/privacy-policy" || val.url == "/refund-policy" || val.url == "/terms-and-conditions")  {
+        ||route.split('/')[1] == "update-bo-customer" 
+       || val.url == "/privacy-policy" || val.url == "/refund-policy" || val.url == "/shipping-policy" || val.url == "/terms-and-conditions" || val.url == "/contact-us" )  {
           this.showHeader = false;
           this.largeDisplay = false;
           this.showConsumerHeader=false;

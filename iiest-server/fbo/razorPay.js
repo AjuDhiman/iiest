@@ -1,5 +1,3 @@
-const axios = require('axios');
-const crypto = require('crypto'); // Correctly using the built-in crypto module
 const uniqid = require('uniqid');
 const Razorpay = require('razorpay');
 
@@ -16,7 +14,7 @@ const razorPayRequest = async (grandTotal, user, fboSessionId) => {
         amount: amountInPaise,
         currency: 'INR',
         receipt: `receipt_${uniqid()}`,
-        payment_capture: 1, // Auto capture
+        payment_capture: 1, 
         notes: {
           employeeName: user.employee_name,
           employeeId: user.employee_id,

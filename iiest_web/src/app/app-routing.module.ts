@@ -30,6 +30,8 @@ import { ConsumerNotificationsComponent } from './pages/consumer-pages/consumer/
 import { ConnectWithUsComponent } from './pages/consumer-pages/consumer/connect-with-us/connect-with-us.component';
 import { ConsumerShopDetailsComponent } from './pages/consumer-pages/consumer/consumer-shop-details/consumer-shop-details.component';
 import { UpdateBoCustomerComponent } from './pages/sales/update-bo-customer/update-bo-customer.component';
+import { ShippingPolicyComponent } from './pages/shipping-policy/shipping-policy.component';
+import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 // import { ConsumerHomeComponent } from './pages/consumer-pages/consumer-home-page/consumer-home';
 
 const routes: Routes = [
@@ -39,8 +41,11 @@ const routes: Routes = [
   { path: 'mainpage', component: MainPageComponent},
   { path: 'privacy-policy', component: PrivacyPolicyComponent},
   { path: 'refund-policy', component: RefundPolicyComponent},
-  { path: 'terms-and-conditions', component: TermsAndConditionsComponent},
-  { path: 'home', component: HomeComponent, canActivate:[authGuard]},
+  { path: 'shipping-policy', component: ShippingPolicyComponent},
+ { path: 'terms-and-conditions', component: TermsAndConditionsComponent},
+ { path: 'contact-us', component: ContactUsComponent},
+
+ { path: 'home', component: HomeComponent, canActivate:[authGuard]},
   { path: 'user', component: UserAccountComponent, canActivate:[authGuard]},
   { path: 'caselist', component: CaseListComponent, canActivate:[authGuard,routeGuard], data: {allowedRoles:caseList_roles}},
   { path: 'recipientlist', component: CaseListComponent, canActivate:[authGuard,routeGuard], data: {allowedRoles:caseList_roles}},
