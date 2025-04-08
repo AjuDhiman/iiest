@@ -15,6 +15,9 @@ import { ShopsModalComponent } from './modals/shops-modal/shops-modal.component'
 import { AccountsModule } from './accounts/accounts.module';
 import { CoworksModule } from './coworks/coworks.module';
 import { ConsumerModule } from './consumer-pages/consumer/consumer.module';
+import { ShippingPolicyComponent } from './shipping-policy/shipping-policy.component';
+import { ContactUsComponent } from './contact-us/contact-us.component';
+import { ContactusformComponent } from './landingpage/contactusform/contactusform.component';
 
 
 
@@ -27,6 +30,9 @@ import { ConsumerModule } from './consumer-pages/consumer/consumer.module';
     RefundPolicyComponent,
     SaleDocModalComponent,
     ShopsModalComponent,
+    ShippingPolicyComponent,
+    ContactUsComponent,
+
     // ConsumerHomeComponent,
   ],
   imports: [
@@ -45,7 +51,8 @@ import { ConsumerModule } from './consumer-pages/consumer/consumer.module';
   exports: [
     SalesModule,
     OperationModule,
-    OnboardVerificationComponent
+    OnboardVerificationComponent,
+  
   ]
 })
 export class PagesModule { }
