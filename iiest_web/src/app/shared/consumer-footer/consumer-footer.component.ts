@@ -27,6 +27,10 @@ export class ConsumerFooterComponent {
 
     this.router.navigate(['/consumer-other-option']);
   }
+  navigateToCutomerSetting() {
+
+    this.router.navigate(['/consumer-settings']);
+  }
   getEmbedUrl(url: string): SafeResourceUrl | null {
     const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
     if (match && match[1]) {

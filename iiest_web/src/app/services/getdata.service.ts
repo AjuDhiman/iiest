@@ -11,7 +11,22 @@ import { Injectable } from '@angular/core';
 export class GetdataService {
   url = config.API_URL
   constructor(private http: HttpClient, private router: Router) { }
-
+  changePassword(id: string, current_password: string, new_password: string): Observable<any> {
+    const url = `${this.url}/change-password`;
+    const body = { id, current_password, new_password };
+    return this.http.put<any>(url, body).pipe(
+      catchError(this.handleError)
+    );
+  }
+  
+  updateCustomer(id: string, customer_name: string, contact_no: string): Observable<any> {
+    const url = `${this.url}/update-customer`;
+    const body = { id, customer_name, contact_no };
+    return this.http.put<any>(url, body).pipe(
+      catchError(this.handleError)
+    );
+  }
+  
   getChatDocByShopId(shopId: string) {
     return this.http.get<any>(`${this.url}/shops-doc?shopId=${shopId}`);
   }

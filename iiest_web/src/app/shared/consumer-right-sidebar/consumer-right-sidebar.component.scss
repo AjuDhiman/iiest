@@ -1,9 +1,7 @@
 
-  .sidebar.collapsed {
-    width: 0px;
-    right: 0;
-  }
-  
+.sidebar.collapsed {
+  transform: translateX(100%); /* Slide out to the right */
+}
   .logo {
     text-align: center;
     padding: 20px 0;

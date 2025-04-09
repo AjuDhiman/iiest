@@ -9,6 +9,7 @@ import { ConsumerNotificationsComponent } from './consumer-notifications/consume
 import { ConnectWithUsComponent } from './connect-with-us/connect-with-us.component';
 import { ConsumerShopDetailsComponent } from './consumer-shop-details/consumer-shop-details.component';
 import { OperationformModule } from '../../operation/modules/operationform.module';
+import { ConsumerSettingsComponent } from './consumer-settings/consumer-settings.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { OperationformModule } from '../../operation/modules/operationform.modul
     ConsumerInvoiceComponent,
     ConsumerNotificationsComponent,
     ConnectWithUsComponent,
-    ConsumerShopDetailsComponent, 
+    ConsumerShopDetailsComponent,
+    ConsumerSettingsComponent, 
   ],
   imports: [
     CommonModule,

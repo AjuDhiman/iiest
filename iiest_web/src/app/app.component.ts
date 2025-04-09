@@ -30,6 +30,11 @@ export class AppComponent implements OnInit {
     private activateRoute: ActivatedRoute,
     private _registerService: RegisterService
   ) {
+
+    this.shopId = this._registerService.getShopId();
+    console.log(" this.shopId main page==>", this.shopId)
+  
+
     router.events.subscribe((val) => {
       const route:any = window.location.hash;
       if (val instanceof NavigationEnd) {
@@ -64,10 +69,7 @@ export class AppComponent implements OnInit {
     }
   }
   ngOnInit(): void {
-    const previousShopId = this.shopId;
 
-    this.shopId = this._registerService.getShopId();
-console.log(" this.shopId==>", this.shopId)
     this.loggedInUserData = this._registerService.LoggedInUserData();
     this.loggedInUserData = JSON.parse(this.loggedInUserData)
     if(this.loggedInUserData){

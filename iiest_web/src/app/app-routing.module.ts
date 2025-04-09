@@ -32,6 +32,7 @@ import { ConsumerShopDetailsComponent } from './pages/consumer-pages/consumer/co
 import { UpdateBoCustomerComponent } from './pages/sales/update-bo-customer/update-bo-customer.component';
 import { ShippingPolicyComponent } from './pages/shipping-policy/shipping-policy.component';
 import { ContactUsComponent } from './pages/contact-us/contact-us.component';
+import { ConsumerSettingsComponent } from './pages/consumer-pages/consumer/consumer-settings/consumer-settings.component';
 // import { ConsumerHomeComponent } from './pages/consumer-pages/consumer-home-page/consumer-home';
 
 const routes: Routes = [
@@ -74,6 +75,8 @@ const routes: Routes = [
  { path: 'consumer-notification', component: ConsumerNotificationsComponent,canActivate:[consumerAuthGuard]},
  { path: 'consumer-chat', component: ConnectWithUsComponent,canActivate:[consumerAuthGuard]},
  { path: 'consumer-shop-details', component:ConsumerShopDetailsComponent,canActivate:[consumerAuthGuard]},
+ { path: 'consumer-settings', component:ConsumerSettingsComponent,canActivate:[consumerAuthGuard]},
+
 ];
 
 @NgModule({

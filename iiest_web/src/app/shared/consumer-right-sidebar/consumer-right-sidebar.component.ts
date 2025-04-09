@@ -38,4 +38,5 @@ export class ConsumerRightSidebarComponent {
 
     this.router.navigate(['/consumer-other-option']);
   }
+
 }

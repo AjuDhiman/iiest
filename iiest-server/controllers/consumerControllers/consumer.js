@@ -10,6 +10,7 @@ const citiesModel = require("../../models/CitiesModels/CitiesModels");
 const BusinessCityLicense = require("../../models/businessCityLicenseModels/businessCityLicenseModel");
 const mongoose = require("mongoose");
 const License = require("../../models/licensesModel/licensesModel");
+const { sendPasswordChangeMail } = require("./changePasswordMail");
 
 
 
@@ -601,3 +602,88 @@ exports.getShopsByBoId = async (req, res) => {
   }
 };
 
+exports.UpdateCustomer = async (req, res) => {
+  try {
+    const { id, customer_name, contact_no } = req.body;
+
+    // Validate inputs
+    if (!id || !customer_name || !contact_no) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required fields: id, customer_name, or contact_no.'
+      });
+    }
+
+    // Update the customer document
+    const updatedCustomer = await customerSchema.findByIdAndUpdate(id, { customer_name, contact_no }, { new: true });
+   console.log("updatedCustomer==>",updatedCustomer)
+    if (!updatedCustomer) {
+      return res.status(404).json({
+        success: false,
+        message: 'Customer not found.'
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Customer updated successfully.',
+      data: updatedCustomer
+    });
+  } catch (error) {
+    console.error('Error updating customer:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error.'
+    });
+  }
+};
+
+
+
+exports.changePassword = async (req, res) => {
+  try {
+    const { id, current_password, new_password } = req.body;
+
+    // Validate input
+    if (!id || !current_password || !new_password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required fields: id, current_password, or new_password.'
+      });
+    }
+
+    // Find customer by ID
+    const customer = await customerSchema.findById(id);
+
+    if (!customer) {
+      return res.status(404).json({
+        success: false,
+        message: 'Customer not found.'
+      });
+    }
+
+    // Check if current password matches
+    if (customer.password !== current_password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Current password is incorrect.'
+      });
+    }
+
+    // Update password
+    customer.password = new_password;
+    await customer.save();
+    await sendPasswordChangeMail(customer);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Password changed successfully.'
+    });
+  } catch (error) {
+    console.error('Error changing password:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error.'
+    });
+  }
+};

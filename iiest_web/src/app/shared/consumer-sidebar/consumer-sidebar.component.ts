@@ -29,9 +29,9 @@ export class ConsumerSidebarComponent {
     this.router.navigate(['']); 
   }
 
-  navigateToConnectWithUs() {
-    this.router.navigate(['/consumer-chat']);
-    this.isCollapsed=true;
+
+  navigateTo(url: string) {
+    this.router.navigate([url]);
+    this.isCollapsed = true;
   }
-  
 }

@@ -7,12 +7,12 @@
   <nav>
     <ul>
       <li>
-        <a routerLink="/helpline-centre">
+        <a  (click)="navigateTo('/')">
           <span class="nav-item" *ngIf="!isCollapsed">ABOUT US</span>
         </a>
       </li>
       <li>
-        <a routerLink="/privacy-policy">
+        <a (click)="navigateTo('/privacy-policy')">
           <span class="nav-item" *ngIf="!isCollapsed">PRIVACY POLICY</span>
         </a>
       </li>
@@ -30,7 +30,7 @@
       </li>
 
       <li>
-        <a routerLink="/legal-help">
+        <a (click)="navigateTo('/consumer-settings')">
           <span class="nav-item" *ngIf="!isCollapsed">CUSTOMER SETTING
           </span>
         </a>

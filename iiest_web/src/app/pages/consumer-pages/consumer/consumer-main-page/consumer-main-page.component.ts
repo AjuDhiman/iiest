@@ -39,10 +39,11 @@ export class ConsumerMainPageComponent {
       }
     });
   }
-  navigateToDashboard(shop:any) {
+  navigateToDashboard(shop: any) {
     this.registerService.setShopId(shop.shopId);
     this.router.navigate(['/consumer-dashboard']);
   }
+  
 
   fetchStatistics(boId:any): void {
     this.getDataService.getConsumerStatisticsData(boId).subscribe(
