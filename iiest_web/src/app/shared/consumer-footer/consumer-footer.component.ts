@@ -31,6 +31,7 @@ export class ConsumerFooterComponent {
 
     this.router.navigate(['/consumer-settings']);
   }
+
   getEmbedUrl(url: string): SafeResourceUrl | null {
     const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
     if (match && match[1]) {
@@ -40,6 +41,7 @@ export class ConsumerFooterComponent {
     }
     return null;
   }
+  
   navigateToNotification() {
     this.router.navigate(['/consumer-notification']);
   }

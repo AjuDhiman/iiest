@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ɵbypassSanitizationTrustStyle } from '@angular/core';
 import { Router } from '@angular/router';
 import { RegisterService } from 'src/app/services/register.service';
 
@@ -17,6 +17,12 @@ export class ConsumerRightSidebarComponent {
   }
   ngOnInit(): void {
     this.shopId = this.registerService.getShopId();
+      if (window.innerWidth >= 992) { // Bootstrap "lg" breakpoint
+    this.isCollapsed = false;
+  }else{
+    this.isCollapsed = true;
+
+  }
   }
  toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;

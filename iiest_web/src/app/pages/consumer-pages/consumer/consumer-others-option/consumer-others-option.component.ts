@@ -100,17 +100,49 @@ export class ConsumerOthersOptionComponent {
   
   getImageForItem(itemName: string): string {
     const imageMap: { [key: string]: string } = {
-      'Health Trade License': '../../../../../assets/images/licensesimg/muncipleCorporate.jpg',
-      'FSSAI License': '../../../../../assets/images/licensesimg/fssai.jpg',
+      'Health and Trade': '../../../../../assets/images/licensesimg/muncipleCorporate.jpg',
+      'FSSAI': '../../../../../assets/images/licensesimg/fssai.webp',
       'Shop Estd. Registration': '../../../../../assets/images/licensesimg/shopRegistration.jpg',
       'Food Training': '../../../../../assets/images/licensesimg/fostao.jpg',
       'Medical Certificate': '../../../../../assets/images/licensesimg/medicalCertificate.jpg',
       'Water Testing Report': '../../../../../assets/images/licensesimg/nabl.jpg',
-      'Fire NOC': '../../../../../assets/images/licensesimg/dfs.jpg',
+      'Fire NOC': '../../../../../assets/images/licensesimg/FireNoc.jpg',
       'DPCC License': '../../../../../assets/images/licensesimg/dpcc.jpg',
-      'Liquor License': '../../../../../assets/images/licensesimg/liquorLicense.jpg'
+      'Liquor License': '../../../../../assets/images/licensesimg/liquorLicense.jpg',
+      'Eatinghouse': '../../../../../assets/images/licensesimg/EatingHouse.png',
+      'Pollution': '../../../../../../assets/images/licensesimg/pollution.jpg',
+      'Shop establishment':'../../../../../../assets/images/licensesimg/shopestablishment.jpg',
+      'Water':'../../../../../../assets/images/licensesimg/water.jpg',
+      'FOSTAC':'../../../../../../assets/images/licensesimg/fostac.jpg',
+      'Food Sample':'../../../../../../assets/images/licensesimg/FoodSaftyAwarness.jpg',
+      'Hygiene':'../../../../../../assets/images/licensesimg/Hygiene.jpg',
+      'Food Sample*':'../../../../../../assets/images/licensesimg/foodSample.jpg',
+      'Pest Control':'../../../../../../assets/images/licensesimg/pest control.jpg',
+      'Medical':'../../../../../../assets/images/licensesimg/Medical.jpg',
+      'RUCO*':'../../../../../../assets/images/licensesimg/ruconew.jpg',
+      'ISO':'../../../../../../assets/images/licensesimg/isonew.jpg',
+      'Menu Labeling':'../../../../../../assets/images/licensesimg/menuLabelling.jpg',
+      '3rd Party':'../../../../../../assets/images/licensesimg/thirdparty.jpg',
+      'Liquor*':'../../../../../../assets/images/licensesimg/liquor.jpg',
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     };
   
-    return imageMap[itemName] || '../../../../../assets/images/licensesimg/IEC.png';
+    return imageMap[itemName] || '../../../../../assets/images/licensesimg/optionalImage.png'
   }
+  
 }

@@ -99,21 +99,7 @@ export class ConsumerDashboardComponent {
       'Menu Labeling':'../../../../../../assets/images/licensesimg/menuLabelling.jpg',
       '3rd Party':'../../../../../../assets/images/licensesimg/thirdparty.jpg',
       'Liquor*':'../../../../../../assets/images/licensesimg/liquor.jpg',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      'Trade': '../../../../../assets/images/licensesimg/trade.jpg',
 
     };
   

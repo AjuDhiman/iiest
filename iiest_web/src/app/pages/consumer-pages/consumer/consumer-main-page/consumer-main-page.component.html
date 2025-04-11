@@ -96,7 +96,7 @@
             <img src="../../../../../assets/images/consumer-icons/group (1).png"alt="EDN" class="icon-image mb-1" />
             <div class="fw-semibold">EDN</div>
           </div>
-          <div class="col-6 mb-4">
+          <div class="col-6 mb-4 "  (click)="openNotificationModal()">
             <img src="../../assets/images/consumer-icons/circular.png" alt="CIRCULAR" class="icon-image mb-1" />
             <div class="fw-semibold">CIRCULAR</div>
           </div>
@@ -113,7 +113,19 @@
         </div>
       </div>
       
-
+      <!-- modal popup -->
+      <div class="modal fade" id="notificationModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog notification-dialog">
+          <div class="modal-content border border-secondary shadow-lg">
+            <div class="modal-body p-0">
+              <iframe *ngIf="trustedVideoUrl" [src]="trustedVideoUrl" width="100%" height="200" frameborder="0" allowfullscreen class="w-100"></iframe>
+            </div>
+            <div class="modal-footer py-1 px-2 justify-content-end">
+              <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
       
     </div>
   </div>

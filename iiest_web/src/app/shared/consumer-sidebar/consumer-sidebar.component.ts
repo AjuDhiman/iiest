@@ -18,6 +18,12 @@ export class ConsumerSidebarComponent {
   }
   ngOnInit(): void {
     this.shopId = this.registerService.getShopId();
+    if (window.innerWidth >= 992) { 
+      this.isCollapsed = false;
+    }else{
+      this.isCollapsed = true;
+  
+    }
   }
  toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;

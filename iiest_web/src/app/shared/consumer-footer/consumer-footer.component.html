@@ -1,6 +1,6 @@
 <footer class="bg-light py-3 fixed-bottom border-top">
   <div class="container">
-    <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex justify-content-between align-items-center icons-gap">
 
       <!-- HOME -->
       <div class="d-flex flex-column align-items-center text-center gap-1" (click)="navigateToHome()">
@@ -44,7 +44,7 @@
             <!-- Food doc -->
 
       <!-- NOTIFICATIONS -->
-      <div class="d-flex flex-column align-items-center text-center gap-1" (click)="openNotificationModal()">
+      <div class="d-flex flex-column align-items-center text-center gap-1">
         <div class="d-flex align-items-center justify-content-center"
              [ngClass]="{'image-selection': selectedMenu === 'notification'}"
              style="width: 50px; height: 50px;">
@@ -85,7 +85,7 @@
   </div>
 
   <!-- Modal -->
-  <div class="modal fade" id="notificationModal" tabindex="-1" aria-hidden="true">
+  <!-- <div class="modal fade" id="notificationModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog notification-dialog">
       <div class="modal-content border border-secondary shadow-lg">
         <div class="modal-body p-0">
@@ -96,5 +96,5 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </footer>
