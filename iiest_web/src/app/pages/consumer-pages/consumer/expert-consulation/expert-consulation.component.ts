@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { ToastrService } from 'ngx-toastr';
 import { GetdataService } from 'src/app/services/getdata.service';
 import { RegisterService } from 'src/app/services/register.service';
@@ -10,9 +12,12 @@ import { RegisterService } from 'src/app/services/register.service';
 })
 export class ExpertConsulationComponent {
   shopId: string | null = null;
+  faArrowLeft = faArrowLeft;
 
   constructor(
     private getdataService: GetdataService,
+        private router: Router,
+    
     private toastr: ToastrService,
         private registerService: RegisterService 
     
@@ -43,5 +48,8 @@ export class ExpertConsulationComponent {
     } else {
       this.toastr.warning('Please provide your consultation details.');
     }
+  }
+  goBack() {
+    this.router.navigate(['/consumer-dashboard']);
   }
 }

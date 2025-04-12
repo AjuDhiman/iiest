@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr'; 
 import { GetdataService } from 'src/app/services/getdata.service';
 import { RegisterService } from 'src/app/services/register.service';
+import { faArrowLeft, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-expert-resources',
@@ -9,12 +11,17 @@ import { RegisterService } from 'src/app/services/register.service';
   styleUrls: ['./expert-resources.component.scss']
 })
 export class ExpertResourcesComponent implements OnInit {
+  faPlus = faPlus;
+  faArrowLeft = faArrowLeft;
+
+
   showForm: boolean = true; // ✅ By default form is open
 
   shopId: string | null = null;
   resourceList: any[] = []; // ✅ List to store resources
 
   constructor(
+    private router: Router,
     private getdataService: GetdataService,
     private toastr: ToastrService,
     private registerService: RegisterService
@@ -74,6 +81,12 @@ export class ExpertResourcesComponent implements OnInit {
   
   openForm() {
     this.showForm = true;
+  }
+  goBack() {
+    this.router.navigate(['/consumer-dashboard']);
+  }
+  closeForm() {
+    this.showForm = false;
   }
   
 }
