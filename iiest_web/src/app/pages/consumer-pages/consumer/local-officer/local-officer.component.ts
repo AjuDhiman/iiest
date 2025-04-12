@@ -6,5 +6,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./local-officer.component.scss']
 })
 export class LocalOfficerComponent {
-
+  designatedOfficer = 'SAURABH SHARMA';
+  foodSafetyOfficers = ['ANJALI SIDDHARTH', 'Naresh Kumar Sharma', 'Sunny Rao'];
 }

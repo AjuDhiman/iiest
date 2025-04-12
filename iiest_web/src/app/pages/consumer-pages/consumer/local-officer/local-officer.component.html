@@ -1,1 +1,21 @@
-<p>local-officer works!</p>
+
+  <div class="officer-container">
+    <h2 class="officer-title">Officer Details</h2>
+  
+    <div class="officer-card">
+      <div class="officer-section">
+        <h3 class="section-heading">Designated Officer</h3>
+        <div class="officer-name">
+          <span>{{ designatedOfficer }}</span>
+        </div>
+      </div>
+  
+      <div class="officer-section">
+        <h3 class="section-heading">Food Safety Officers</h3>
+        <ul class="officer-list">
+          <li *ngFor="let officer of foodSafetyOfficers">{{ officer }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
