@@ -36,6 +36,7 @@ import { ConsumerSettingsComponent } from './pages/consumer-pages/consumer/consu
 import { ExpertResourcesComponent } from './pages/consumer-pages/consumer/expert-resources/expert-resources.component';
 import { ExpertConsulationComponent } from './pages/consumer-pages/consumer/expert-consulation/expert-consulation.component';
 import { ConsumerFaqComponent } from './pages/consumer-pages/consumer/consumer-faq/consumer-faq.component';
+import { LocalOfficerComponent } from './pages/consumer-pages/consumer/local-officer/local-officer.component';
 // import { ConsumerHomeComponent } from './pages/consumer-pages/consumer-home-page/consumer-home';
 
 const routes: Routes = [
@@ -82,6 +83,7 @@ const routes: Routes = [
  { path: 'export-resources', component:ExpertResourcesComponent,canActivate:[consumerAuthGuard]},
  { path: 'export-consulation', component:ExpertConsulationComponent,canActivate:[consumerAuthGuard]},
  { path: 'faq-consumer', component:ConsumerFaqComponent,canActivate:[consumerAuthGuard]},
+ { path: 'local-officer', component:LocalOfficerComponent,canActivate:[consumerAuthGuard]},
 
 
 ];

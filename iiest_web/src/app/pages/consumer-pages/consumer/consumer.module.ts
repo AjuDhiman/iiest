@@ -13,6 +13,7 @@ import { ConsumerSettingsComponent } from './consumer-settings/consumer-settings
 import { ExpertResourcesComponent } from './expert-resources/expert-resources.component';
 import { ExpertConsulationComponent } from './expert-consulation/expert-consulation.component';
 import { ConsumerFaqComponent } from './consumer-faq/consumer-faq.component';
+import { LocalOfficerComponent } from './local-officer/local-officer.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { ConsumerFaqComponent } from './consumer-faq/consumer-faq.component';
     ConsumerSettingsComponent,
     ExpertResourcesComponent,
     ExpertConsulationComponent,
-    ConsumerFaqComponent, 
+    ConsumerFaqComponent,
+    LocalOfficerComponent, 
   ],
   imports: [
     CommonModule,
