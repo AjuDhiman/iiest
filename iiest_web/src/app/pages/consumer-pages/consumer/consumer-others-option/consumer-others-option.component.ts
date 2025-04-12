@@ -101,7 +101,7 @@ export class ConsumerOthersOptionComponent {
   getImageForItem(itemName: string): string {
     const imageMap: { [key: string]: string } = {
       'Health and Trade': '../../../../../assets/images/logo/health and trade lisc.png',
-      'FSSAI': '../../../../../assets/images/logo/Fssai annual return.png',
+      'FSSAI': '../../../../../assets/images/logo/Fssai License.png',
       'Shop Estd. Registration': '../../../../../assets/images/licensesimg/shopRegistration.jpg',
       'Food Training': '../../../../../assets/images/logo/food safety awarness training.png',
       'Medical Certificate': '../../../../../assets/images/logo/medicial test.png',

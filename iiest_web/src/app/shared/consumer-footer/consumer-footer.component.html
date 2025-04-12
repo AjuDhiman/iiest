@@ -110,54 +110,58 @@
         </div>
 
         <div
-          *ngIf="showNotificationDropdown"
-          class="dropdown-menu show text-start"
-          style="
-            position: absolute;
-            bottom: 70px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            min-width: 250px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
-            font-size: 13px;
-          "
+        *ngIf="showNotificationDropdown"
+        class="dropdown-menu show text-start notification-dropdown"
+        style="
+          position: absolute;
+          bottom: 70px;
+          left: 50%;
+          transform: translateX(-50%);
+          background-color: white;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          min-width: 250px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+          z-index: 1000;
+          font-size: 13px;
+        "
+      >
+        <button
+          class="dropdown-item text-wrap bullet-button"
+          type="button"
+          (click)="openLink('https://www.youtube.com/watch?v=2i_DodKPHAo')"
         >
-          <button
-            class="dropdown-item text-wrap"
-            type="button"
-            (click)="openLink('https://www.youtube.com/watch?v=2i_DodKPHAo')"
-          >
-            हाथ ठीक से न धोने पर बंद हो सकता है खाद्य कारोबार
-          </button>
+          Bizz Info — हाथ ठीक से न धोने पर बंद हो सकता है खाद्य कारोबार
+        </button>
+        <hr class="dropdown-divider my-1" />
+      
+        <button
+          class="dropdown-item text-wrap bullet-button"
+          type="button"
+          (click)="openLink('https://www.youtube.com/watch?v=etuN05FwDao')"
+        >
+          Bizz Info — How to Handle Customers With Food Allergy
+        </button>
+        <hr class="dropdown-divider my-1" />
+      
+        <button
+          class="dropdown-item text-wrap bullet-button"
+          type="button"
+          (click)="openLink('https://www.youtube.com/watch?v=R6-BmJq1D6c')"
+        >
+          Bizz Info — Food Storage Mistakes commonly done by FBO's
+        </button>
+        <hr class="dropdown-divider my-1" />
+      
+        <button
+          class="dropdown-item text-wrap bullet-button"
+          type="button"
+        >
+          Service Info — Ms. Aditi Kulshrestha has been appointed as your regulatory advisor
+        </button>
+      </div>
+      
 
-          <button
-            class="dropdown-item text-wrap"
-            type="button"
-            (click)="openLink('https://www.youtube.com/watch?v=etuN05FwDao')"
-          >
-            How to Handle Customers With Food Allergy
-          </button>
-
-          <button
-            class="dropdown-item text-wrap"
-            type="button"
-            (click)="openLink('https://www.youtube.com/watch?v=R6-BmJq1D6c')"
-          >
-            Food Storage Mistakes commonly done by FBO's
-          </button>
-
-          <button
-            class="dropdown-item text-wrap"
-            type="button"
-            (click)="openLink('https://www.youtube.com/@kkaarobarr')"
-          >
-            Ms. Aditi Kulshrestha has been appointed as your regulatory advisor
-          </button>
-        </div>
       </div>
 
       <!-- FOOD DOC -->

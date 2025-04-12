@@ -100,3 +100,39 @@ background-color: bisque;
 .dropdown-item:hover {
   background-color: #f8f9fa;
 }
+
+
+.bullet-button {
+  position: relative;
+  padding-left: 20px;
+  text-align: left;
+  white-space: normal;
+  line-height: 1.5;
+  font-weight: 500;
+  color: #333;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Bullet before text */
+.bullet-button::before {
+  content: '•';
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #333;
+  font-size: 16px;
+  line-height: 1;
+  transition: color 0.3s;
+}
+
+/* Hover effect — change background color */
+.bullet-button:hover {
+  background-color: rgb(214, 214, 214);
+  color: #333;
+}
+
+.bullet-button:hover::before {
+  color: #333; 
+}
+
