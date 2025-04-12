@@ -12,6 +12,9 @@ const mongoose = require("mongoose");
 const License = require("../../models/licensesModel/licensesModel");
 const { sendPasswordChangeMail } = require("./changePasswordMail");
 
+const resourceSchema = require("../../models/customerModel/resourcesrequirementModal");
+const expertConsultation = require("../../models/customerModel/expertconsulationModal");
+
 
 
 const auth = JSON.parse(process.env.AUTH);
@@ -681,6 +684,99 @@ exports.changePassword = async (req, res) => {
     });
   } catch (error) {
     console.error('Error changing password:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error.'
+    });
+  }
+};
+
+
+exports.addResourceRequirement = async (req, res) => {
+  try {
+    const { designation, count, salary ,shopId,jobDescription} = req.body;
+
+    // Validate input
+    if (!designation || !count || !salary) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required fields: designation, count, or salary.'
+      });
+    }
+
+    // Create new resource requirement
+    const newResource = new resourceSchema({
+      designation,
+      jobDescription,
+      count,
+      salary,shopId
+
+    });
+
+    await newResource.save();
+
+    return res.status(201).json({
+      success: true,
+      message: 'Resource requirement saved successfully.'
+    });
+  } catch (error) {
+    console.error('Error saving resource requirement:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error.'
+    });
+  }
+};
+
+
+exports.addExpertConsultation = async (req, res) => {
+  try {
+    const { consultationDetails, shopId } = req.body;
+console.log("consultationDetails===>",consultationDetails);
+console.log("shopId===>",shopId)
+
+    if (!consultationDetails) {
+      return res.status(400).json({
+        success: false,
+        message: 'Consultation details are required.'
+      });
+    }
+
+    const newConsultation = new expertConsultation({ consultationDetails, shopId });
+
+    await newConsultation.save();
+
+    return res.status(201).json({
+      success: true,
+      message: 'Consultation submitted successfully.'
+    });
+  } catch (error) {
+    console.error('Error submitting consultation:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error.'
+    });
+  }
+};
+exports.getResourceRequirement = async (req, res) => {
+  try {
+    const { shopId } = req.query;
+
+    if (!shopId) {
+      return res.status(400).json({
+        success: false,
+        message: 'shopId is required.'
+      });
+    }
+
+    const resources = await resourceSchema.find({ shopId });
+
+    return res.status(200).json({
+      success: true,
+      data: resources
+    });
+  } catch (error) {
+    console.error('Error fetching resource requirements:', error);
     return res.status(500).json({
       success: false,
       message: 'Internal server error.'

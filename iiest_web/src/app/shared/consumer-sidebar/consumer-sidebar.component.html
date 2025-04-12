@@ -17,13 +17,13 @@
         </a>
       </li>
       <li>
-        <a routerLink="/legal-help">
+        <a (click)="navigateTo('/terms-and-conditions')">
           <span class="nav-item" *ngIf="!isCollapsed">TERMS OF USE 
           </span>
         </a>
       </li>
       <li>
-        <a routerLink="/legal-help">
+        <a (click)="navigateTo('/faq-consumer')">
           <span class="nav-item" *ngIf="!isCollapsed">FAQ
           </span>
         </a>

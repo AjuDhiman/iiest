@@ -66,6 +66,9 @@ export class ConsumerMainPageComponent {
     this.registerService.setShopId(shop.shopId);
     this.router.navigate(['/consumer-dashboard']);
   }
+  navigateToLocalOfficer() {
+    this.router.navigate(['/local-officer']);
+  }
   
 
   fetchStatistics(boId:any): void {

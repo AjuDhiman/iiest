@@ -11,6 +11,10 @@ import { ConsumerShopDetailsComponent } from './consumer-shop-details/consumer-s
 import { OperationformModule } from '../../operation/modules/operationform.module';
 import { ConsumerSettingsComponent } from './consumer-settings/consumer-settings.component';
 import { ConsumerFoodDocComponent } from './consumer-food-doc/consumer-food-doc.component';
+import { ExpertResourcesComponent } from './expert-resources/expert-resources.component';
+import { ExpertConsulationComponent } from './expert-consulation/expert-consulation.component';
+import { ConsumerFaqComponent } from './consumer-faq/consumer-faq.component';
+import { LocalOfficerComponent } from './local-officer/local-officer.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +27,10 @@ import { ConsumerFoodDocComponent } from './consumer-food-doc/consumer-food-doc.
     ConsumerShopDetailsComponent,
     ConsumerSettingsComponent,
     ConsumerFoodDocComponent, 
+    ExpertResourcesComponent,
+    ExpertConsulationComponent,
+    ConsumerFaqComponent,
+    LocalOfficerComponent, 
   ],
   imports: [
     CommonModule,

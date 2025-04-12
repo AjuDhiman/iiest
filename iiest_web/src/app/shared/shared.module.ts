@@ -24,8 +24,7 @@ import { ConsumerRightSidebarComponent } from './consumer-right-sidebar/consumer
     InrAmountPipe,
     ConsumerSidebarComponent,
     ConsumerFooterComponent,
-    ConsumerRightSidebarComponent
-  ],
+    ConsumerRightSidebarComponent  ],
   imports: [
     CommonModule,
     //Ngx Modules

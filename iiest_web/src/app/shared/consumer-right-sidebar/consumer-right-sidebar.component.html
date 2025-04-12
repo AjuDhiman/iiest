@@ -6,20 +6,23 @@
     
     <nav style="margin-top: 80px;">
       <ul>
-    
-     
         <li>
           <a (click)="navigateToOtherOptions()">
-            <span class="nav-item" *ngIf="!isCollapsed">OTHER VOLUNTARY COMPILANCES</span>
+            <span class="nav-item" *ngIf="!isCollapsed">VOLUNTARY COMPILANCES</span>
           </a>
         </li>
         <li>
-          <a routerLink="/expert-consultation">
+          <a >
+            <span class="nav-item" *ngIf="!isCollapsed">OTHER</span>
+          </a>
+        </li>
+        <li>
+          <a  (click)="navigateTo('/export-resources')">
             <span class="nav-item" *ngIf="!isCollapsed">EXPERT RESOURCES</span>
           </a>
         </li>
         <li>
-          <a routerLink="/expert-consultation">
+          <a  (click)="navigateTo('/export-consulation')">
             <span class="nav-item" *ngIf="!isCollapsed">EXPERT CONSULTATION</span>
           </a>
         </li>

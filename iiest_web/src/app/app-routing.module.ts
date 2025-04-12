@@ -34,6 +34,10 @@ import { ShippingPolicyComponent } from './pages/shipping-policy/shipping-policy
 import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 import { ConsumerSettingsComponent } from './pages/consumer-pages/consumer/consumer-settings/consumer-settings.component';
 import { ConsumerFoodDocComponent } from './pages/consumer-pages/consumer/consumer-food-doc/consumer-food-doc.component';
+import { ExpertResourcesComponent } from './pages/consumer-pages/consumer/expert-resources/expert-resources.component';
+import { ExpertConsulationComponent } from './pages/consumer-pages/consumer/expert-consulation/expert-consulation.component';
+import { ConsumerFaqComponent } from './pages/consumer-pages/consumer/consumer-faq/consumer-faq.component';
+import { LocalOfficerComponent } from './pages/consumer-pages/consumer/local-officer/local-officer.component';
 // import { ConsumerHomeComponent } from './pages/consumer-pages/consumer-home-page/consumer-home';
 
 const routes: Routes = [
@@ -78,6 +82,10 @@ const routes: Routes = [
  { path: 'consumer-shop-details', component:ConsumerShopDetailsComponent,canActivate:[consumerAuthGuard]},
  { path: 'consumer-settings', component:ConsumerSettingsComponent,canActivate:[consumerAuthGuard]},
  { path: 'consumer-food-doc', component:ConsumerFoodDocComponent,canActivate:[consumerAuthGuard]},
+ { path: 'export-resources', component:ExpertResourcesComponent,canActivate:[consumerAuthGuard]},
+ { path: 'export-consulation', component:ExpertConsulationComponent,canActivate:[consumerAuthGuard]},
+ { path: 'faq-consumer', component:ConsumerFaqComponent,canActivate:[consumerAuthGuard]},
+ { path: 'local-officer', component:LocalOfficerComponent,canActivate:[consumerAuthGuard]},
 
 
 ];
