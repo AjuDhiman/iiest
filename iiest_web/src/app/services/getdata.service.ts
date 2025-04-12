@@ -11,10 +11,31 @@ import { Injectable } from '@angular/core';
 export class GetdataService {
   url = config.API_URL
   constructor(private http: HttpClient, private router: Router) { }
+
+  addExpertConsultation(consultationDetails: string,shopId:string): Observable<any> {
+    const url = `${this.url}/add-expert-consultation`;
+    const body = { consultationDetails,shopId };
+    return this.http.post<any>(url, body).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getResourceRequirements(shopId: string): Observable<any> {
+    const url = `${this.url}/get-resources?shopId=${shopId}`;
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
   changePassword(id: string, current_password: string, new_password: string): Observable<any> {
     const url = `${this.url}/change-password`;
     const body = { id, current_password, new_password };
     return this.http.put<any>(url, body).pipe(
+      catchError(this.handleError)
+    );
+  }
+  addResourceRequirement(shopId:string,jobDescription:string,designation: string, count: number, salary: number): Observable<any> {
+    const url = `${this.url}/add-resources`;
+    const body = { shopId,jobDescription,designation, count, salary };
+    return this.http.post<any>(url, body).pipe(
       catchError(this.handleError)
     );
   }

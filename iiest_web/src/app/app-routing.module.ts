@@ -33,6 +33,9 @@ import { UpdateBoCustomerComponent } from './pages/sales/update-bo-customer/upda
 import { ShippingPolicyComponent } from './pages/shipping-policy/shipping-policy.component';
 import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 import { ConsumerSettingsComponent } from './pages/consumer-pages/consumer/consumer-settings/consumer-settings.component';
+import { ExpertResourcesComponent } from './pages/consumer-pages/consumer/expert-resources/expert-resources.component';
+import { ExpertConsulationComponent } from './pages/consumer-pages/consumer/expert-consulation/expert-consulation.component';
+import { ConsumerFaqComponent } from './pages/consumer-pages/consumer/consumer-faq/consumer-faq.component';
 // import { ConsumerHomeComponent } from './pages/consumer-pages/consumer-home-page/consumer-home';
 
 const routes: Routes = [
@@ -76,6 +79,10 @@ const routes: Routes = [
  { path: 'consumer-chat', component: ConnectWithUsComponent,canActivate:[consumerAuthGuard]},
  { path: 'consumer-shop-details', component:ConsumerShopDetailsComponent,canActivate:[consumerAuthGuard]},
  { path: 'consumer-settings', component:ConsumerSettingsComponent,canActivate:[consumerAuthGuard]},
+ { path: 'export-resources', component:ExpertResourcesComponent,canActivate:[consumerAuthGuard]},
+ { path: 'export-consulation', component:ExpertConsulationComponent,canActivate:[consumerAuthGuard]},
+ { path: 'faq-consumer', component:ConsumerFaqComponent,canActivate:[consumerAuthGuard]},
+
 
 ];
 

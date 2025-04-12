@@ -44,5 +44,8 @@ export class ConsumerRightSidebarComponent {
 
     this.router.navigate(['/consumer-other-option']);
   }
-
+  navigateTo(url: string) {
+    this.router.navigate([url]);
+    this.isCollapsed = true;
+  }
 }
