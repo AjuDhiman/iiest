@@ -1,25 +1,54 @@
 <footer class="bg-light py-3 fixed-bottom border-top">
   <div class="container">
     <div class="d-flex justify-content-between align-items-center icons-gap">
-
       <!-- HOME -->
-      <div class="d-flex flex-column align-items-center text-center gap-1" (click)="navigateToHome()">
-        <div class="d-flex align-items-center justify-content-center"
-             [ngClass]="{'image-selection': selectedMenu === 'home'}"
-             style="width: 50px; height: 50px;">
-          <img src="../../../assets/images/consumer-icons/home.png" alt="Home" width="20" height="20">
+      <div
+        class="d-flex flex-column align-items-center text-center gap-1"
+        (click)="navigateToHome()"
+      >
+        <div
+          class="d-flex align-items-center justify-content-center"
+          [ngClass]="{ 'image-selection': selectedMenu === 'home' }"
+          style="width: 50px; height: 50px"
+        >
+          <img
+            src="../../../assets/images/consumer-icons/home.png"
+            alt="Home"
+            width="20"
+            height="20"
+          />
         </div>
-        <div class="footer-text-size text-muted fw-bold text-nowrap" style="height: 20px;">HOME</div>
+        <div
+          class="footer-text-size text-muted fw-bold text-nowrap"
+          style="height: 20px"
+        >
+          HOME
+        </div>
       </div>
 
       <!-- YOUR ORDERS -->
-      <div class="d-flex flex-column align-items-center text-center gap-1" (click)="navigateToInVoice()">
-        <div class="d-flex align-items-center justify-content-center"
-             [ngClass]="{'image-selection': selectedMenu === 'invoice'}"
-             style="width: 50px; height: 50px;">
-          <img src="../../../assets/images/consumer-icons/shopping-cart.png" alt="Orders" width="20" height="20">
+      <div
+        class="d-flex flex-column align-items-center text-center gap-1"
+        (click)="navigateToInVoice()"
+      >
+        <div
+          class="d-flex align-items-center justify-content-center"
+          [ngClass]="{ 'image-selection': selectedMenu === 'invoice' }"
+          style="width: 50px; height: 50px"
+        >
+          <img
+            src="../../../assets/images/consumer-icons/shopping-cart.png"
+            alt="Orders"
+            width="20"
+            height="20"
+          />
         </div>
-        <div class="footer-text-size text-muted fw-bold text-nowrap" style="height: 20px;">YOUR ORDERS</div>
+        <div
+          class="footer-text-size text-muted fw-bold text-nowrap"
+          style="height: 20px"
+        >
+          YOUR ORDERS
+        </div>
       </div>
 
       <!-- TRAINING -->
@@ -33,34 +62,129 @@
       </div> -->
 
       <!-- CALL -->
-      <div class="d-flex flex-column align-items-center text-center gap-1" (click)="makeCall(); selectMenu('call')">
-        <div class="d-flex align-items-center justify-content-center"
-             [ngClass]="{'image-selection': selectedMenu === 'call'}"
-             style="width: 50px; height: 50px;">
-          <img src="../../../assets/images/consumer-icons/phone-call.png" alt="Call" width="50">
+      <div
+        class="d-flex flex-column align-items-center text-center gap-1"
+        (click)="makeCall(); selectMenu('call')"
+      >
+        <div
+          class="d-flex align-items-center justify-content-center"
+          [ngClass]="{ 'image-selection': selectedMenu === 'call' }"
+          style="width: 50px; height: 50px"
+        >
+          <img
+            src="../../../assets/images/consumer-icons/phone-call.png"
+            alt="Call"
+            width="50"
+          />
         </div>
-        <div class="footer-text-size text-muted fw-bold text-nowrap" style="height: 20px;">CALL</div>
+        <div
+          class="footer-text-size text-muted fw-bold text-nowrap"
+          style="height: 20px"
+        >
+          CALL
+        </div>
       </div>
-            <!-- Food doc -->
+      <!-- Food doc -->
 
       <!-- NOTIFICATIONS -->
-      <div class="d-flex flex-column align-items-center text-center gap-1">
-        <div class="d-flex align-items-center justify-content-center"
-             [ngClass]="{'image-selection': selectedMenu === 'notification'}"
-             style="width: 50px; height: 50px;">
-          <img src="../../../assets/images/consumer-icons/notification.png" alt="Notification" width="20">
+      <div
+        class="d-flex flex-column align-items-center text-center gap-1 position-relative"
+      >
+        <div
+          class="d-flex align-items-center justify-content-center"
+          [ngClass]="{ 'image-selection': selectedMenu === 'notification' }"
+          style="width: 50px; height: 50px"
+          (click)="toggleNotificationDropdown()"
+        >
+          <img
+            src="../../../assets/images/consumer-icons/notification.png"
+            alt="Notification"
+            width="20"
+          />
         </div>
-        <div class="footer-text-size text-muted fw-bold text-nowrap" style="height: 20px;">NOTIFICATIONS</div>
+        <div
+          class="footer-text-size text-muted fw-bold text-nowrap"
+          style="height: 20px"
+        >
+          NOTIFICATIONS
+        </div>
+
+        <div
+          *ngIf="showNotificationDropdown"
+          class="dropdown-menu show text-start"
+          style="
+            position: absolute;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-width: 250px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            font-size: 13px;
+          "
+        >
+          <button
+            class="dropdown-item text-wrap"
+            type="button"
+            (click)="openLink('https://www.youtube.com/watch?v=2i_DodKPHAo')"
+          >
+            हाथ ठीक से न धोने पर बंद हो सकता है खाद्य कारोबार
+          </button>
+
+          <button
+            class="dropdown-item text-wrap"
+            type="button"
+            (click)="openLink('https://www.youtube.com/watch?v=etuN05FwDao')"
+          >
+            How to Handle Customers With Food Allergy
+          </button>
+
+          <button
+            class="dropdown-item text-wrap"
+            type="button"
+            (click)="openLink('https://www.youtube.com/watch?v=R6-BmJq1D6c')"
+          >
+            Food Storage Mistakes commonly done by FBO's
+          </button>
+
+          <button
+            class="dropdown-item text-wrap"
+            type="button"
+            (click)="openLink('https://www.youtube.com/@kkaarobarr')"
+          >
+            Ms. Aditi Kulshrestha has been appointed as your regulatory advisor
+          </button>
+        </div>
       </div>
 
-      <div class="d-flex flex-column align-items-center text-center gap-1" >
-        <div class="d-flex align-items-center justify-content-center"
-             [ngClass]="{'image-selection': selectedMenu === 'composition'}"
-             style="width: 50px; height: 50px;">
-          <img src="../../../assets/images/consumer-icons/composition.png" alt="Notification" width="20">
+      <!-- FOOD DOC -->
+      <!-- FOOD DOC -->
+      <div
+        class="d-flex flex-column align-items-center text-center gap-1"
+        (click)="navigateToFoodDoc()"
+      >
+        <div
+          class="d-flex align-items-center justify-content-center"
+          [ngClass]="{ 'image-selection': selectedMenu === 'composition' }"
+          style="width: 50px; height: 50px"
+        >
+          <img
+            src="../../../assets/images/consumer-icons/composition.png"
+            alt="Notification"
+            width="20"
+          />
         </div>
-        <div class="footer-text-size text-muted fw-bold text-nowrap" style="height: 20px;">FOOD DOC</div>
+        <div
+          class="footer-text-size text-muted fw-bold text-nowrap"
+          style="height: 20px"
+        >
+          FOOD DOC
+        </div>
       </div>
+
       <!-- EDN -->
       <!-- <div class="d-flex flex-column align-items-center text-center gap-1" (click)="selectMenu('edn')">
         <div class="d-flex align-items-center justify-content-center"
@@ -80,7 +204,6 @@
         </div>
         <div class="footer-text-size text-muted fw-bold text-nowrap" style="height: 20px;">OTHERS</div>
       </div> -->
-
     </div>
   </div>
 

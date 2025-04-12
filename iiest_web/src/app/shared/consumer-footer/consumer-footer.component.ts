@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, ElementRef } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -16,7 +16,9 @@ export class ConsumerFooterComponent {
   phoneNumber: string = '9289310979'; 
   driveVideoUrl: string = 'https://drive.google.com/file/d/1isI_YuozFcDhLjV4IVgfmVCFVnrILZFx/view?usp=drive_link';
   trustedVideoUrl: SafeResourceUrl | null = null;
-  constructor(library: FaIconLibrary,private router: Router,private sanitizer: DomSanitizer) {
+  showNotificationDropdown: boolean = false;
+
+  constructor(library: FaIconLibrary,private router: Router,private sanitizer: DomSanitizer, private elementRef: ElementRef) {
     this.trustedVideoUrl = this.getEmbedUrl(this.driveVideoUrl);
 
     library.addIcons(faShoppingCart, faBell, faPhone, faChalkboardTeacher, faBars,faBookOpen,faPhoneVolume);
@@ -88,5 +90,30 @@ export class ConsumerFooterComponent {
       }, { once: true }); // only once per modal open
     }
   }
+
+  openLink(url: string) {
+    window.open(url, '_blank');
+  }
   
+  
+  toggleNotificationDropdown() {
+    this.showNotificationDropdown = !this.showNotificationDropdown;
+    this.selectedMenu = 'notification';
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const targetElement = event.target as HTMLElement;
+
+    // Check if the click was outside the component
+    if (this.showNotificationDropdown && !this.elementRef.nativeElement.contains(targetElement)) {
+      this.showNotificationDropdown = false;
+    }
+  
+  }
+
+
+  navigateToFoodDoc() {
+    this.router.navigate(['/consumer-food-doc']);
+  }
 }

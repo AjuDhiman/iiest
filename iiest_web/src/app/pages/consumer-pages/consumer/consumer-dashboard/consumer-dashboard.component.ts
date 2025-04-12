@@ -73,38 +73,41 @@ export class ConsumerDashboardComponent {
     };
     return icons[title] || '❓';
   }
-  getImageForItem(itemName: string): string {
+
+   getImageForItem(itemName: string): string {
     const imageMap: { [key: string]: string } = {
-      'Health and Trade': '../../../../../assets/images/licensesimg/muncipleCorporate.jpg',
-      'FSSAI': '../../../../../assets/images/licensesimg/fssai.webp',
+      'Health and Trade': '../../../../../assets/images/logo/health and trade lisc.png',
+      'FSSAI': '../../../../../assets/images/logo/Fssai annual return.png',
       'Shop Estd. Registration': '../../../../../assets/images/licensesimg/shopRegistration.jpg',
-      'Food Training': '../../../../../assets/images/licensesimg/fostao.jpg',
-      'Medical Certificate': '../../../../../assets/images/licensesimg/medicalCertificate.jpg',
-      'Water Testing Report': '../../../../../assets/images/licensesimg/nabl.jpg',
-      'Fire NOC': '../../../../../assets/images/licensesimg/FireNoc.jpg',
+      'Food Training': '../../../../../assets/images/logo/food safety awarness training.png',
+      'Medical Certificate': '../../../../../assets/images/logo/medicial test.png',
+      'Water Testing Report': '../../../../../assets/images/logo/water testing.png',
+      'Fire NOC': '../../../../../assets/images/logo/fire-noc.png',
       'DPCC License': '../../../../../assets/images/licensesimg/dpcc.jpg',
-      'Liquor License': '../../../../../assets/images/licensesimg/liquorLicense.jpg',
-      'Eatinghouse': '../../../../../assets/images/licensesimg/EatingHouse.png',
+      'Liquor License': '../../../../../assets/images/logo/liquor lisc.png',
+      'Eatinghouse': '../../../../../assets/images/logo/pollution noc.png',
       'Pollution': '../../../../../../assets/images/licensesimg/pollution.jpg',
-      'Shop establishment':'../../../../../../assets/images/licensesimg/shopestablishment.jpg',
+      'Shop establishment':'../../../../../../assets/images/logo/shop establish lisc.png',
       'Water':'../../../../../../assets/images/licensesimg/water.jpg',
-      'FOSTAC':'../../../../../../assets/images/licensesimg/fostac.jpg',
-      'Food Sample':'../../../../../../assets/images/licensesimg/FoodSaftyAwarness.jpg',
-      'Hygiene':'../../../../../../assets/images/licensesimg/Hygiene.jpg',
-      'Food Sample*':'../../../../../../assets/images/licensesimg/foodSample.jpg',
-      'Pest Control':'../../../../../../assets/images/licensesimg/pest control.jpg',
+      'FOSTAC':'../../../../../../assets/images/logo/Fostac certificate.png',
+      'Food Sample':'../../../../../../assets/images/logo/food safety awarness training.png',
+      'Hygiene':'../../../../../../assets/images/logo/hygiene rating audit.png',
+      'Food Sample*':'../../../../../../assets/images/logo/food safety awarness training.png',
+      'Pest Control':'../../../../../../assets/images/logo/pest-control.png',
       'Medical':'../../../../../../assets/images/licensesimg/Medical.jpg',
-      'RUCO*':'../../../../../../assets/images/licensesimg/ruconew.jpg',
-      'ISO':'../../../../../../assets/images/licensesimg/isonew.jpg',
-      'Menu Labeling':'../../../../../../assets/images/licensesimg/menuLabelling.jpg',
-      '3rd Party':'../../../../../../assets/images/licensesimg/thirdparty.jpg',
-      'Liquor*':'../../../../../../assets/images/licensesimg/liquor.jpg',
-      'Trade': '../../../../../assets/images/licensesimg/trade.jpg',
+      'RUCO*':'../../../../../../assets/images/logo/Ruco.png',
+      'ISO':'../../../../../../assets/images/logo/Iso Audit.png',
+      'Menu Labeling':'../../../../../../assets/images/logo/menu labelling.png',
+      '3rd Party':'../../../../../../assets/images/logo/Thrid party audit.png',
+      'Liquor*':'../../../../../../assets/images/logo/liquor lisc.png',
+      'Trade': '../../../../../assets/images/logo/Trade lisc.png',
+
+
 
     };
-  
-    return imageMap[itemName] || '../../../../../assets/images/licensesimg/IEC.png'
+   return imageMap[itemName] || '../../../../../assets/images/logo/Import-Export Certiifcate.png'
   }
+  
   
   getDocs(oid:any): void {
     this.getDataService.getDocs(oid).subscribe(response => {

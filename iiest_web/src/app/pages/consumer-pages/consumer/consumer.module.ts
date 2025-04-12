@@ -10,6 +10,7 @@ import { ConnectWithUsComponent } from './connect-with-us/connect-with-us.compon
 import { ConsumerShopDetailsComponent } from './consumer-shop-details/consumer-shop-details.component';
 import { OperationformModule } from '../../operation/modules/operationform.module';
 import { ConsumerSettingsComponent } from './consumer-settings/consumer-settings.component';
+import { ConsumerFoodDocComponent } from './consumer-food-doc/consumer-food-doc.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { ConsumerSettingsComponent } from './consumer-settings/consumer-settings
     ConsumerNotificationsComponent,
     ConnectWithUsComponent,
     ConsumerShopDetailsComponent,
-    ConsumerSettingsComponent, 
+    ConsumerSettingsComponent,
+    ConsumerFoodDocComponent, 
   ],
   imports: [
     CommonModule,

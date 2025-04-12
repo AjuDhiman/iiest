@@ -15,8 +15,9 @@
 
     <div class="row row-cols-3 g-4 mx-auto" style="max-width: 1200px;" style="margin-bottom: 50px;">
       <div class="col" *ngFor="let item of complianceItems">
-        <div class="compliance-card" [style.background-color]="item.color">
-          <div class="icon-box">
+        <div class="compliance-card"
+        [ngStyle]="{ 'border': '3px solid ' + item.color }">
+             <div class="icon-box">
             <!-- <div class="icon">{{ item.icon }}</div> -->
             <div>
               <img [src]="getImageForItem(item.name)" alt="Shop Image" class="rounded shadow mt-1" width="50"
