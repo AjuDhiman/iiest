@@ -15,6 +15,9 @@ import { ExpertResourcesComponent } from './expert-resources/expert-resources.co
 import { ExpertConsulationComponent } from './expert-consulation/expert-consulation.component';
 import { ConsumerFaqComponent } from './consumer-faq/consumer-faq.component';
 import { LocalOfficerComponent } from './local-officer/local-officer.component';
+import { ConsumerSidebarComponent } from '../../../shared/consumer-sidebar/consumer-sidebar.component';
+import { ConsumerRightSidebarComponent } from '../../../shared/consumer-right-sidebar/consumer-right-sidebar.component';
+
 
 @NgModule({
   declarations: [
@@ -39,7 +42,9 @@ import { LocalOfficerComponent } from './local-officer/local-officer.component';
   exports: [
     
     ConsumerDashboardComponent,
-    ConnectWithUsComponent
+    ConnectWithUsComponent,
+    ConsumerSidebarComponent,
+    ConsumerRightSidebarComponent
   ]
 })
 export class ConsumerModule { }

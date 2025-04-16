@@ -1,8 +1,6 @@
 const { fostacRevenue, foscosRevenue, hraRevenue, medicalRevenue, waterTestRevenue, limitAdminSalePipeline, khadyaPaalnRevenue } = require("../../config/pipeline");
 const salesModel = require("../../models/employeeModels/employeeSalesSchema");
 const reportingManagerModel = require("../../models/employeeModels/reportingManagerSchema");
-const fboModel = require("../../models/fboModels/fboSchema");
-const { fboFormData } = require("../generalControllers/generalData");
 
 //function for getting data in a formated way for ploating top sales person list in statlist
 exports.getTopSalesPersons = async (req, res) => { 

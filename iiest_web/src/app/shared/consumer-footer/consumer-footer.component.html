@@ -84,87 +84,95 @@
           CALL
         </div>
       </div>
-      <!-- Food doc -->
 
       <!-- NOTIFICATIONS -->
       <div
-        class="d-flex flex-column align-items-center text-center gap-1 position-relative"
+      class="d-flex flex-column align-items-center text-center gap-1 position-relative"
+    >
+      <div
+        class="d-flex align-items-center justify-content-center"
+        [ngClass]="{ 'image-selection': selectedMenu === 'notification' }"
+        style="width: 50px; height: 50px"
+        (click)="toggleNotificationDropdown()"
       >
-        <div
-          class="d-flex align-items-center justify-content-center"
-          [ngClass]="{ 'image-selection': selectedMenu === 'notification' }"
-          style="width: 50px; height: 50px"
-          (click)="toggleNotificationDropdown()"
-        >
-          <img
-            src="../../../assets/images/consumer-icons/notification.png"
-            alt="Notification"
-            width="20"
-          />
-        </div>
-        <div
-          class="footer-text-size text-muted fw-bold text-nowrap"
-          style="height: 20px"
-        >
-          NOTIFICATIONS
-        </div>
-
-        <div
-        *ngIf="showNotificationDropdown"
-        class="dropdown-menu show text-start notification-dropdown"
-        style="
-          position: absolute;
-          bottom: 70px;
-          left: 50%;
-          transform: translateX(-50%);
-          background-color: white;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-          min-width: 250px;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-          z-index: 1000;
-          font-size: 13px;
-        "
+        <img
+          src="../../../assets/images/consumer-icons/notification.png"
+          alt="Notification"
+          width="20"
+        />
+      </div>
+    
+      <div
+        class="footer-text-size text-muted fw-bold text-nowrap"
+        style="height: 20px"
       >
-        <button
-          class="dropdown-item text-wrap bullet-button"
-          type="button"
-          (click)="openLink('https://www.youtube.com/watch?v=2i_DodKPHAo')"
-        >
-          Bizz Info — हाथ ठीक से न धोने पर बंद हो सकता है खाद्य कारोबार
-        </button>
-        <hr class="dropdown-divider my-1" />
-      
-        <button
-          class="dropdown-item text-wrap bullet-button"
-          type="button"
-          (click)="openLink('https://www.youtube.com/watch?v=etuN05FwDao')"
-        >
-          Bizz Info — How to Handle Customers With Food Allergy
-        </button>
-        <hr class="dropdown-divider my-1" />
-      
-        <button
-          class="dropdown-item text-wrap bullet-button"
-          type="button"
-          (click)="openLink('https://www.youtube.com/watch?v=R6-BmJq1D6c')"
-        >
-          Bizz Info — Food Storage Mistakes commonly done by FBO's
-        </button>
-        <hr class="dropdown-divider my-1" />
-      
-        <button
-          class="dropdown-item text-wrap bullet-button"
-          type="button"
-        >
-          Service Info — Ms. Aditi Kulshrestha has been appointed as your regulatory advisor
-        </button>
+        NOTIFICATIONS
       </div>
-      
+    
+      <div
+      *ngIf="showNotificationDropdown"
+      class="dropdown-menu show text-start notification-dropdown p-3"
+      style="
+        position: absolute;
+        bottom: 74px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        min-width: 250px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+        font-size: 13px;
+      "
+    >
+      <ul class="ps-3 mb-0" style="list-style-type: disc;">
+        <li class="mb-2">
+          <button
+            class="dropdown-item px-0 py-0 border-0 bg-transparent text-wrap"
+            type="button"
+            (click)="openLink('https://www.youtube.com/watch?v=2i_DodKPHAo')"
+          >
+            <span style="font-weight: bold; font-size: 14px;">Bizz Info —</span>
+            <span style="font-weight: normal;"> हाथ ठीक से न धोने पर बंद हो सकता है खाद्य कारोबार</span>
+          </button>
+        </li>
+        <li class="mb-2">
+          <button
+            class="dropdown-item px-0 py-0 border-0 bg-transparent text-wrap"
+            type="button"
+            (click)="openLink('https://www.youtube.com/watch?v=etuN05FwDao')"
+          >
+            <span style="font-weight: bold; font-size: 14px;">Bizz Info —</span>
+            <span style="font-weight: normal;"> How to Handle Customers With Food Allergy</span>
+          </button>
+        </li>
+        <li class="mb-2">
+          <button
+            class="dropdown-item px-0 py-0 border-0 bg-transparent text-wrap"
+            type="button"
+            (click)="openLink('https://www.youtube.com/watch?v=R6-BmJq1D6c')"
+          >
+            <span style="font-weight: bold; font-size: 14px;">Bizz Info —</span>
+            <span style="font-weight: normal;"> Food Storage Mistakes commonly done by FBO's</span>
+          </button>
+        </li>
+        <li>
+          <button
+            class="dropdown-item px-0 py-0 border-0 bg-transparent text-wrap"
+            type="button"
+          >
+            <span style="font-weight: bold; font-size: 14px;">Service Info —</span>
+            <span style="font-weight: normal;"> Ms. Aditi Kulshrestha has been appointed as your regulatory advisor</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+    
 
-      </div>
+    </div>
+    
 
-      <!-- FOOD DOC -->
       <!-- FOOD DOC -->
       <div
         class="d-flex flex-column align-items-center text-center gap-1"
