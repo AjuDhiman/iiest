@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GetdataService } from 'src/app/services/getdata.service';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-consumer-settings',
@@ -10,8 +12,10 @@ import { GetdataService } from 'src/app/services/getdata.service';
 export class ConsumerSettingsComponent implements OnInit {
   consumerForm!: FormGroup;
   changePasswordForm!: FormGroup;
+  faArrowLeft = faArrowLeft;
 
-  constructor(private fb: FormBuilder,private getDataService: GetdataService) {}
+
+  constructor(private router: Router, private fb: FormBuilder,private getDataService: GetdataService) {}
 
   ngOnInit(): void {
     const consumer = JSON.parse(localStorage.getItem('consumer') || '{}');
@@ -97,4 +101,8 @@ export class ConsumerSettingsComponent implements OnInit {
     }
   }
   
+
+  goBack() {
+    this.router.navigate(['/consumer-dashboard']);
+  }
 }
