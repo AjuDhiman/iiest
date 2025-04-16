@@ -16,6 +16,7 @@ const resourceSchema = require("../../models/customerModel/resourcesrequirementM
 const expertConsultation = require("../../models/customerModel/expertconsulationModal");
 
 
+const VoluntaryLicense = require("../../models/customerModel/voluntaoryLicences");
 
 const auth = JSON.parse(process.env.AUTH);
 
@@ -771,5 +772,17 @@ exports.getResourceRequirement = async (req, res) => {
       success: false,
       message: 'Internal server error.'
     });
+  }
+};
+
+
+
+exports.getVoluntaryLicenses = async (req, res) => {
+  try {
+    const licenses = await VoluntaryLicense.find({}, 'name category'); // Only fetch name & category
+    res.status(200).json({ success: true, data: licenses });
+  } catch (error) {
+    console.error('Error fetching voluntary licenses:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
   }
 };

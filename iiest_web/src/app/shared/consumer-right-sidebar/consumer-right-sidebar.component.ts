@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ɵbypassSanitizationTrustStyle } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { RegisterService } from 'src/app/services/register.service';
@@ -15,61 +15,56 @@ export class ConsumerRightSidebarComponent implements OnInit, OnDestroy {
   isCollapsed = true;
   private sub: Subscription;
 
-  constructor(private router: Router,private registerService: RegisterService,
+  constructor(
+    private router: Router,
+    private registerService: RegisterService,
     private sidebarService: SidebarService
-    
-  ) { 
+  ) {}
 
-  }
   ngOnInit(): void {
     this.shopId = this.registerService.getShopId();
-    this.sub = this.sidebarService.activeSidebar$.subscribe(active => {
-      this.isCollapsed = active !== 'right';
+    this.sub = this.sidebarService.sidebarState$.subscribe(state => {
+      this.isCollapsed = !state.right;
     });
 
-    if (window.innerWidth >= 992) {
-      this.sidebarService.openSidebar('right'); // optionally open on large screens
+    if (window.innerWidth >= 500) {
+      this.sidebarService.openSidebar('right');
+      this.sidebarService.openSidebar('left'); // both open on large screens
     }
   }
-  
+
   toggleSidebar() {
-    if (this.sidebarService.getActiveSidebar() === 'right') {
-      this.sidebarService.closeSidebar();
+    if (this.sidebarService.isSidebarOpen('right')) {
+      this.sidebarService.closeSidebar('right');
     } else {
       this.sidebarService.openSidebar('right');
     }
   }
- consumerLogout() {
-  localStorage.removeItem('selectedShopId');
+
+  consumerLogout() {
+    localStorage.removeItem('selectedShopId');
     localStorage.removeItem("consumerAuthToken");
     localStorage.removeItem("consumer");
-    this.router.navigate(['']); 
-    this.sidebarService.closeSidebar();
-
+    this.router.navigate(['']);
+    this.sidebarService.closeSidebar('right');
   }
 
   navigateToConnectWithUs() {
     this.router.navigate(['/consumer-chat']);
-    // this.isCollapsed=true;
-    this.sidebarService.closeSidebar();
-
+    this.sidebarService.closeSidebar('right');
   }
-  
+
   navigateToOtherOptions() {
-    // this.isCollapsed = true;
-
     this.router.navigate(['/consumer-other-option']);
-    this.sidebarService.closeSidebar();
-
+    this.sidebarService.closeSidebar('right');
   }
+
   navigateTo(url: string) {
     this.router.navigate([url]);
-    // this.isCollapsed = true;
-    this.sidebarService.closeSidebar();
-
+    this.sidebarService.closeSidebar('right');
   }
 
   ngOnDestroy(): void {
     this.sub.unsubscribe();
-  }
+  }
 }
