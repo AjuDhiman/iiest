@@ -5,6 +5,7 @@ import { ViewDocumentComponent } from 'src/app/pages/modals/view-document/view-d
 import { GetdataService } from 'src/app/services/getdata.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RegisterService } from 'src/app/services/register.service';
+import { Router } from '@angular/router';
 
 
 interface ComplianceItem {
@@ -29,7 +30,10 @@ export class ConsumerDashboardComponent {
 
   faChevronRight = faChevronRight;
   complianceItems:any[];
-  constructor(private getDataService: GetdataService,private ngbModal: NgbModal,private registerService: RegisterService
+  constructor(
+        private router: Router,
+    
+    private getDataService: GetdataService,private ngbModal: NgbModal,private registerService: RegisterService
   ) {  }
 
   ngOnInit(): void {
@@ -164,7 +168,10 @@ export class ConsumerDashboardComponent {
     //   remainingDays = Math.floor(remainingDays % 30.5); // Fix modulo value to 30.5
     //    return `${remainingYear} Years ${remainingMonths} Months ${remainingDays} Days`;
     // }
-    
+    naviagateToChat() {
+
+      this.router.navigate(['/consumer-chat']);
+    }
   
 }
 

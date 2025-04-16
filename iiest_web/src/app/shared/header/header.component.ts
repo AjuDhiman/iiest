@@ -54,6 +54,7 @@ export class HeaderComponent implements OnInit {
 
   }
   ngOnInit() {
+    console.log("userData==>",this.userData)
     this.getUserData();
     if (this.width >= 1920) {
       this.isSideBar = true;

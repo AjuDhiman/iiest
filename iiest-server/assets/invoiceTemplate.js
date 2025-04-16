@@ -70,7 +70,7 @@ console.log('**************8FboDATA*************',fboInfo)
     console.log('signature  -----------------------------------------------------------$$$$$', `${employeeDocsPath}${signatureName}`)
     console.log(signatureName)
     const signatureDownloadStream = await getFileStream((`${employeeDocsPath}${signatureName}`));
-
+console.log("signatureDownloadStream===>",signatureDownloadStream)
     signatureDownloadStream.on('error', () => {
         success = false;
         return res.status(200).json({ success, randomErr: true });

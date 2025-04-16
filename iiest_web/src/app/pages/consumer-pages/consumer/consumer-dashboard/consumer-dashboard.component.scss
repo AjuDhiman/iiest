@@ -114,6 +114,20 @@
   // margin-right: -74px;
   margin-top: 60px
 }
+.color-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  position: absolute;
+  // margin-top: -27px;
+  // margin-right: -74px;
+  margin-top: 60px
+}
 
 .fa-icon {
   font-size: 16px;

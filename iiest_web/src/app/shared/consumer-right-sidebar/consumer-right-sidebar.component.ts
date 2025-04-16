@@ -1,4 +1,57 @@
-import { Component, ɵbypassSanitizationTrustStyle } from '@angular/core';
+// import { Component, ɵbypassSanitizationTrustStyle } from '@angular/core';
+// import { Router } from '@angular/router';
+// import { RegisterService } from 'src/app/services/register.service';
+
+// @Component({
+//   selector: 'app-consumer-right-sidebar',
+//   templateUrl: './consumer-right-sidebar.component.html',
+//   styleUrls: ['./consumer-right-sidebar.component.scss']
+// })
+// export class ConsumerRightSidebarComponent {
+
+//   shopId: string | null = null;
+//   isCollapsed = true;
+//   constructor(private router: Router,private registerService: RegisterService) { 
+
+//   }
+//   ngOnInit(): void {
+//     this.shopId = this.registerService.getShopId();
+//       if (window.innerWidth >= 992) { // Bootstrap "lg" breakpoint
+//     this.isCollapsed = false;
+//   }else{
+//     this.isCollapsed = true;
+
+//   }
+//   }
+//  toggleSidebar() {
+//     this.isCollapsed = !this.isCollapsed;
+    
+//   }
+//  consumerLogout() {
+//   localStorage.removeItem('selectedShopId');
+//     localStorage.removeItem("consumerAuthToken");
+//     localStorage.removeItem("consumer");
+//     this.router.navigate(['']); 
+//   }
+
+//   navigateToConnectWithUs() {
+//     this.router.navigate(['/consumer-chat']);
+//     this.isCollapsed=true;
+//   }
+  
+//   navigateToOtherOptions() {
+//     this.isCollapsed = true;
+
+//     this.router.navigate(['/consumer-other-option']);
+//   }
+//   navigateTo(url: string) {
+//     this.router.navigate([url]);
+//     this.isCollapsed = true;
+//   }
+// }
+
+
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { RegisterService } from 'src/app/services/register.service';
 
@@ -8,44 +61,53 @@ import { RegisterService } from 'src/app/services/register.service';
   styleUrls: ['./consumer-right-sidebar.component.scss']
 })
 export class ConsumerRightSidebarComponent {
-
   shopId: string | null = null;
-
   isCollapsed = true;
-  constructor(private router: Router,private registerService: RegisterService) { 
 
-  }
+  constructor(private router: Router, private registerService: RegisterService) {}
+
   ngOnInit(): void {
     this.shopId = this.registerService.getShopId();
-      if (window.innerWidth >= 992) { // Bootstrap "lg" breakpoint
-    this.isCollapsed = false;
-  }else{
-    this.isCollapsed = true;
 
+    const activeSidebar = localStorage.getItem('activeConsumerSidebar');
+    this.isCollapsed = activeSidebar !== 'right';
+
+    if (window.innerWidth >= 992 && activeSidebar === null) {
+      this.isCollapsed = false;
+      localStorage.setItem('activeConsumerSidebar', 'right');
+    }
   }
-  }
- toggleSidebar() {
+
+  toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
+    localStorage.setItem('activeConsumerSidebar', this.isCollapsed ? '' : 'right');
   }
- consumerLogout() {
-  localStorage.removeItem('selectedShopId');
-    localStorage.removeItem("consumerAuthToken");
-    localStorage.removeItem("consumer");
-    this.router.navigate(['']); 
+
+  consumerLogout() {
+    localStorage.removeItem('selectedShopId');
+    localStorage.removeItem('consumerAuthToken');
+    localStorage.removeItem('consumer');
+    localStorage.removeItem('activeConsumerSidebar');
+    this.router.navigate(['']);
   }
 
   navigateToConnectWithUs() {
     this.router.navigate(['/consumer-chat']);
-    this.isCollapsed=true;
+    this.setCollapsedTrue();
   }
-  
-  navigateToOtherOptions() {
-    this.isCollapsed = true;
 
+  navigateToOtherOptions() {
     this.router.navigate(['/consumer-other-option']);
+    this.setCollapsedTrue();
   }
+
   navigateTo(url: string) {
     this.router.navigate([url]);
+    this.setCollapsedTrue();
+  }
+
+  private setCollapsedTrue() {
     this.isCollapsed = true;
+    localStorage.setItem('activeConsumerSidebar', '');
   }
 }

@@ -37,7 +37,7 @@ export class ConsumerMainPageComponent {
     this.shopId = this.route.snapshot.paramMap.get('shopId') || '';
     console.log('Shop ID:', this.shopId);
 
-    this.fetchStatistics(this.consumer.iiest_member_id);
+    this.fetchStatistics(this.consumer.iiest_member_id,this.consumer.city_Id,this.consumer.business_category_ID,);
 
     this.getDataService.getShopsByBoId(this.consumer.iiest_member_id).subscribe({
       next: (res: any) => {
@@ -71,8 +71,8 @@ export class ConsumerMainPageComponent {
   }
   
 
-  fetchStatistics(boId:any): void {
-    this.getDataService.getConsumerStatisticsData(boId).subscribe(
+  fetchStatistics(boId:any,city_id:string,business_type_id:string): void {
+    this.getDataService.getConsumerStatisticsData(boId,city_id,business_type_id).subscribe(
       (response) => {
         if (response.success) {
           this.statistics = response.statistics;

@@ -79,8 +79,8 @@ export class GetdataService {
     return this.http.get<any>(`${this.url}/get-chat-by-sender?shopId=${shopId}`);
   }
   //api for getting statistics data
-  public getConsumerStatisticsData(boId:any): Observable<any> {
-    const url = `${this.url}/compliance-statistics?boId=${boId}`;
+  public getConsumerStatisticsData(boId:any,city_id:string,business_type_id:string): Observable<any> {
+    const url = `${this.url}/compliance-statistics?boId=${boId}&city_id=${city_id}&business_type_id=${business_type_id}`;
     return this.http.get<any>(url).pipe(catchError(this.handleError));
   }
 

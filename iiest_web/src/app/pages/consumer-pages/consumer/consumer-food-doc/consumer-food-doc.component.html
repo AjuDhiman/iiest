@@ -1,8 +1,14 @@
-<div class="container mt-4 text-center">
-    <h5 class="mb-4 fw-bold">Documents</h5>
-  
-    <div class="row justify-content-center" style="margin-bottom: 170px;">
-      <div *ngFor="let file of wordFiles" class="col-6 col-sm-4 col-md-3 mb-4" >
+<div class="container text-center">
+  <!-- Header -->
+  <div class="d-flex mt-4 align-items-center mb-4 ms-5">
+    <fa-icon [icon]="faArrowLeft" (click)="goBack()" class="me-2" style="cursor: pointer;"></fa-icon>
+    <h5 class="mb-0 fw-bold">Documents</h5>
+  </div>
+
+  <!-- Scrollable vertical area -->
+  <div style="max-height: 74vh; overflow-y: auto; overflow-x:hidden">
+    <div class="row justify-content-center">
+      <div *ngFor="let file of wordFiles" class="col-6 col-sm-4 col-md-3 mb-4">
         <div class="card p-2 text-center h-100 card-hover"
              style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); border: none; cursor: default;">
           
@@ -25,4 +31,4 @@
       </div>
     </div>
   </div>
-  
+</div>

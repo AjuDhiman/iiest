@@ -127,6 +127,7 @@ exports.doesFileExist = async (key) => {
             Bucket: AWS_S3.bucket,
             Key: key
         });
+        console.log("command===>",command)
 
         await s3Client.send(command);
         return true; // File exists

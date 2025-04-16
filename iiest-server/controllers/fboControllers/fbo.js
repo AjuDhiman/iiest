@@ -725,8 +725,8 @@ exports.boPayLater = async (req, res) => {
     const user = req.user;
     const signatureFile = user.signatureImage;
 
-    const signExists = await doesFileExist(`${employeeDocsPath}${signatureFile}`);
-    console.log('sign Exsists:', signExists)
+    // const signExists = await doesFileExist(`${employeeDocsPath}${signatureFile}`);
+    // console.log('sign Exsists:', signExists)
 
     // if (!signExists) {
     //   return res.status(404).json({ success: false, noSignErr: true })
@@ -1307,7 +1307,7 @@ exports.approveChequeOrPaylaterSale = async (req, res) => {
 
     if (product_name.includes('Khadya Paaln')) { //generating  Invoivce
       const invoiceCode = await generateInvoiceCode(salesInfo.fboInfo.business_type);//generating new imvoice code
-
+console.log("invoiceCode==>",invoiceCode)
       fileName = `${Date.now()}_${fboInfo.id_num}.pdf`;
       invoiceUploadStream = invoiceBucket.openUploadStream(`${fileName}`);
 
@@ -1317,7 +1317,7 @@ exports.approveChequeOrPaylaterSale = async (req, res) => {
 
       const qty = 1;
       const invoice = await invoiceDataHandler(invoiceCode, fboInfo.email, fboInfo.fbo_name, fboInfo.address, fboInfo.state, fboInfo.district, fboInfo.pincode, fboInfo.owner_contact, fboInfo.email, total_processing_amount, extraFee, totalGST, qty, fboInfo.business_type, fboInfo.gst_number, khadyaPaalnInfo.khadya_paaln_total, 'Khadya Paaln', khadyaPaalnInfo, signatureFile, invoiceUploadStream, employeeInfo.employee_name, fboInfo.customer_id, fboInfo.boInfo);
-
+console.log("invoice====>",invoice)
       invoiceData.push(invoice);
       invoiceIdArr.push({ src: invoice.fileName, code: invoiceCode, product: 'Khadya Paaln' });
     }

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { faDownload, faFileWord, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { Router } from '@angular/router';
+import { faArrowLeft, faDownload, faFileWord, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-consumer-food-doc',
@@ -10,7 +11,12 @@ export class ConsumerFoodDocComponent {
 
   faFileWord: IconDefinition = faFileWord;
   faDownload: IconDefinition = faDownload;
-
+  faArrowLeft = faArrowLeft;
+  
+  constructor(
+            private router: Router,
+    
+  ) {}
   wordFiles = [
     { name: 'Incoming Material Inspection', url: 'assets/pdf-assets/IncomingMaterialInspection.docx', icon: 'assets/pdf-icon.png', type: 'word' },
     { name: 'Personal Hygiene Monitoring', url: 'assets/pdf-assets/Personal Hygiene Monitoring.docx', icon: 'assets/pdf-icon.png', type: 'word' },
@@ -24,5 +30,8 @@ export class ConsumerFoodDocComponent {
     link.href = fileUrl;
     link.download = fileUrl.split('/').pop()!;
     link.click();
+  }
+  goBack() {
+    this.router.navigate(['/consumer-dashboard']);
   }
 }

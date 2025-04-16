@@ -44,7 +44,16 @@
                 [icon]="faChevronRight">
               </fa-icon>
             </div>
-
+            <div *ngIf="!item.docObject" class="color-circle"    
+            [ngStyle]="{ 'background-color': item.color }" 
+            (click)="naviagateToChat()">
+            
+            <fa-icon 
+              class="fa-1xl text-[#0d6ef] cursor-pointer" 
+              [icon]="faChevronRight">
+            </fa-icon>
+          </div>
+          
         </div>
         <div class="card-title mt-3">{{ item.name }} </div>
 

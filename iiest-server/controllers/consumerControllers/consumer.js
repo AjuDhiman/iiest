@@ -78,107 +78,41 @@ exports.consumerLogin = async (req, res) => {
   }
 };
 
-exports.getComplianceStatistics = async (req, res) => {
-  try {
-    let success = true;
-    const { boId } = req.query;
-
-    if (!boId) {
-      return res.status(400).json({ success: false, message: "boId is required" });
-    }
-
-const shopDetails = await shopModel.findOne({ boId });
-
-
-    let statistics = {
-      completedCompliances: 1,
-      pendingCompliances: 8,
-      durationInMonths: 6,
-    };
-console.log("shopDetails--->",shopDetails)
-    if(shopDetails){
-      const shopDocumentDetails = await docsModel.findOne({ handlerId:shopDetails.shopId }).lean();
-      const shopPhotoDoc = shopDocumentDetails?.documents.find(doc => doc.name === "Shop Photo");
-      if (shopPhotoDoc && shopPhotoDoc.src) {
-        const srcObject = await getDocObject(shopPhotoDoc.src);
-        if (srcObject) {
-          statistics.srcObject = srcObject;
-        }
-  }
-    if (!shopDetails) {
-      return res.status(404).json({ success: false, message: "Shop not found" });
-    }
-  }
-    return res.status(200).json({
-      success,
-      statistics,
-      message: 'Compliance statistics fetched successfully',
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ success: false, message: 'Internal Server Error' });
-  }
-};
-
-
-
-// exports.getShopLicenses = async (req, res) => {
+// exports.getComplianceStatistics = async (req, res) => {
 //   try {
 //     let success = true;
-//     const { boId } = req.query; // Use req.query for query parameters
-//     console.log("boId===>",boId)
+//     const { boId } = req.query;
 
 //     if (!boId) {
 //       return res.status(400).json({ success: false, message: "boId is required" });
 //     }
-//     let foscosObject = null;
-//     let docObject = null;
-//     let employeeSales = null; // Declare variable for employeeSales
 
-    
-//     let foscosStatus = "Pending";
-//     let shopDetails = await shopModel.findOne({ boId });
-//     console.log("shopDetails==>",shopDetails)
-//     if (shopDetails) {
-//      employeeSales = await salesModel.findOne({ _id: shopDetails.salesInfo });
-//       if (!employeeSales) {
-//         return res.status(404).json({ success: false, message: "Employee sales details not found" });
-//       }
-//       foscosStatus = "initiated";
-// console.log("employeeSales==>",employeeSales)
-//       foscosObject = employeeSales.foscosInfo
-      
-//       const shopDocumentDetails = await docsModel.findOne({ 
-//         handlerId:  shopDetails.shopId, 
-//         // name: "Foscos License" 
-//     }).lean();
-    
-//     const foscosLicense = shopDocumentDetails?.documents?.find(doc => doc.name === "Foscos License");
-    
-//     if (foscosLicense) {
-//         foscosStatus = "Completed";
-//         docObject = shopDocumentDetails;
-//         docObject.src = await getDocObject(foscosLicense.src);
-//     } else {
-//         docObject = null; 
+// const shopDetails = await shopModel.findOne({ boId });
+
+
+//     let statistics = {
+//       completedCompliances: 1,
+//       pendingCompliances: 8,
+//       durationInMonths: 6,
+//     };
+// console.log("shopDetails--->",shopDetails)
+//     if(shopDetails){
+//       const shopDocumentDetails = await docsModel.findOne({ handlerId:shopDetails.shopId }).lean();
+//       const shopPhotoDoc = shopDocumentDetails?.documents.find(doc => doc.name === "Shop Photo");
+//       if (shopPhotoDoc && shopPhotoDoc.src) {
+//         const srcObject = await getDocObject(shopPhotoDoc.src);
+//         if (srcObject) {
+//           statistics.srcObject = srcObject;
+//         }
+//   }
+//     if (!shopDetails) {
+//       return res.status(404).json({ success: false, message: "Shop not found" });
 //     }
-//  }
-//     const licenses = [
-//       { id: 1, name: 'Health Trade License', status: 'Pending' },
-//       { id: 2, name: 'FSSAI License', status: foscosStatus, object : foscosObject,docObject:docObject,employeeSalesObject:employeeSales },
-//       { id: 3, name: 'Shop Estd. Registration', status: 'Pending' },
-//       { id: 4, name: 'Food Training', status: 'Pending' },
-//       { id: 5, name: 'Medical Certificate', status: 'Pending' },
-//       { id: 6, name: 'Water Testing Report', status: 'Pending' },
-//       { id: 7, name: 'Fire NOC', status: 'Pending' },
-//       { id: 8, name: 'DPCC License', status: 'Pending' },
-//       { id: 9, name: 'Liquor License', status: 'Pending' }
-//     ];
-
+//   }
 //     return res.status(200).json({
 //       success,
-//       licenses,
-//       message: 'Shop licenses fetched successfully',
+//       statistics,
+//       message: 'Compliance statistics fetched successfully',
 //     });
 //   } catch (error) {
 //     console.error(error);
@@ -186,28 +120,84 @@ console.log("shopDetails--->",shopDetails)
 //   }
 // };
 
-// exports.getAllEmployeeSales = async (req, res) => {
-//   try {
-//     let success = true;
-//     const { boId } = req.query; 
-//     let shopDetails = await shopModel.findOne({ boId });
-//     console.log("shopDetails===>",shopDetails)
-//     if (shopDetails) {
-//      employeeSales = await salesModel.find({ _id: shopDetails.salesInfo });
-//     }
-//     console.log("employeeSales=====>",employeeSales);
 
-//     return res.status(200).json({
-//       success,
-//       employeeSales,
-//       message: 'employee Sales fetched successfully',
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ success: false, message: 'Internal Server Error' });
-//   }
-// };
 
+
+exports.getComplianceStatistics = async (req, res) => {
+  try {
+    const { boId, city_id, business_type_id } = req.query;
+
+    if (!boId || !city_id || !business_type_id) {
+      return res.status(400).json({ success: false, message: "boId, city_id, and business_type_id are required" });
+    }
+
+    // Get all shops under this BO
+    const shopList = await shopModel.find({ boId });
+    if (!shopList.length) {
+      return res.status(404).json({ success: false, message: "No shops found for this boId" });
+    }
+
+    const businessTypeId = new mongoose.Types.ObjectId(business_type_id);
+    const cityId = new mongoose.Types.ObjectId(city_id);
+
+    // Fetch mandatory licenses only
+    const licenseData = await BusinessCityLicense.findOne({
+      business_type_id: businessTypeId,
+      city_id: cityId,
+    }).populate({ path: "mandatory_licenses", model: "License" });
+
+    if (!licenseData) {
+      return res.status(404).json({ success: false, message: "No mandatory licenses found for the given business_type_id and city_id" });
+    }
+
+    const mandatoryLicenses = licenseData.mandatory_licenses;
+    const licenseCountPerShop = mandatoryLicenses.length;
+
+    let completed = 0;
+    let initiated = 0;
+    let pending = 0;
+
+    // Loop through each shop and evaluate each mandatory license
+    for (const shop of shopList) {
+      const shopDocs = await docsModel.findOne({ handlerId: shop.shopId }).lean();
+
+      for (const license of mandatoryLicenses) {
+        let status = "Pending";
+
+        // Mark as initiated if license is FSSAI
+        if (license.name.includes("FSSAI")) {
+          status = "Initiated";
+        }
+
+        // Check if document is already uploaded
+        if (shopDocs?.documents) {
+          const doc = shopDocs.documents.find(d => d.name === license.name);
+          if (doc) {
+            status = "Completed";
+          }
+        }
+
+        if (status === "Completed") completed++;
+        else if (status === "Initiated") initiated++;
+        else pending++;
+      }
+    }
+
+    return res.status(200).json({
+      success: true,
+      statistics: {
+        completedCompliances: completed,
+        initiatedCompliances: initiated,
+        pendingCompliances: pending,
+        totalLicenses: licenseCountPerShop * shopList.length,
+      },
+      message: "Compliance statistics (mandatory licenses only) fetched successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
 
 
 

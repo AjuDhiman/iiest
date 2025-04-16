@@ -6,6 +6,8 @@ import {
   ElementRef,
   ChangeDetectorRef,
 } from '@angular/core';
+import { Router } from '@angular/router';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { GetdataService } from 'src/app/services/getdata.service';
 import { RegisterService } from 'src/app/services/register.service';
 
@@ -15,6 +17,7 @@ import { RegisterService } from 'src/app/services/register.service';
   styleUrls: ['./connect-with-us.component.scss'],
 })
 export class ConnectWithUsComponent implements OnInit {
+  
   @Input() senderType: 'shop' | 'agent' = 'shop';
   @Input() boId: string = '';
   @Input() senderId: string = '';
@@ -24,11 +27,14 @@ export class ConnectWithUsComponent implements OnInit {
   userInput = '';
   messages: any[] = [];
   selectedFile: File | null = null;
+  faArrowLeft = faArrowLeft;
 
   constructor(
     private getDataService: GetdataService,
     private registerService: RegisterService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+            private router: Router,
+    
   ) {}
 
   ngOnInit(): void {
@@ -159,4 +165,7 @@ export class ConnectWithUsComponent implements OnInit {
       },
     });
   }
+    goBack() {
+      this.router.navigate(['/consumer-dashboard']);
+    }
 }

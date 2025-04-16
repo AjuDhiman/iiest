@@ -1,227 +1,227 @@
-<footer class="bg-light py-3 fixed-bottom border-top">
-  <div class="container">
-    <div class="d-flex justify-content-between align-items-center icons-gap">
-      <!-- HOME -->
-      <div
-        class="d-flex flex-column align-items-center text-center gap-1"
-        (click)="navigateToHome()"
-      >
+  <footer class="bg-light py-3 fixed-bottom border-top">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center icons-gap">
+        <!-- HOME -->
         <div
-          class="d-flex align-items-center justify-content-center"
-          [ngClass]="{ 'image-selection': selectedMenu === 'home' }"
-          style="width: 50px; height: 50px"
+          class="d-flex flex-column align-items-center text-center gap-1"
+          (click)="navigateToHome()"
         >
-          <img
-            src="../../../assets/images/consumer-icons/home.png"
-            alt="Home"
-            width="20"
-            height="20"
-          />
+          <div
+            class="d-flex align-items-center justify-content-center"
+            [ngClass]="{ 'image-selection': selectedMenu === 'home' }"
+            style="width: 50px; height: 50px"
+          >
+            <img
+              src="../../../assets/images/consumer-icons/home.png"
+              alt="Home"
+              width="20"
+              height="20"
+            />
+          </div>
+          <div
+            class="footer-text-size text-muted fw-bold text-nowrap"
+            style="height: 20px"
+          >
+            HOME
+          </div>
         </div>
+  
+        <!-- YOUR ORDERS -->
         <div
-          class="footer-text-size text-muted fw-bold text-nowrap"
-          style="height: 20px"
+          class="d-flex flex-column align-items-center text-center gap-1"
+          (click)="navigateToInVoice()"
         >
-          HOME
+          <div
+            class="d-flex align-items-center justify-content-center"
+            [ngClass]="{ 'image-selection': selectedMenu === 'invoice' }"
+            style="width: 50px; height: 50px"
+          >
+            <img
+              src="../../../assets/images/consumer-icons/shopping-cart.png"
+              alt="Orders"
+              width="20"
+              height="20"
+            />
+          </div>
+          <div
+            class="footer-text-size text-muted fw-bold text-nowrap"
+            style="height: 20px"
+          >
+            YOUR ORDERS
+          </div>
         </div>
-      </div>
-
-      <!-- YOUR ORDERS -->
-      <div
-        class="d-flex flex-column align-items-center text-center gap-1"
-        (click)="navigateToInVoice()"
-      >
+  
+        <!-- TRAINING -->
+        <!-- <div class="d-flex flex-column align-items-center text-center gap-1" (click)="selectMenu('training')">
+          <div class="d-flex align-items-center justify-content-center"
+               [ngClass]="{'image-selection': selectedMenu === 'training'}"
+               style="width: 50px; height: 50px;">
+            <img src="../../../assets/images/consumer-icons/training.png" alt="Training" width="20">
+          </div>
+          <div class="footer-text-size text-muted fw-bold text-nowrap" style="height: 20px;">TRAINING</div>
+        </div> -->
+  
+        <!-- CALL -->
         <div
-          class="d-flex align-items-center justify-content-center"
-          [ngClass]="{ 'image-selection': selectedMenu === 'invoice' }"
-          style="width: 50px; height: 50px"
+          class="d-flex flex-column align-items-center text-center gap-1"
+          (click)="makeCall(); selectMenu('call')"
         >
-          <img
-            src="../../../assets/images/consumer-icons/shopping-cart.png"
-            alt="Orders"
-            width="20"
-            height="20"
-          />
+          <div
+            class="d-flex align-items-center justify-content-center"
+            [ngClass]="{ 'image-selection': selectedMenu === 'call' }"
+            style="width: 50px; height: 50px"
+          >
+            <img
+              src="../../../assets/images/consumer-icons/phone-call.png"
+              alt="Call"
+              width="50"
+            />
+          </div>
+          <div
+            class="footer-text-size text-muted fw-bold text-nowrap"
+            style="height: 20px"
+          >
+            CALL
+          </div>
         </div>
+        <!-- Food doc -->
+  
+        <!-- NOTIFICATIONS -->
         <div
-          class="footer-text-size text-muted fw-bold text-nowrap"
-          style="height: 20px"
+          class="d-flex flex-column align-items-center text-center gap-1 position-relative"
         >
-          YOUR ORDERS
+          <div
+            class="d-flex align-items-center justify-content-center"
+            [ngClass]="{ 'image-selection': selectedMenu === 'notification' }"
+            style="width: 50px; height: 50px"
+            (click)="toggleNotificationDropdown()"
+          >
+            <img
+              src="../../../assets/images/consumer-icons/notification.png"
+              alt="Notification"
+              width="20"
+            />
+          </div>
+          <div
+            class="footer-text-size text-muted fw-bold text-nowrap"
+            style="height: 20px"
+          >
+            NOTIFICATIONS
+          </div>
+  
+          <div
+          *ngIf="showNotificationDropdown"
+          class="dropdown-menu show text-start notification-dropdown"
+          style="
+            position: absolute;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-width: 250px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            font-size: 13px;
+          "
+        >
+          <button
+            class="dropdown-item text-wrap bullet-button"
+            type="button"
+            (click)="openLink('https://www.youtube.com/watch?v=2i_DodKPHAo')"
+          >
+            Bizz Info — हाथ ठीक से न धोने पर बंद हो सकता है खाद्य कारोबार
+          </button>
+          <hr class="dropdown-divider my-1" />
+        
+          <button
+            class="dropdown-item text-wrap bullet-button"
+            type="button"
+            (click)="openLink('https://www.youtube.com/watch?v=etuN05FwDao')"
+          >
+            Bizz Info — How to Handle Customers With Food Allergy
+          </button>
+          <hr class="dropdown-divider my-1" />
+        
+          <button
+            class="dropdown-item text-wrap bullet-button"
+            type="button"
+            (click)="openLink('https://www.youtube.com/watch?v=R6-BmJq1D6c')"
+          >
+            Bizz Info — Food Storage Mistakes commonly done by FBO's
+          </button>
+          <hr class="dropdown-divider my-1" />
+        
+          <button
+            class="dropdown-item text-wrap bullet-button"
+            type="button"
+          >
+            Service Info — Ms. Aditi Kulshrestha has been appointed as your regulatory advisor
+          </button>
         </div>
-      </div>
-
-      <!-- TRAINING -->
-      <!-- <div class="d-flex flex-column align-items-center text-center gap-1" (click)="selectMenu('training')">
-        <div class="d-flex align-items-center justify-content-center"
-             [ngClass]="{'image-selection': selectedMenu === 'training'}"
-             style="width: 50px; height: 50px;">
-          <img src="../../../assets/images/consumer-icons/training.png" alt="Training" width="20">
+        
+  
         </div>
-        <div class="footer-text-size text-muted fw-bold text-nowrap" style="height: 20px;">TRAINING</div>
-      </div> -->
-
-      <!-- CALL -->
-      <div
-        class="d-flex flex-column align-items-center text-center gap-1"
-        (click)="makeCall(); selectMenu('call')"
-      >
+  
+        <!-- FOOD DOC -->
+        <!-- FOOD DOC -->
         <div
-          class="d-flex align-items-center justify-content-center"
-          [ngClass]="{ 'image-selection': selectedMenu === 'call' }"
-          style="width: 50px; height: 50px"
+          class="d-flex flex-column align-items-center text-center gap-1"
+          (click)="navigateToFoodDoc()"
         >
-          <img
-            src="../../../assets/images/consumer-icons/phone-call.png"
-            alt="Call"
-            width="50"
-          />
+          <div
+            class="d-flex align-items-center justify-content-center"
+            [ngClass]="{ 'image-selection': selectedMenu === 'composition' }"
+            style="width: 50px; height: 50px"
+          >
+            <img
+              src="../../../assets/images/consumer-icons/composition.png"
+              alt="Notification"
+              width="20"
+            />
+          </div>
+          <div
+            class="footer-text-size text-muted fw-bold text-nowrap"
+            style="height: 20px"
+          >
+            FOOD DOC
+          </div>
         </div>
-        <div
-          class="footer-text-size text-muted fw-bold text-nowrap"
-          style="height: 20px"
-        >
-          CALL
-        </div>
-      </div>
-      <!-- Food doc -->
-
-      <!-- NOTIFICATIONS -->
-      <div
-        class="d-flex flex-column align-items-center text-center gap-1 position-relative"
-      >
-        <div
-          class="d-flex align-items-center justify-content-center"
-          [ngClass]="{ 'image-selection': selectedMenu === 'notification' }"
-          style="width: 50px; height: 50px"
-          (click)="toggleNotificationDropdown()"
-        >
-          <img
-            src="../../../assets/images/consumer-icons/notification.png"
-            alt="Notification"
-            width="20"
-          />
-        </div>
-        <div
-          class="footer-text-size text-muted fw-bold text-nowrap"
-          style="height: 20px"
-        >
-          NOTIFICATIONS
-        </div>
-
-        <div
-        *ngIf="showNotificationDropdown"
-        class="dropdown-menu show text-start notification-dropdown"
-        style="
-          position: absolute;
-          bottom: 70px;
-          left: 50%;
-          transform: translateX(-50%);
-          background-color: white;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-          min-width: 250px;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-          z-index: 1000;
-          font-size: 13px;
-        "
-      >
-        <button
-          class="dropdown-item text-wrap bullet-button"
-          type="button"
-          (click)="openLink('https://www.youtube.com/watch?v=2i_DodKPHAo')"
-        >
-          Bizz Info — हाथ ठीक से न धोने पर बंद हो सकता है खाद्य कारोबार
-        </button>
-        <hr class="dropdown-divider my-1" />
-      
-        <button
-          class="dropdown-item text-wrap bullet-button"
-          type="button"
-          (click)="openLink('https://www.youtube.com/watch?v=etuN05FwDao')"
-        >
-          Bizz Info — How to Handle Customers With Food Allergy
-        </button>
-        <hr class="dropdown-divider my-1" />
-      
-        <button
-          class="dropdown-item text-wrap bullet-button"
-          type="button"
-          (click)="openLink('https://www.youtube.com/watch?v=R6-BmJq1D6c')"
-        >
-          Bizz Info — Food Storage Mistakes commonly done by FBO's
-        </button>
-        <hr class="dropdown-divider my-1" />
-      
-        <button
-          class="dropdown-item text-wrap bullet-button"
-          type="button"
-        >
-          Service Info — Ms. Aditi Kulshrestha has been appointed as your regulatory advisor
-        </button>
-      </div>
-      
-
-      </div>
-
-      <!-- FOOD DOC -->
-      <!-- FOOD DOC -->
-      <div
-        class="d-flex flex-column align-items-center text-center gap-1"
-        (click)="navigateToFoodDoc()"
-      >
-        <div
-          class="d-flex align-items-center justify-content-center"
-          [ngClass]="{ 'image-selection': selectedMenu === 'composition' }"
-          style="width: 50px; height: 50px"
-        >
-          <img
-            src="../../../assets/images/consumer-icons/composition.png"
-            alt="Notification"
-            width="20"
-          />
-        </div>
-        <div
-          class="footer-text-size text-muted fw-bold text-nowrap"
-          style="height: 20px"
-        >
-          FOOD DOC
-        </div>
-      </div>
-
-      <!-- EDN -->
-      <!-- <div class="d-flex flex-column align-items-center text-center gap-1" (click)="selectMenu('edn')">
-        <div class="d-flex align-items-center justify-content-center"
-             [ngClass]="{'image-selection': selectedMenu === 'edn'}"
-             style="width: 50px; height: 50px;">
-          <img src="../../../assets/images/consumer-icons/group (1).png" alt="EDN" width="20">
-        </div>
-        <div class="footer-text-size text-muted fw-bold text-nowrap" style="height: 20px;">EDN</div>
-      </div> -->
-
-      <!-- OTHERS -->
-      <!-- <div class="d-flex flex-column align-items-center text-center gap-1" (click)="navigateToOtherOptions()">
-        <div class="d-flex align-items-center justify-content-center"
-             [ngClass]="{'image-selection': selectedMenu === 'other-options'}"
-             style="width: 50px; height: 50px;">
-          <img src="../../../assets/images/consumer-icons/web.png" alt="Others" width="20">
-        </div>
-        <div class="footer-text-size text-muted fw-bold text-nowrap" style="height: 20px;">OTHERS</div>
-      </div> -->
-    </div>
-  </div>
-
-  <!-- Modal -->
-  <!-- <div class="modal fade" id="notificationModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog notification-dialog">
-      <div class="modal-content border border-secondary shadow-lg">
-        <div class="modal-body p-0">
-          <iframe *ngIf="trustedVideoUrl" [src]="trustedVideoUrl" width="100%" height="200" frameborder="0" allowfullscreen class="w-100"></iframe>
-        </div>
-        <div class="modal-footer py-1 px-2 justify-content-end">
-          <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-        </div>
+  
+        <!-- EDN -->
+        <!-- <div class="d-flex flex-column align-items-center text-center gap-1" (click)="selectMenu('edn')">
+          <div class="d-flex align-items-center justify-content-center"
+               [ngClass]="{'image-selection': selectedMenu === 'edn'}"
+               style="width: 50px; height: 50px;">
+            <img src="../../../assets/images/consumer-icons/group (1).png" alt="EDN" width="20">
+          </div>
+          <div class="footer-text-size text-muted fw-bold text-nowrap" style="height: 20px;">EDN</div>
+        </div> -->
+  
+        <!-- OTHERS -->
+        <!-- <div class="d-flex flex-column align-items-center text-center gap-1" (click)="navigateToOtherOptions()">
+          <div class="d-flex align-items-center justify-content-center"
+               [ngClass]="{'image-selection': selectedMenu === 'other-options'}"
+               style="width: 50px; height: 50px;">
+            <img src="../../../assets/images/consumer-icons/web.png" alt="Others" width="20">
+          </div>
+          <div class="footer-text-size text-muted fw-bold text-nowrap" style="height: 20px;">OTHERS</div>
+        </div> -->
       </div>
     </div>
-  </div> -->
-</footer>
+  
+    <!-- Modal -->
+    <!-- <div class="modal fade" id="notificationModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog notification-dialog">
+        <div class="modal-content border border-secondary shadow-lg">
+          <div class="modal-body p-0">
+            <iframe *ngIf="trustedVideoUrl" [src]="trustedVideoUrl" width="100%" height="200" frameborder="0" allowfullscreen class="w-100"></iframe>
+          </div>
+          <div class="modal-footer py-1 px-2 justify-content-end">
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div> -->
+  </footer>

@@ -16,14 +16,14 @@ export class ConsumerShopDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getDataService.getShopsByBoId(this.boId).subscribe({
-      next: (res: any) => {
-        this.shops = res.shops || [];
-      },
-      error: (err) => {
-        console.error('Failed to load shops:', err);
-      }
-    });
+    // this.getDataService.getShopsByBoId(this.boId).subscribe({
+    //   next: (res: any) => {
+    //     this.shops = res.shops || [];
+    //   },
+    //   error: (err) => {
+    //     console.error('Failed to load shops:', err);
+    //   }
+    // });
   }
 
   navigateToOther(shop: any) {
