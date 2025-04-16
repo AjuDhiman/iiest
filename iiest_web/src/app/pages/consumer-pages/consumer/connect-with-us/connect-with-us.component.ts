@@ -17,7 +17,8 @@ import { RegisterService } from 'src/app/services/register.service';
   styleUrls: ['./connect-with-us.component.scss'],
 })
 export class ConnectWithUsComponent implements OnInit {
-  
+  consumer = JSON.parse(localStorage.getItem('consumer') || '{}');
+
   @Input() senderType: 'shop' | 'agent' = 'shop';
   @Input() boId: string = '';
   @Input() senderId: string = '';

@@ -31,6 +31,7 @@ export class ConsumerRightSidebarComponent implements OnInit, OnDestroy {
       this.sidebarService.openSidebar('right'); // optionally open on large screens
     }
   }
+  
   toggleSidebar() {
     if (this.sidebarService.getActiveSidebar() === 'right') {
       this.sidebarService.closeSidebar();
