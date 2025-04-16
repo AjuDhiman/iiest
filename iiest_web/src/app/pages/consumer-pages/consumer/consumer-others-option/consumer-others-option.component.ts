@@ -77,21 +77,19 @@ export class ConsumerOthersOptionComponent {
   ngOnInit(): void {
     const shopId = this.registerService.getShopId();
 
-    this.fetchShopLicenses(this.consumer.iiest_member_id,shopId,this.consumer.city_Id,this.consumer.business_category_ID);
+    this.fetchShopLicenses();
   }
 
-  fetchShopLicenses(boId: any,shopId:any, city_Id: any, business_category_ID: any): void {
-    this.getDataService.getShopLicensesData(boId,shopId, city_Id, business_category_ID).subscribe(response => {
+  fetchShopLicenses(): void {
+    this.getDataService.getVoluntaoryLicensesData().subscribe(response => {
       if (response.success) {
-        this.VoluntaryItems = response.licenses.Voluntary.map((license: any) => {
+        this.VoluntaryItems = response.data.map((license: any) => {
           return {
             id: license.id,
             name: license.name,
             color: license.status === 'Completed' ? '#15803D' : 
                    license.status === 'Pending' ? '#d6d6d6' : 
-                   license.status === 'initiated' ? '#FFA500' : 'transparent',
-            docObject: license.docObject,  
-            object: license.object 
+                   license.status === 'initiated' ? '#FFA500' : 'rgb(214, 214, 214)',
           };
         });
       }

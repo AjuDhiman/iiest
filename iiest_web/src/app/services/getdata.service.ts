@@ -88,6 +88,10 @@ export class GetdataService {
     const url = `${this.url}/licenses?business_type_id=${business_type_id}&city_id=${city_id}`;
     return this.http.get<any>(url).pipe(catchError(this.handleError));
   }
+  public getVoluntaoryLicensesData(): Observable<any> {
+    const url = `${this.url}/voluntary-licenses`;
+    return this.http.get(url);
+  }
 
   public getShopLicensesData(boId: any,shopId:any, city_Id: any, business_category_ID: any): Observable<any> {
     const url = `${this.url}/shop-licenses?boId=${boId}&shopId=${shopId}&city_id=${city_Id}&business_type_id=${business_category_ID}`;

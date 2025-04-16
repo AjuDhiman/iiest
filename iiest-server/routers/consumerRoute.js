@@ -1,5 +1,5 @@
 const express = require('express');
-const { consumerLogin,getComplianceStatistics,getShopLicenses,getAllEmployeeSales,getShopsByBoId,getAllBusinessTypes,getAllCities,getLicensesByBusinessAndCity,getAllLicense,UpdateCustomer ,changePassword,addResourceRequirement,addExpertConsultation,getResourceRequirement} = require('../controllers/consumerControllers/consumer');
+const { consumerLogin,getComplianceStatistics,getShopLicenses,getAllEmployeeSales,getShopsByBoId,getAllBusinessTypes,getAllCities,getLicensesByBusinessAndCity,getAllLicense,UpdateCustomer ,getVoluntaryLicenses,changePassword,addResourceRequirement,addExpertConsultation,getResourceRequirement} = require('../controllers/consumerControllers/consumer');
 const { getShopMessagesDoc,saveMessage,getMessagesBySender } = require('../controllers/chatControllers/chat');
 const { uploadChatFile } = require('../config/s3Bucket');
 
@@ -30,5 +30,6 @@ router.post('/add-resources', addResourceRequirement);
 router.get('/get-resources', getResourceRequirement);
 
 router.post('/add-expert-consultation', addExpertConsultation);
+router.get('/voluntary-licenses', getVoluntaryLicenses);
 
 module.exports = router;
