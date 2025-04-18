@@ -1,10 +1,10 @@
-const testEnv = false;
+const testEnv = true;
 const prodEnv = false;
 
 export const config = {
-   API_URL: prodEnv?'https://connectbharat.org:3001':(testEnv?'https://connectbharat.org:3001/iiest':'http://localhost:3000/iiest'),
+   API_URL: prodEnv?'https://connectonline.world:3001':(testEnv?'https://connectonline.world:3001/iiest':'http://localhost:3000/iiest'),
    // API_URL: 'https://iiest-server.onrender.com'
-   DOC_URL: prodEnv?'https://connectbharat.org:3001':(testEnv?'https://connectbharat.org:3001':'http://localhost:3000') //this url is the loaction in backend from where static file like pdf or images are avilable for download for backend see index.js in server 
+   DOC_URL: prodEnv?'https://connectonline.world:3001':(testEnv?'https://connectonline.world:3001':'http://localhost:3000') //this url is the loaction in backend from where static file like pdf or images are avilable for download for backend see index.js in server 
 }
 
 export const panIndiaAllowedEmpIds = [ //Employees with Pan India Employee Id
@@ -198,7 +198,8 @@ export const caseList_roles = [
 
 //roles of directors
 export const director_roles = [
-   'Director'
+   'Director',
+   'Technical Associate'
 ]
 
 //roles array for showing highchart conditionally

@@ -711,7 +711,13 @@ export class FbonewComponent implements OnInit, OnChanges {
             this.foscosFixedCharges
           ).subscribe({
             next: (res: any) => {
-              this.openRazorpayCheckout(res);
+              //That is for rezorpay Integration
+              // this.openRazorpayCheckout(res);
+
+              //That is for phonepay Integration
+              this.loading = false;
+              window.location.href = res.message;
+              
             },
             error: (err) => {
               this.loading = false;

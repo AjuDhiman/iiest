@@ -955,7 +955,28 @@ exports.employeeSalesData = async (req, res) => {
                 }
             },
             { $addFields: { employeeInfo: { $arrayElemAt: ['$employeeInfo', 0] } } },
-
+// Business Type Name lookup from business_types
+{
+    $lookup: {
+      from: 'business_types',
+      let: { categoryId: '$fboInfo.boInfo.business_category_ID' },
+      pipeline: [
+        {
+          $match: {
+            $expr: { $eq: ['$_id', { $toObjectId: '$$categoryId' }] }
+          }
+        },
+        {
+          $project: {
+            name: 1
+          }
+        }
+      ],
+      as: 'fboInfo.boInfo.business_category_info'
+    }
+  },
+  { $addFields: { 'fboInfo.boInfo.business_category_info': { $arrayElemAt: ['$fboInfo.boInfo.business_category_info', 0] } } },
+  
             // Projection
             {
                 $project: {
@@ -1002,6 +1023,7 @@ exports.employeeSalesData = async (req, res) => {
                     "fboInfo.boInfo.business_ownership_type": 1,
                     "fboInfo.boInfo.city_Id": 1,
                     "fboInfo.boInfo.business_category_ID": 1,
+"fboInfo.boInfo.business_category_info.name": 1,
 
                     // Employee
                     "employeeInfo.employee_name": 1

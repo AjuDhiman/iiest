@@ -98,33 +98,15 @@ export class ConsumerOthersOptionComponent {
   
   getImageForItem(itemName: string): string {
     const imageMap: { [key: string]: string } = {
-      'Health and Trade': '../../../../../assets/images/logo/health and trade lisc.png',
-      'FSSAI': '../../../../../assets/images/logo/Fssai License.png',
-      'Shop Estd. Registration': '../../../../../assets/images/licensesimg/shopRegistration.jpg',
-      'Food Training': '../../../../../assets/images/logo/food safety awarness training.png',
-      'Medical Certificate': '../../../../../assets/images/logo/medicial test.png',
-      'Water Testing Report': '../../../../../assets/images/logo/water testing.png',
-      'Fire NOC': '../../../../../assets/images/logo/fire-noc.png',
-      'DPCC License': '../../../../../assets/images/licensesimg/dpcc.jpg',
-      'Liquor License': '../../../../../assets/images/logo/liquor lisc.png',
-      'Eatinghouse': '../../../../../assets/images/logo/pollution noc.png',
-      'Pollution': '../../../../../../assets/images/licensesimg/pollution.jpg',
-      'Shop establishment':'../../../../../../assets/images/logo/shop establish lisc.png',
-      'Water':'../../../../../../assets/images/licensesimg/water.jpg',
-      'FOSTAC':'../../../../../../assets/images/logo/Fostac certificate.png',
-      'Food Sample':'../../../../../../assets/images/logo/food safety awarness training.png',
-      'Hygiene':'../../../../../../assets/images/logo/hygiene rating audit.png',
-      'Food Sample*':'../../../../../../assets/images/logo/food safety awarness training.png',
+      'ISO Consultation':'../../../../../../assets/images/logo/iso consultation.png',
+      'ISO Audit':'../../../../../../assets/images/logo/Iso Audit.png',
+      'Hygiene Rating Audit':'../../../../../../assets/images/logo/hygiene rating audit.png',
+      'Food Safety Awareness Training':'../../../../../../assets/images/logo/food safety awarness training.png',
       'Pest Control':'../../../../../../assets/images/logo/pest-control.png',
-      'Medical':'../../../../../../assets/images/licensesimg/Medical.jpg',
-      'RUCO*':'../../../../../../assets/images/logo/Ruco.png',
-      'ISO':'../../../../../../assets/images/logo/Iso Audit.png',
-      'Menu Labeling':'../../../../../../assets/images/logo/menu labelling.png',
-      '3rd Party':'../../../../../../assets/images/logo/Thrid party audit.png',
-      'Liquor*':'../../../../../../assets/images/logo/liquor lisc.png',
-      'Trade': '../../../../../assets/images/logo/Trade lisc.png',
-
-
+     'ISO Internal Auditor Training':'../../../../../../assets/images/logo/Iso internal audit training.png',
+      'GAP Assessment':'../../../../../../assets/images/logo/gap assessment.png',
+      'Lead Auditor Training': '../../../../../assets/images/logo/lead auditor training.png',
+      'NON NABL Water Test Report': '../../../../../assets/images/logo/water testing.png',
 
     };
    return imageMap[itemName] || '../../../../../assets/images/logo/Import-Export Certiifcate.png'

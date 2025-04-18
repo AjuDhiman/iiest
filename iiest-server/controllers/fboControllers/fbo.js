@@ -18,6 +18,8 @@ const { getDocObject, invoicesPath, fboBasicDocsPath, uploadDocObject, doesFileE
 const docsModel = require('../../models/operationModels/documentsSchema');
 const { default: mongoose } = require('mongoose');
 const { logAudit } = require('../generalControllers/auditLogsControllers');
+const payRequest = require('../../fbo/phonePay');
+
 const FRONT_END = JSON.parse(process.env.FRONT_END);
 const BACK_END = process.env.BACK_END;
 
@@ -66,9 +68,13 @@ exports.fboPayment = async (req, res) => {
         return res.status(404).json({ success: false, wrongPincode: true });
       }
     }
+    //That is for phonepay integration
 
-    const paymentData = await razorPayRequest(formBody.grand_total, req.user, fboFormData._id);
-    return res.status(200).json(paymentData);
+    payRequest(formBody.grand_total, req.user, res, `${BACK_END}/fbo-pay-return/${fboFormData._id}`);
+
+//That is for rezorpay integration
+    // const paymentData = await razorPayRequest(formBody.grand_total, req.user, fboFormData._id);
+    // return res.status(200).json(paymentData);
     
 
   } catch (error) {
@@ -437,9 +443,10 @@ exports.fboPayReturn = async (req, res) => {
 
 
         //lastly redirect user to fbo form
-        // res.redirect(`${FRONT_END.VIEW_URL}/#/fbo`);
+        res.redirect(`${FRONT_END.VIEW_URL}/#/fbo`);
 
         const isPayLaterMail = false;
+        console.log("invoiceData======>",invoiceData)
         sendInvoiceMail(email, invoiceData, isPayLaterMail, {});
         return res.status(200).json({ message: "Payment successfull" });
 
