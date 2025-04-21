@@ -71,6 +71,7 @@ exports.createBusinessOwner = async (req, res) => {
             contact_no: newBo.contact_no
         };
         try {
+            await sendBOVerificationSMS(newBo._id,newBo.email, newBo.contact_no)
             await sendMailToBo(email, mailInfo);
 
             console.log("STEP 7: Verification Mail Sent");

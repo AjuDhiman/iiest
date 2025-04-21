@@ -2,6 +2,7 @@
 
 const GUPSHUP_CONFIG = JSON.parse(process.env.GUPSHUP_CONFIG);
 const RAPID_SMS_CONFIG = JSON.parse(process.env.RAPID_SMS_CONFIG);
+const FRONT_END = JSON.parse(process.env.FRONT_END);
 
 const DLT_CONFIG = JSON.parse(process.env.DLT_CONFIG);
 var request = require("request");
@@ -11,14 +12,29 @@ const qs = require('qs')
 
 
 // methord for sending bo verification sms
-exports.sendBOVerificationSMS = async (manager_contact, email, verification_link, phoneNo) => {
+// manager_contact
+
+
+async function shortenURLWithTinyURL(longUrl) {
+    try {
+      const response = await axios.get(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`);
+      return response.data; // shortened URL
+    } catch (error) {
+      console.error('TinyURL Error:', error.message);
+      throw error;
+    }
+  }
+exports.sendBOVerificationSMS = async (_id, email, phoneNo) => {
+    const verifyLink = `${FRONT_END.VIEW_URL}#/verifyonboard/bo/${_id}`;
     const dltTempletID = '1007928778645796672';
-    const message = `Thanks for registering in the Connect Bharat. To complete the registration process and activate your account, Please verify your email address ${email} and your phone number ${manager_contact}.by clicking the link below. ${verification_link}For any query call us on 9289310979 - Connect Bharat (IIEST)`;
-    await sendSMS(message, phoneNo, dltTempletID);
+     const shortUrl = await shortenURLWithTinyURL(verifyLink);
+    const message = `Thanks for registering in the Connect Bharat. To complete the registration process and activate your account, Please verify your email address ${email} and your phone number ${phoneNo}.by clicking the link below. ${shortUrl}For any query call us on 9289310979 - Connect Bharat (IIEST)`;
+    
+    await sendRapidoSMS(message, phoneNo, dltTempletID);
+
+
+
 };
-
-
-
 
 
 // methord for sending bo Onboard sms
@@ -195,31 +211,37 @@ exports.foscosVerificationSMS = async (owner_name, manager_name, manager_contact
     }
 
 
-    async function sendRapidoSMS(message, phoneNo, dltTempletID) {
-        console.log("message====>", message);
-        console.log("phoneNo====>", phoneNo);
-        console.log("dlt_template_id==>", dltTempletID);
+    async function sendRapidoSMS(templateText, phoneNo, dltTempletID, variables = []) {
+        console.log("Template Message ====>", templateText);
+        console.log("Phone No ====>", phoneNo);
+        console.log("DLT Template ID ====>", dltTempletID);
     
         const params = {
             apikey: RAPID_SMS_CONFIG.authKey,
-            route: 'trans', 
+            route: 'trans',
             sender: RAPID_SMS_CONFIG.senderId,
             mobileno: phoneNo,
-            text: message,
-            template_id: dltTempletID 
+            text: templateText,
+            DLT_TE_ID: dltTempletID
         };
+    
+        // Add dynamic variables as VAR1, VAR2, VAR3, ...
+        variables.forEach((value, index) => {
+            params[`VAR${index + 1}`] = value;
+        });
     
         const url = `${RAPID_SMS_CONFIG.apiUrl}?${qs.stringify(params)}`;
     
         try {
             const response = await axios.get(url);
-            console.log("RapidSMS response====>", response.data);
+            console.log("RapidSMS response ====>", response.data);
             return response.data;
         } catch (error) {
             console.error("RapidSMS sending error:", error.response?.data || error.message || error);
             throw error;
         }
     }
+    
 
 
 
