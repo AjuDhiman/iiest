@@ -21,6 +21,7 @@ exports.createBusinessOwner = async (req, res) => {
 
         // Check Existing Email (Case Insensitive)
         const existingMail = await boModel.findOne({ email: { $regex: new RegExp(`^${email}$`, 'i') } });
+        console.log("existingMail==>",existingMail)
         if (existingMail) {
             console.log("Email Already Exists");
             return res.status(401).json({ success: false, message: 'Email already exists' });
@@ -186,9 +187,9 @@ exports.verifyEmail = async (req, res) => {
             console.log('isAdmin', isAdmin);
             if (verifiedMail) {
 
-                if (isAdmin) {
+                // if (isAdmin) {
                     await sendBOOnBoardSMS(idExsists.owner_name, idExsists.manager_name, idExsists.customer_id, idExsists.contact_no)
-                }
+                // }
           
                 console.log("mailInfo====>",mailInfo)
 

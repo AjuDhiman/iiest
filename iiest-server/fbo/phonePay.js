@@ -92,7 +92,6 @@ const payRequest = (grandTotal, req, res, redirectUrl) => {
             'Content-Type': 'application/json',
             'X-VERIFY': checksum,
             'accept': 'application/json',
-            'Origin': 'https://connectonline.world' 
 }
     }).then(function (response) {
         return res.status(200).json({ message: response.data.data.instrumentResponse.redirectInfo.url });

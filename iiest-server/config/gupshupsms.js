@@ -1,6 +1,8 @@
 //-------This  File contains the all the gupshup SMS related vars and methords --------
 
 const GUPSHUP_CONFIG = JSON.parse(process.env.GUPSHUP_CONFIG);
+const RAPID_SMS_CONFIG = JSON.parse(process.env.RAPID_SMS_CONFIG);
+
 const DLT_CONFIG = JSON.parse(process.env.DLT_CONFIG);
 var request = require("request");
 const axios = require('axios');
@@ -36,7 +38,8 @@ exports.sendBOOnBoardSMS = async (owner_name, manager_name, bo_id, phoneNo) => {
 
 
     //sending sms
-    const messageSent =  await sendSMS(message, phoneNo,dltTempletID);
+    // const messageSent =  await sendSMS(message, phoneNo,dltTempletID);
+    const messageSent =  await sendRapidoSMS(message, phoneNo,dltTempletID);
 
     return messageSent
 
@@ -192,7 +195,31 @@ exports.foscosVerificationSMS = async (owner_name, manager_name, manager_contact
     }
 
 
-
+    async function sendRapidoSMS(message, phoneNo, dltTempletID) {
+        console.log("message====>", message);
+        console.log("phoneNo====>", phoneNo);
+        console.log("dlt_template_id==>", dltTempletID);
+    
+        const params = {
+            apikey: RAPID_SMS_CONFIG.authKey,
+            route: 'trans', 
+            sender: RAPID_SMS_CONFIG.senderId,
+            mobileno: phoneNo,
+            text: message,
+            template_id: dltTempletID 
+        };
+    
+        const url = `${RAPID_SMS_CONFIG.apiUrl}?${qs.stringify(params)}`;
+    
+        try {
+            const response = await axios.get(url);
+            console.log("RapidSMS response====>", response.data);
+            return response.data;
+        } catch (error) {
+            console.error("RapidSMS sending error:", error.response?.data || error.message || error);
+            throw error;
+        }
+    }
 
 
 
