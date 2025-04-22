@@ -36,11 +36,9 @@ exports.sendBOVerificationSMS = async (_id, email, phoneNo) => {
      const decodedShortUrl = decodeURIComponent(shortUrl);
 
     // const message = `Thanks for registering in the Connect Bharat. To complete the registration process and activate your account, Please verify your email address ${email} and your phone number ${phoneNo}.by clicking the link below. ${shortUrl}For any query call us on 9289310979 - Connect Bharat (IIEST)`;
-    const message = `Thanks for registering in the Connect Bharat. To complete the registration process and activate your account, Please verify your email address ${email} and your phone number ${phoneNo}.by clicking the link below. {var} For any query call us on 9289310979 - Connect Bharat (IIEST)`;
+    const message = `Thanks for registering in the Connect Bharat. To complete the registration process and activate your account, Please verify your email address ${email} and your phone number ${phoneNo}.by clicking the link below. ${decodedShortUrl} For any query call us on 9289310979 - Connect Bharat (IIEST)`;
     console.log("aaaa",message);
     await sendRapidoSMS(message, phoneNo, dltTempletID);
-
-
 
 };
 
