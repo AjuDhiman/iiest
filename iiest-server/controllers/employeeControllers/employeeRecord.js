@@ -7,56 +7,50 @@ const { recipientModel } = require('../../models/fboModels/recipientSchema');
 const { recipientsList } = require('../fboControllers/recipient');
 
 
-//function for getting data about total, pending and approved sales related to sales officer  
+
+
 exports.employeeRecord = async (req, res) => {
     try {
-
         const user = req.user;
-
-        console.log(user);
-
-        //checking is is admin or not
         const isAdmin = user.employee_name.toLowerCase().includes('admin');
 
-        //var for timelines usually used in getting for a particular time Interval
-        const todayDate = new Date(); // getting today's date string
-        const startOfToday = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()); //getting time of start of the day
-        const startOfThisWeek = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate() - todayDate.getDay());//getting time of start of this week
-        const startOfPrevMonth = new Date(todayDate.getFullYear(), todayDate.getMonth() - 1, 1);//getting time of start of prev month
-        const startOfThisMonth = new Date(todayDate.getFullYear(), todayDate.getMonth(), 1);//getting time of start of this month
-        const startOfThisFinancialYear = new Date(todayDate.getFullYear(), 3, 1); //getting time of start of this year
+        const todayDate = new Date();
+        const startOfToday = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate());
+        const startOfThisWeek = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate() - todayDate.getDay());
+        const startOfPrevMonth = new Date(todayDate.getFullYear(), todayDate.getMonth() - 1, 1);
+        const startOfThisMonth = new Date(todayDate.getFullYear(), todayDate.getMonth(), 1);
+        const startOfThisFinancialYear = new Date(todayDate.getFullYear(), 3, 1);
+        const startOfLastFinancialYear = new Date(startOfThisFinancialYear.getFullYear() - 1, 3, 1);
+        const endOfLastFinancialYear = new Date(startOfThisFinancialYear.getFullYear(), 2, 31, 23, 59, 59, 999);
 
-        let pipeLineArr
-
-        if (user.designation == 'Director') {
-            pipeLineArr = [ // creating pipeline array for performing aggregation on sales model and getting data in required format
-                {
-                    $lookup: { //getting info about fbo from fbo registetrs by the help of foreign key match 
-                        from: 'fbo_registers', // The collection name where fboInfo is stored
-                        localField: 'fboInfo',
-                        foreignField: '_id',
-                        as: 'fboInfo'
-                    }
-                },
-                {
-                    $unwind: "$fboInfo" //unwinding fboInfo because data comes in array format
-                },
+        const commonLookups = [
+            {
+                $lookup: {
+                    from: 'fbo_registers',
+                    localField: 'fboInfo',
+                    foreignField: '_id',
+                    as: 'fboInfo'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$fboInfo',
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            ...(isAdmin ? [
                 {
                     $lookup: {
                         from: 'staff_registers',
                         let: { employeeId: '$employeeInfo' },
                         pipeline: [
                             {
-                                $match: {
-                                    $expr: {
-                                        $eq: ['$_id', '$$employeeId']
-                                    }
-                                }
+                                $match: { $expr: { $eq: ['$_id', '$$employeeId'] } }
                             },
                             {
                                 $project: {
-                                    employee_name: 1, // Only include the employee_name field
-                                    _id: 0 // Optionally exclude the _id field
+                                    employee_name: 1,
+                                    _id: 0
                                 }
                             }
                         ],
@@ -64,15 +58,52 @@ exports.employeeRecord = async (req, res) => {
                     }
                 },
                 {
-                    $unwind: "$employeeInfo" //unwinding fboInfo because data comes in array format
+                    $unwind: {
+                        path: '$employeeInfo',
+                        preserveNullAndEmptyArrays: true
+                    }
                 },
-                ...limitAdminSalePipeline,
-                {
-                    $group: { //grouping data for total, approved and pending sales ammount
-                        _id: 3,
-                        totalProcessingAmount: { //aggregating total sales amount
-                            $sum: {
-                                $sum: [  //getting revenue formulas pipeline from pipeline.js
+                ...limitAdminSalePipeline
+            ] : [])
+        ];
+
+        const groupStage = {
+            $group: {
+                _id: 3,
+                totalProcessingAmount: {
+                    $sum: {
+                        $sum: [
+                            ...fostacRevenue,
+                            ...foscosRevenue,
+                            ...hraRevenue,
+                            ...medicalRevenue,
+                            ...waterTestRevenue,
+                            ...khadyaPaalnRevenue
+                        ]
+                    }
+                },
+                pending: {
+                    $sum: {
+                        $cond: {
+                            if: {
+                                $or: [
+                                    {
+                                        $and: [
+                                            { $ne: ["$cheque_data", null] },
+                                            { $eq: ["$cheque_data.status", "Pending"] }
+                                        ]
+                                    },
+                                    {
+                                        $and: [
+                                            { $eq: ["$payment_mode", "Pay Later"] },
+                                            { $eq: ["$pay_later_status", "Pending"] }
+                                        ]
+                                    },
+                                    { $eq: ["$fboInfo.isBasicDocUploaded", false] }
+                                ]
+                            },
+                            then: {
+                                $sum: [
                                     ...fostacRevenue,
                                     ...foscosRevenue,
                                     ...hraRevenue,
@@ -80,263 +111,96 @@ exports.employeeRecord = async (req, res) => {
                                     ...waterTestRevenue,
                                     ...khadyaPaalnRevenue
                                 ]
-                            }
-                        },
-                        pending: { //grouping data pending sales ammount 
-                            $sum: {
-                                $cond: { //filtering only those data which contain cheque data and cheque_data.status is equal to Pending
-                                    if: {
-                                        $or: [
-                                            // Condition 1: cheque_data exists and cheque_data.status is "Pending"
-                                            {
-                                                $and: [
-                                                    { $ne: ["$cheque_data", null] }, // cheque_data exists
-                                                    { $eq: ["$cheque_data.status", "Pending"] } // cheque_data.status is "Pending"
-                                                ]
-                                            },
-                                            {
-                                                $and: [
-                                                    { $eq: ["$payment_mode", "Pay Later"] }, // payment mode = pay later
-                                                    { $eq: ["$pay_later_status", "Pending"] }
-                                                ]
-                                            },
-                                            // Condition 2: isBasicDocUploaded is false
-                                            { $eq: ["$fboInfo.isBasicDocUploaded", false] }
-                                        ]
-                                    }, then: {
-                                        $sum: [ //the sum is same as for total sale only the filtering condition is changed 
-                                            //getting revenue formulas pipeline from pipeline.js
-                                            ...fostacRevenue,
-                                            ...foscosRevenue,
-                                            ...hraRevenue,
-                                            ...medicalRevenue,
-                                            ...waterTestRevenue,
-                                            ...khadyaPaalnRevenue
-                                        ]
-                                    }, else: 0
-                                }
-                            }
-                        },
-                        approved: { //grouping data approved sales ammount 
-                            $sum: {
-                                $cond: { //filtering only those data which does not contains cheque data and if contains it's status should be approved and the basic doc uploaded var should be true 
-                                    if: {
-                                        $and: [
-                                            {
-                                                $or: [
-                                                    { $eq: [{ $ifNull: ["$cheque_data", null] }, null] }, // Check if cheque_data is null or doesn't exist
-                                                    { $eq: [{ $ifNull: ["$cheque_data.status", null] }, "Approved"] } // Check if cheque_data.status is "Approved"
-                                                ]
-                                            },
-                                            {
-                                                $or: [
-                                                    {
-                                                        $and: [
-                                                            { $eq: ["$payment_mode", "Pay Later"] }, // payment mode = pay later
-                                                            { $eq: ["$pay_later_status", "Approved"] } // pay_later_status is "Approved"
-                                                        ]
-                                                    },
-                                                    {
-                                                        $ne: ["$payment_mode", "Pay Later"] // If payment mode is not "Pay Later", skip the check
-                                                    }
-                                                ]
-                                            },
-                                            { $eq: ["$fboInfo.isBasicDocUploaded", true] }
-                                        ]
-
-                                    }, then: {
-                                        $sum: [ //the some is same as for total sale only the filtering condition is changed 
-                                            //getting revenue formulas pipeline from pipeline.js
-                                            ...fostacRevenue,
-                                            ...foscosRevenue,
-                                            ...hraRevenue,
-                                            ...medicalRevenue,
-                                            ...waterTestRevenue,
-                                            ...khadyaPaalnRevenue
-                                        ]
-                                    }, else: 0
-                                }
-                            }
+                            },
+                            else: 0
                         }
-
-                    }
-                }
-            ];
-
-        } else {
-            pipeLineArr = [ // creating pipeline array for performing aggregation on sales model and getting data in required format
-                {
-                    $lookup: { //getting info about fbo from fbo registetrs by the help of foreign key match 
-                        from: 'fbo_registers', // The collection name where fboInfo is stored
-                        localField: 'fboInfo',
-                        foreignField: '_id',
-                        as: 'fboInfo'
                     }
                 },
-                {
-                    $unwind: "$fboInfo" //unwinding fboInfo because data comes in array format
-                },
-                {
-                    $group: { //grouping data for total, approved and pending sales ammount
-                        _id: 3,
-                        totalProcessingAmount: { //aggregating total sales amount
-                            $sum: {
-                                $sum: [  //getting revenue formulas pipeline from pipeline.js
+                approved: {
+                    $sum: {
+                        $cond: {
+                            if: {
+                                $and: [
+                                    {
+                                        $or: [
+                                            { $eq: [{ $ifNull: ["$cheque_data", null] }, null] },
+                                            { $eq: [{ $ifNull: ["$cheque_data.status", null] }, "Approved"] }
+                                        ]
+                                    },
+                                    {
+                                        $or: [
+                                            {
+                                                $and: [
+                                                    { $eq: ["$payment_mode", "Pay Later"] },
+                                                    { $eq: ["$pay_later_status", "Approved"] }
+                                                ]
+                                            },
+                                            { $ne: ["$payment_mode", "Pay Later"] }
+                                        ]
+                                    },
+                                    { $eq: ["$fboInfo.isBasicDocUploaded", true] }
+                                ]
+                            },
+                            then: {
+                                $sum: [
                                     ...fostacRevenue,
                                     ...foscosRevenue,
                                     ...hraRevenue,
                                     ...medicalRevenue,
                                     ...waterTestRevenue,
-                                    ...khadyaPaalnRevenue,
+                                    ...khadyaPaalnRevenue
                                 ]
-                            }
-                        },
-                        pending: { //grouping data pending sales ammount 
-                            $sum: {
-                                $cond: { //filtering only those data which contain cheque data and cheque_data.status is equal to Pending
-                                    if: {
-                                        $or: [
-                                            // Condition 1: cheque_data exists and cheque_data.status is "Pending"
-                                            {
-                                                $and: [
-                                                    { $ne: ["$cheque_data", null] }, // cheque_data exists
-                                                    { $eq: ["$cheque_data.status", "Pending"] } // cheque_data.status is "Pending"
-                                                ]
-                                            },
-                                            {
-                                                $and: [
-                                                    { $eq: ["$payment_mode", "Pay Later"] }, // payment mode = pay later
-                                                    { $eq: ["$pay_later_status", "Pending"] }
-                                                ]
-                                            },
-                                            // Condition 2: isBasicDocUploaded is false
-                                            { $eq: ["$fboInfo.isBasicDocUploaded", false] }
-                                        ]
-                                    }, then: {
-                                        $sum: [ //the sum is same as for total sale only the filtering condition is changed 
-                                            //getting revenue formulas pipeline from pipeline.js
-                                            ...fostacRevenue,
-                                            ...foscosRevenue,
-                                            ...hraRevenue,
-                                            ...medicalRevenue,
-                                            ...waterTestRevenue,
-                                            ...khadyaPaalnRevenue,
-                                        ]
-                                    }, else: 0
-                                }
-                            }
-                        },
-                        approved: { //grouping data approved sales ammount 
-                            $sum: {
-                                $cond: { //filtering only those data which does not contains cheque data and if contains it's status should be approved and the basic doc uploaded var should be true 
-                                    if: {
-                                        $and: [
-                                            {
-                                                $or: [
-                                                    { $eq: [{ $ifNull: ["$cheque_data", null] }, null] }, // Check if cheque_data is null or doesn't exist
-                                                    { $eq: [{ $ifNull: ["$cheque_data.status", null] }, "Approved"] } // Check if cheque_data.status is "Approved"
-                                                ]
-                                            },
-                                            {
-                                                $or: [
-                                                    {
-                                                        $and: [
-                                                            { $eq: ["$payment_mode", "Pay Later"] }, // payment mode = pay later
-                                                            { $eq: ["$pay_later_status", "Approved"] } // pay_later_status is "Approved"
-                                                        ]
-                                                    },
-                                                    {
-                                                        $ne: ["$payment_mode", "Pay Later"] // If payment mode is not "Pay Later", skip the check
-                                                    }
-                                                ]
-                                            },
-                                            { $eq: ["$fboInfo.isBasicDocUploaded", true] }
-                                        ]
-
-                                    }, then: {
-                                        $sum: [ //the some is same as for total sale only the filtering condition is changed 
-                                            //getting revenue formulas pipeline from pipeline.js
-                                            ...fostacRevenue,
-                                            ...foscosRevenue,
-                                            ...hraRevenue,
-                                            ...medicalRevenue,
-                                            ...waterTestRevenue,
-                                            ...khadyaPaalnRevenue
-                                        ]
-                                    }, else: 0
-                                }
-                            }
+                            },
+                            else: 0
                         }
-
                     }
                 }
-            ];
-        }
+            }
+        };
 
-
-        const pipeline = [ //pipeline for aggregating data according to time periods
+        const pipeline = [
+            ...(user.designation !== 'Director' ? [{ $match: { employeeInfo: user._id } }] : []),
             {
-                $facet: { // we will use facet for aggregate sales data according to above pipeline arr for diffrent time lines
-                    today: [ //filltering only those data which are created after start of today
-                        {
-                            $match: {
-                                createdAt: { $gte: startOfToday },
-                            }
-                        },
-                        ...pipeLineArr
+                $facet: {
+                    today: [
+                        { $match: { createdAt: { $gte: startOfToday } } },
+                        ...commonLookups,
+                        groupStage
                     ],
-                    this_week: [  //filltering only those data which are created after start of this week
-                        {
-                            $match: {
-                                createdAt: { $gte: startOfThisWeek },
-                            }
-                        },
-                        ...pipeLineArr
+                    this_week: [
+                        { $match: { createdAt: { $gte: startOfThisWeek } } },
+                        ...commonLookups,
+                        groupStage
                     ],
-                    this_month: [  //filetering only those data which are created after start of this month
-                        {
-                            $match: {
-                                createdAt: { $gte: startOfThisMonth },
-                            }
-                        },
-                        ...pipeLineArr
+                    this_month: [
+                        { $match: { createdAt: { $gte: startOfThisMonth } } },
+                        ...commonLookups,
+                        groupStage
                     ],
-                    prev_month: [  //filetering only those data which are created after start of prev month before start of current month
-                        {
-                            $match: {
-                                createdAt: { $gte: startOfPrevMonth, $lt: startOfThisMonth },
-                            }
-                        },
-                        ...pipeLineArr
+                    prev_month: [
+                        { $match: { createdAt: { $gte: startOfPrevMonth, $lt: startOfThisMonth } } },
+                        ...commonLookups,
+                        groupStage
                     ],
-                    this_year: [  //filetering only those data which are created after start of this year
-                        {
-                            $match: {
-                                createdAt: { $gte: startOfThisFinancialYear },
-                            }
-                        },
-                        ...pipeLineArr
+                    this_year: [
+                        { $match: { createdAt: { $gte: startOfThisFinancialYear } } },
+                        ...commonLookups,
+                        groupStage
                     ],
-                    till_now: [  //filetering only those data which are created till now
-                        ...pipeLineArr
+                    last_year: [
+                        { $match: { createdAt: { $gte: startOfLastFinancialYear, $lt: endOfLastFinancialYear } } },
+                        ...commonLookups,
+                        groupStage
                     ],
+                    till_now: [
+                        ...commonLookups,
+                        groupStage
+                    ]
                 }
             }
         ];
 
-        if (user.designation !== 'Director') { //getting only data related only related to user in case of user is not director
-            pipeline.unshift({
-                $match: {
-                    employeeInfo: user._id,
-                }
-            });
-        }
-
-        const data = await salesModel.aggregate(pipeline); //performing aggregation
-
-
-        console.log('dataaaaaaaaaaaaaaaaaaa: ------------------', data)
-        console.log('today: ------------------', todayDate)
+        const data = await salesModel.aggregate(pipeline).allowDiskUse(true);
 
         res.status(200).json(data);
     } catch (error) {
@@ -344,6 +208,369 @@ exports.employeeRecord = async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
+
+
+
+
+
+//function for getting data about total, pending and approved sales related to sales officer  
+// exports.employeeRecord = async (req, res) => {
+//     try {
+
+//         const user = req.user;
+
+//         console.log(user);
+
+//         //checking is is admin or not
+//         const isAdmin = user.employee_name.toLowerCase().includes('admin');
+
+//         //var for timelines usually used in getting for a particular time Interval
+//         const todayDate = new Date(); // getting today's date string
+//         const startOfToday = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()); //getting time of start of the day
+//         const startOfThisWeek = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate() - todayDate.getDay());//getting time of start of this week
+//         const startOfPrevMonth = new Date(todayDate.getFullYear(), todayDate.getMonth() - 1, 1);//getting time of start of prev month
+//         const startOfThisMonth = new Date(todayDate.getFullYear(), todayDate.getMonth(), 1);//getting time of start of this month
+//         const startOfThisFinancialYear = new Date(todayDate.getFullYear(), 3, 1); //getting time of start of this year
+//         console.log("startOfThisFinancialYear=====>",startOfThisFinancialYear);
+//       // Last Financial Year (1 year before)
+//         const startOfLastFinancialYear = new Date(startOfThisFinancialYear.getFullYear() - 1, 3, 1);
+//         const endOfLastFinancialYear = new Date(startOfThisFinancialYear.getFullYear(), 2, 31, 23, 59, 59, 999); 
+//         // Optional: log in readable format (dd-mm-yyyy)
+//         const format = (d) => d.toLocaleDateString('en-GB');
+        
+//         console.log("🟡 Last FY:", format(startOfLastFinancialYear), "→", format(endOfLastFinancialYear));
+        
+
+//         let pipeLineArr
+
+
+//         if (user.designation == 'Director') {
+//             pipeLineArr = [ // creating pipeline array for performing aggregation on sales model and getting data in required format
+//                 {
+//                     $lookup: { //getting info about fbo from fbo registetrs by the help of foreign key match 
+//                         from: 'fbo_registers', // The collection name where fboInfo is stored
+//                         localField: 'fboInfo',
+//                         foreignField: '_id',
+//                         as: 'fboInfo'
+//                     }
+//                 },
+//                 {
+//                     $unwind: "$fboInfo" //unwinding fboInfo because data comes in array format
+//                 },
+//                 {
+//                     $lookup: {
+//                         from: 'staff_registers',
+//                         let: { employeeId: '$employeeInfo' },
+//                         pipeline: [
+//                             {
+//                                 $match: {
+//                                     $expr: {
+//                                         $eq: ['$_id', '$$employeeId']
+//                                     }
+//                                 }
+//                             },
+//                             {
+//                                 $project: {
+//                                     employee_name: 1, // Only include the employee_name field
+//                                     _id: 0 // Optionally exclude the _id field
+//                                 }
+//                             }
+//                         ],
+//                         as: 'employeeInfo'
+//                     }
+//                 },
+//                 {
+//                     $unwind: "$employeeInfo" //unwinding fboInfo because data comes in array format
+//                 },
+//                 ...limitAdminSalePipeline,
+//                 {
+//                     $group: { //grouping data for total, approved and pending sales ammount
+//                         _id: 3,
+//                         totalProcessingAmount: { //aggregating total sales amount
+//                             $sum: {
+//                                 $sum: [  //getting revenue formulas pipeline from pipeline.js
+//                                     ...fostacRevenue,
+//                                     ...foscosRevenue,
+//                                     ...hraRevenue,
+//                                     ...medicalRevenue,
+//                                     ...waterTestRevenue,
+//                                     ...khadyaPaalnRevenue
+//                                 ]
+//                             }
+//                         },
+//                         pending: { //grouping data pending sales ammount 
+//                             $sum: {
+//                                 $cond: { //filtering only those data which contain cheque data and cheque_data.status is equal to Pending
+//                                     if: {
+//                                         $or: [
+//                                             // Condition 1: cheque_data exists and cheque_data.status is "Pending"
+//                                             {
+//                                                 $and: [
+//                                                     { $ne: ["$cheque_data", null] }, // cheque_data exists
+//                                                     { $eq: ["$cheque_data.status", "Pending"] } // cheque_data.status is "Pending"
+//                                                 ]
+//                                             },
+//                                             {
+//                                                 $and: [
+//                                                     { $eq: ["$payment_mode", "Pay Later"] }, // payment mode = pay later
+//                                                     { $eq: ["$pay_later_status", "Pending"] }
+//                                                 ]
+//                                             },
+//                                             // Condition 2: isBasicDocUploaded is false
+//                                             { $eq: ["$fboInfo.isBasicDocUploaded", false] }
+//                                         ]
+//                                     }, then: {
+//                                         $sum: [ //the sum is same as for total sale only the filtering condition is changed 
+//                                             //getting revenue formulas pipeline from pipeline.js
+//                                             ...fostacRevenue,
+//                                             ...foscosRevenue,
+//                                             ...hraRevenue,
+//                                             ...medicalRevenue,
+//                                             ...waterTestRevenue,
+//                                             ...khadyaPaalnRevenue
+//                                         ]
+//                                     }, else: 0
+//                                 }
+//                             }
+//                         },
+//                         approved: { //grouping data approved sales ammount 
+//                             $sum: {
+//                                 $cond: { //filtering only those data which does not contains cheque data and if contains it's status should be approved and the basic doc uploaded var should be true 
+//                                     if: {
+//                                         $and: [
+//                                             {
+//                                                 $or: [
+//                                                     { $eq: [{ $ifNull: ["$cheque_data", null] }, null] }, // Check if cheque_data is null or doesn't exist
+//                                                     { $eq: [{ $ifNull: ["$cheque_data.status", null] }, "Approved"] } // Check if cheque_data.status is "Approved"
+//                                                 ]
+//                                             },
+//                                             {
+//                                                 $or: [
+//                                                     {
+//                                                         $and: [
+//                                                             { $eq: ["$payment_mode", "Pay Later"] }, // payment mode = pay later
+//                                                             { $eq: ["$pay_later_status", "Approved"] } // pay_later_status is "Approved"
+//                                                         ]
+//                                                     },
+//                                                     {
+//                                                         $ne: ["$payment_mode", "Pay Later"] // If payment mode is not "Pay Later", skip the check
+//                                                     }
+//                                                 ]
+//                                             },
+//                                             { $eq: ["$fboInfo.isBasicDocUploaded", true] }
+//                                         ]
+
+//                                     }, then: {
+//                                         $sum: [ //the some is same as for total sale only the filtering condition is changed 
+//                                             //getting revenue formulas pipeline from pipeline.js
+//                                             ...fostacRevenue,
+//                                             ...foscosRevenue,
+//                                             ...hraRevenue,
+//                                             ...medicalRevenue,
+//                                             ...waterTestRevenue,
+//                                             ...khadyaPaalnRevenue
+//                                         ]
+//                                     }, else: 0
+//                                 }
+//                             }
+//                         }
+
+//                     }
+//                 }
+//             ];
+
+//         } else {
+//             pipeLineArr = [ // creating pipeline array for performing aggregation on sales model and getting data in required format
+//                 {
+//                     $lookup: { //getting info about fbo from fbo registetrs by the help of foreign key match 
+//                         from: 'fbo_registers', // The collection name where fboInfo is stored
+//                         localField: 'fboInfo',
+//                         foreignField: '_id',
+//                         as: 'fboInfo'
+//                     }
+//                 },
+//                 {
+//                     $unwind: "$fboInfo" //unwinding fboInfo because data comes in array format
+//                 },
+//                 {
+//                     $group: { //grouping data for total, approved and pending sales ammount
+//                         _id: 3,
+//                         totalProcessingAmount: { //aggregating total sales amount
+//                             $sum: {
+//                                 $sum: [  //getting revenue formulas pipeline from pipeline.js
+//                                     ...fostacRevenue,
+//                                     ...foscosRevenue,
+//                                     ...hraRevenue,
+//                                     ...medicalRevenue,
+//                                     ...waterTestRevenue,
+//                                     ...khadyaPaalnRevenue,
+//                                 ]
+//                             }
+//                         },
+//                         pending: { //grouping data pending sales ammount 
+//                             $sum: {
+//                                 $cond: { //filtering only those data which contain cheque data and cheque_data.status is equal to Pending
+//                                     if: {
+//                                         $or: [
+//                                             // Condition 1: cheque_data exists and cheque_data.status is "Pending"
+//                                             {
+//                                                 $and: [
+//                                                     { $ne: ["$cheque_data", null] }, // cheque_data exists
+//                                                     { $eq: ["$cheque_data.status", "Pending"] } // cheque_data.status is "Pending"
+//                                                 ]
+//                                             },
+//                                             {
+//                                                 $and: [
+//                                                     { $eq: ["$payment_mode", "Pay Later"] }, // payment mode = pay later
+//                                                     { $eq: ["$pay_later_status", "Pending"] }
+//                                                 ]
+//                                             },
+//                                             // Condition 2: isBasicDocUploaded is false
+//                                             { $eq: ["$fboInfo.isBasicDocUploaded", false] }
+//                                         ]
+//                                     }, then: {
+//                                         $sum: [ //the sum is same as for total sale only the filtering condition is changed 
+//                                             //getting revenue formulas pipeline from pipeline.js
+//                                             ...fostacRevenue,
+//                                             ...foscosRevenue,
+//                                             ...hraRevenue,
+//                                             ...medicalRevenue,
+//                                             ...waterTestRevenue,
+//                                             ...khadyaPaalnRevenue,
+//                                         ]
+//                                     }, else: 0
+//                                 }
+//                             }
+//                         },
+//                         approved: { //grouping data approved sales ammount 
+//                             $sum: {
+//                                 $cond: { //filtering only those data which does not contains cheque data and if contains it's status should be approved and the basic doc uploaded var should be true 
+//                                     if: {
+//                                         $and: [
+//                                             {
+//                                                 $or: [
+//                                                     { $eq: [{ $ifNull: ["$cheque_data", null] }, null] }, // Check if cheque_data is null or doesn't exist
+//                                                     { $eq: [{ $ifNull: ["$cheque_data.status", null] }, "Approved"] } // Check if cheque_data.status is "Approved"
+//                                                 ]
+//                                             },
+//                                             {
+//                                                 $or: [
+//                                                     {
+//                                                         $and: [
+//                                                             { $eq: ["$payment_mode", "Pay Later"] }, // payment mode = pay later
+//                                                             { $eq: ["$pay_later_status", "Approved"] } // pay_later_status is "Approved"
+//                                                         ]
+//                                                     },
+//                                                     {
+//                                                         $ne: ["$payment_mode", "Pay Later"] // If payment mode is not "Pay Later", skip the check
+//                                                     }
+//                                                 ]
+//                                             },
+//                                             { $eq: ["$fboInfo.isBasicDocUploaded", true] }
+//                                         ]
+
+//                                     }, then: {
+//                                         $sum: [ //the some is same as for total sale only the filtering condition is changed 
+//                                             //getting revenue formulas pipeline from pipeline.js
+//                                             ...fostacRevenue,
+//                                             ...foscosRevenue,
+//                                             ...hraRevenue,
+//                                             ...medicalRevenue,
+//                                             ...waterTestRevenue,
+//                                             ...khadyaPaalnRevenue
+//                                         ]
+//                                     }, else: 0
+//                                 }
+//                             }
+//                         }
+
+//                     }
+//                 }
+//             ];
+//         }
+
+
+//         const pipeline = [ //pipeline for aggregating data according to time periods
+//             {
+//                 $facet: { // we will use facet for aggregate sales data according to above pipeline arr for diffrent time lines
+//                     today: [ //filltering only those data which are created after start of today
+//                         {
+//                             $match: {
+//                                 createdAt: { $gte: startOfToday },
+//                             }
+//                         },
+//                         ...pipeLineArr
+//                     ],
+//                     this_week: [  //filltering only those data which are created after start of this week
+//                         {
+//                             $match: {
+//                                 createdAt: { $gte: startOfThisWeek },
+//                             }
+//                         },
+//                         ...pipeLineArr
+//                     ],
+//                     this_month: [  //filetering only those data which are created after start of this month
+//                         {
+//                             $match: {
+//                                 createdAt: { $gte: startOfThisMonth },
+//                             }
+//                         },
+//                         ...pipeLineArr
+//                     ],
+//                     prev_month: [  //filetering only those data which are created after start of prev month before start of current month
+//                         {
+//                             $match: {
+//                                 createdAt: { $gte: startOfPrevMonth, $lt: startOfThisMonth },
+//                             }
+//                         },
+//                         ...pipeLineArr
+//                     ],
+//                     this_year: [  //filetering only those data which are created after start of this year
+//                         {
+//                             $match: {
+//                                 createdAt: { $gte: startOfThisFinancialYear },
+//                             }
+//                         },
+//                         ...pipeLineArr
+//                     ],
+//                     last_year: [  // ✅ Add this block
+//                         {
+//                           $match: {
+//                             createdAt: {
+//                               $gte: startOfLastFinancialYear,
+//                               $lt: endOfLastFinancialYear
+//                             }
+//                           }
+//                         },
+//                         ...pipeLineArr
+//                       ],
+//                     till_now: [  //filetering only those data which are created till now
+//                         ...pipeLineArr
+//                     ],
+//                 }
+//             }
+//         ];
+
+//         if (user.designation !== 'Director') { //getting only data related only related to user in case of user is not director
+//             pipeline.unshift({
+//                 $match: {
+//                     employeeInfo: user._id,
+//                 }
+//             });
+//         }
+
+//         const data = await salesModel.aggregate(pipeline); //performing aggregation
+
+
+//         console.log('dataaaaaaaaaaaaaaaaaaa: ------------------', data)
+//         console.log('today: ------------------', todayDate)
+
+//         res.status(200).json(data);
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: 'Internal Server Error' });
+//     }
+// };
 
 //function for getting data about all of the ticket completed(verified)
 exports.ticketVerificationData = async (req, res) => {
@@ -643,217 +870,177 @@ exports.ticketVerificationData = async (req, res) => {
     }
 }
 
+
 //function for getting sales data
+
 exports.employeeSalesData = async (req, res) => {
     try {
-
         const panelType = req.user.panel_type;
+        const isAdmin = req.user.designation === 'Director' || panelType === 'FSSAI Supervisor Panel';
 
-        let salesInfo;
-        if (req.user.designation === 'Director' || panelType === 'FSSAI Supervisor Panel') {
-            salesInfo = await salesModel.aggregate([
-                // {
-                //     $sort: {
-                //         "createdAt": -1
-                //     }
-                // },
-                {
-                    $lookup: {
-                        from: 'fbo_registers', // The collection name where fboInfo is stored
-                        localField: 'fboInfo',
-                        foreignField: '_id',
-                        as: 'fboInfo'
-                    }
-                },
-                {
-                    $unwind: {
-                        path: '$fboInfo',
-                        preserveNullAndEmptyArrays: true
-                    }
-                },
-                {
-                    $lookup: {
-                        from: 'bo_registers', // The collection name where boInfo is stored
-                        localField: 'fboInfo.boInfo',
-                        foreignField: '_id',
-                        as: 'fboInfo.boInfo'
-                    }
-                },
-                {
-                    $unwind: {
-                        path: '$fboInfo.boInfo',
-                        preserveNullAndEmptyArrays: true
-                    }
-                },
-
-                {
-                    $lookup: {
-                        from: 'staff_registers', // The collection name where employeeInfo is stored
-                        localField: 'employeeInfo',
-                        foreignField: '_id',
-                        as: 'employeeInfo'
-                    }
-                },
-                {
-                    $unwind: {
-                        path: '$employeeInfo',
-                        preserveNullAndEmptyArrays: true
-                    }
-                },
-                ...limitAdminSalePipeline,
-                {
-                    $project: {
-                        "_id": 1,
-                        "grand_total": 1,
-                        "checkStatus": 1,
-                        "fboInfo.fbo_name": 1,
-                        "fboInfo.owner_name": 1,
-                        "fboInfo.email": 1,
-                        "fboInfo.owner_contact": 1,
-                        "fboInfo._id": 1,
-                        "fboInfo.customer_id": 1,
-                        "fboInfo.boInfo.customer_id": 1,
-                        "fboInfo.boInfo.manager_name": 1,
-                        "fboInfo.boInfo.business_entity": 1,
-                        "fboInfo.boInfo.business_category": 1,
-                        "fboInfo.boInfo.business_ownership_type": 1,
-                        "product_name": 1,
-                        "fboInfo.state": 1,
-                        "fboInfo.address": 1,
-                        "fboInfo.pincode": 1,
-                        "fboInfo.village": 1,
-                        "fboInfo.tehsil": 1,
-                        "fboInfo.district": 1,
-                        "fboInfo.business_type": 1,
-                        "fboInfo.gst_number": 1,
-                        "fboInfo.isBasicDocUploaded": 1,
-                        "fboInfo.activeStatus": 1,
-                        "employeeInfo.employee_name": 1,
-                        "fostacInfo": 1,
-                        "foscosInfo": 1,
-                        "hraInfo": 1,
-                        "medicalInfo": 1,
-                        "waterTestInfo": 1,
-                        "khadyaPaalnInfo": 1,
-                        "foodLabelingInfo": 1,
-                        "createdAt": 1,
-                        "cheque_data": 1,
-                        "invoiceId": 1,
-                        "payment_mode": 1,
-                        "pay_later_status": 1
-                    }
-                },
-            ]);
+        let matchStage = {};
+        if (!isAdmin) {
+            matchStage = { employeeInfo: req.user._id };
         }
-        else {
-            salesInfo = await salesModel.aggregate([
-                {
-                    $match: {
-                        employeeInfo: req.user._id
-                    }
-                },
-                {
-                    $lookup: {
-                        from: 'fbo_registers', // The collection name where fboInfo is stored
-                        localField: 'fboInfo',
-                        foreignField: '_id',
-                        as: 'fboInfo'
-                    }
-                },
-                {
-                    $unwind: {
-                        path: '$fboInfo',
-                        preserveNullAndEmptyArrays: true
-                    }
-                },
-                {
-                    $lookup: {
-                        from: 'bo_registers', // The collection name where boInfo is stored
-                        localField: 'fboInfo.boInfo',
-                        foreignField: '_id',
-                        as: 'fboInfo.boInfo'
-                    }
-                },
-                {
-                    $unwind: {
-                        path: '$fboInfo.boInfo',
-                        preserveNullAndEmptyArrays: true
-                    }
-                },
 
-                {
-                    $lookup: {
-                        from: 'staff_registers', // The collection name where employeeInfo is stored
-                        localField: 'employeeInfo',
-                        foreignField: '_id',
-                        as: 'employeeInfo'
-                    }
-                },
-                {
-                    $unwind: {
-                        path: '$employeeInfo',
-                        preserveNullAndEmptyArrays: true
-                    }
-                },
-                {
-                    $project: {
-                        "_id": 1,
-                        "grand_total": 1,
-                        "checkStatus": 1,
-                        "fboInfo.fbo_name": 1,
-                        "fboInfo.owner_name": 1,
-                        "fboInfo.email": 1,
-                        "fboInfo.owner_contact": 1,
-                        "fboInfo._id": 1,
-                        "fboInfo.customer_id": 1,
-                        "fboInfo.boInfo.customer_id": 1,
-                        "fboInfo.boInfo.business_entity": 1,
-                        "fboInfo.boInfo.manager_name": 1,
-                        "fboInfo.boInfo.business_category": 1,
-                        "fboInfo.boInfo.business_ownership_type": 1,
-                        "product_name": 1,
-                        "fboInfo.state": 1,
-                        "fboInfo.address": 1,
-                        "fboInfo.pincode": 1,
-                        "fboInfo.village": 1,
-                        "fboInfo.tehsil": 1,
-                        "fboInfo.district": 1,
-                        "fboInfo.business_type": 1,
-                        "fboInfo.gst_number": 1,
-                        "fboInfo.isBasicDocUploaded": 1,
-                        "fboInfo.activeStatus": 1,
-                        "employeeInfo.employee_name": 1,
-                        "fostacInfo": 1,
-                        "foscosInfo": 1,
-                        "hraInfo": 1,
-                        "medicalInfo": 1,
-                        "waterTestInfo": 1,
-                        "khadyaPaalnInfo": 1,
-                        "foodLabelingInfo": 1,
-                        "createdAt": 1,
-                        "cheque_data": 1,
-                        "invoiceId": 1,
-                        "payment_mode": 1,
-                        "pay_later_status": 1
-                    }
+        const aggregationPipeline = [
+            { $match: matchStage },
+
+            // (Admin filters if any)
+            ... (isAdmin ? limitAdminSalePipeline : []),
+
+            // FBO Info lookup (optimized)
+            {
+                $lookup: {
+                    from: 'fbo_registers',
+                    let: { fboId: '$fboInfo' },
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$fboId'] } } },
+                        { $project: {
+                            fbo_name: 1,
+                            owner_name: 1,
+                            email: 1,
+                            owner_contact: 1,
+                            customer_id: 1,
+                            boInfo: 1,
+                            state: 1,
+                            address: 1,
+                            pincode: 1,
+                            village: 1,
+                            tehsil: 1,
+                            district: 1,
+                            business_type: 1,
+                            gst_number: 1,
+                            isBasicDocUploaded: 1,
+                            activeStatus: 1
+                        }}
+                    ],
+                    as: 'fboInfo'
                 }
+            },
+            { $addFields: { fboInfo: { $arrayElemAt: ['$fboInfo', 0] } } },
 
-            ]);
+            // BO Info lookup (optimized)
+            {
+                $lookup: {
+                    from: 'bo_registers',
+                    let: { boId: '$fboInfo.boInfo' },
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$boId'] } } },
+                        { $project: {
+                            customer_id: 1,
+                            manager_name: 1,
+                            business_entity: 1,
+                            business_category: 1,
+                            business_ownership_type: 1,
+                            city_Id: 1,
+                            business_category_ID: 1
+                        }}
+                    ],
+                    as: 'fboInfo.boInfo'
+                }
+            },
+            { $addFields: { 'fboInfo.boInfo': { $arrayElemAt: ['$fboInfo.boInfo', 0] } } },
+
+            // Employee Info lookup (optimized)
+            {
+                $lookup: {
+                    from: 'staff_registers',
+                    let: { empId: '$employeeInfo' },
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$empId'] } } },
+                        { $project: { employee_name: 1 } }
+                    ],
+                    as: 'employeeInfo'
+                }
+            },
+            { $addFields: { employeeInfo: { $arrayElemAt: ['$employeeInfo', 0] } } },
+// Business Type Name lookup from business_types
+{
+    $lookup: {
+      from: 'business_types',
+      let: { categoryId: '$fboInfo.boInfo.business_category_ID' },
+      pipeline: [
+        {
+          $match: {
+            $expr: { $eq: ['$_id', { $toObjectId: '$$categoryId' }] }
+          }
+        },
+        {
+          $project: {
+            name: 1
+          }
         }
+      ],
+      as: 'fboInfo.boInfo.business_category_info'
+    }
+  },
+  { $addFields: { 'fboInfo.boInfo.business_category_info': { $arrayElemAt: ['$fboInfo.boInfo.business_category_info', 0] } } },
+  
+            // Projection
+            {
+                $project: {
+                    "_id": 1,
+                    "grand_total": 1,
+                    "checkStatus": 1,
+                    "product_name": 1,
+                    "createdAt": 1,
+                    "cheque_data": 1,
+                    "invoiceId": 1,
+                    "payment_mode": 1,
+                    "pay_later_status": 1,
+                    "fostacInfo": 1,
+                    "foscosInfo": 1,
+                    "hraInfo": 1,
+                    "medicalInfo": 1,
+                    "waterTestInfo": 1,
+                    "khadyaPaalnInfo": 1,
+                    "foodLabelingInfo": 1,
 
-        // console.log(Date.now())
-        //generating presigned url for all docs src
+                    // FBO
+                    "fboInfo.fbo_name": 1,
+                    "fboInfo.owner_name": 1,
+                    "fboInfo.email": 1,
+                    "fboInfo.owner_contact": 1,
+                    "fboInfo._id": 1,
+                    "fboInfo.customer_id": 1,
+                    "fboInfo.state": 1,
+                    "fboInfo.address": 1,
+                    "fboInfo.pincode": 1,
+                    "fboInfo.village": 1,
+                    "fboInfo.tehsil": 1,
+                    "fboInfo.district": 1,
+                    "fboInfo.business_type": 1,
+                    "fboInfo.gst_number": 1,
+                    "fboInfo.isBasicDocUploaded": 1,
+                    "fboInfo.activeStatus": 1,
 
-        // salesInfo.docs.forEach((doc) => {
-        //     doc.src = doc.src.map(async(src) => await getDocObject(src))
-        // })
+                    // BO
+                    "fboInfo.boInfo.customer_id": 1,
+                    "fboInfo.boInfo.manager_name": 1,
+                    "fboInfo.boInfo.business_entity": 1,
+                    "fboInfo.boInfo.business_category": 1,
+                    "fboInfo.boInfo.business_ownership_type": 1,
+                    "fboInfo.boInfo.city_Id": 1,
+                    "fboInfo.boInfo.business_category_ID": 1,
+"fboInfo.boInfo.business_category_info.name": 1,
+
+                    // Employee
+                    "employeeInfo.employee_name": 1
+                }
+            }
+        ];
+
+        const salesInfo = await salesModel.aggregate(aggregationPipeline);
 
         return res.status(200).json({ salesInfo, time: new Date() });
+
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Internal Server Error" });
     }
-}
+};
+
 
 //
 exports.getTicketsDocs = async (req, res) => {

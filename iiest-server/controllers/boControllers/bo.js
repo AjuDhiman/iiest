@@ -1,7 +1,9 @@
 const boModel = require('../../models/BoModels/boSchema');
+const customerModel = require('../../models/customerModel/customerModel');
+
 const employeeSchema = require('../../models/employeeModels/employeeSchema')
-const { sendMailToBo } = require('./emailService');
-const { generateUniqueId } = require('../../fbo/generateCredentials');
+const { sendMailToBo, sendCredentialToBo } = require('./emailService');
+const { generateUniqueId, generateRandomPassword } = require('../../fbo/generateCredentials');
 const { default: mongoose } = require('mongoose');
 const fboModel = require('../../models/fboModels/fboSchema');
 const { sendBOVerificationSMS, sendBOOnBoardSMS } = require('../../config/gupshupsms');
@@ -9,67 +11,88 @@ const { sendBOVerificationSMS, sendBOOnBoardSMS } = require('../../config/gupshu
 //methord for creating business owners
 exports.createBusinessOwner = async (req, res) => {
     try {
-        const {
-            owner_name,
-            business_entity,
-            business_category,
-            business_ownership_type,
-            manager_name,
-            contact_no,
-            email,
-            onboard_by } = req.body; //destructuring req body
+        console.log("STEP 1: Data Received", req.body);
 
-        const { idNumber, generatedUniqueCustomerId } = await generateUniqueId(); //generating unique customer id for a bo
+        const { owner_name, business_entity, business_category_Id, business_ownership_type, manager_name, contact_no, email, onboard_by,cityID } = req.body;
 
-        //preceding lines will terminate the api and send exsisting mail error in response
-        const exsistingMail = await boModel.findOne({ email: email });
-        console.log(exsistingMail);
-
-        if (exsistingMail) {
-            return res.status(401).json({ success: false, emailErr: true });
+        if (!owner_name || !contact_no || !email) {
+            return res.status(400).json({ message: 'Missing required fields' });
         }
 
-        //preceding lines will terminate the api and send exsisting contact error in response
-        const exsistingContact = await boModel.findOne({ contact_no: contact_no });
-
-        if (exsistingContact) {
-            return res.status(401).json({ success: false, contactErr: true });
+        // Check Existing Email (Case Insensitive)
+        const existingMail = await boModel.findOne({ email: { $regex: new RegExp(`^${email}$`, 'i') } });
+        console.log("existingMail==>",existingMail)
+        if (existingMail) {
+            console.log("Email Already Exists");
+            return res.status(401).json({ success: false, message: 'Email already exists' });
         }
 
-        const employeeInfo = await employeeSchema.findOne({ employee_id: onboard_by }); //getting employee info the help of unique
-        //  employee id of a sales man (we are not using req.user in this case like our other api because we are not passing this api through middleware because we want to consumer to use onboard form witout being some one logged in)
+        // Check Existing Contact Number
+        const existingContact = await boModel.findOne({ contact_no: contact_no });
+        if (existingContact) {
+            console.log("Contact Number Already Exists");
+            return res.status(401).json({ success: false, message: 'Contact number already exists' });
+        }
 
+        // Check Employee
+        const employeeInfo = await employeeSchema.findOne({ employee_id: onboard_by });
+        if (!employeeInfo) {
+            console.log("Employee Not Found");
+            return res.status(404).json({ message: 'Employee not found' });
+        }
+        console.log("STEP 2: Employee Found", employeeInfo);
+
+        // Generate Unique ID
+        const { idNumber, generatedUniqueCustomerId } = await generateUniqueId();
+        console.log("STEP 3: Unique ID Generated:", idNumber, generatedUniqueCustomerId);
+
+        // Create Business Owner
         const newBo = await boModel.create({
             id_num: idNumber,
             customer_id: generatedUniqueCustomerId,
+            iiest_member_id: generatedUniqueCustomerId,
             owner_name,
             business_entity,
-            business_category,
+            business_category_ID:business_category_Id,
             business_ownership_type,
             contact_no,
             email: email.toLowerCase(),
             manager_name,
-            onboard_by: employeeInfo._id,
+            onboard_by: employeeInfo._id,   
             is_contact_verified: false,
-            is_email_verified: false //setting contact and email verification initially false beacuse we want consumer to verify both by mail or contact
-        }); // creating new bo in db
-
-
+            is_email_verified: false,
+            city_Id:cityID
+        });
+        console.log("STEP 4: Business Owner Created", newBo);
         const mailInfo = {
-            purpose: 'verification',// purpose of the mail
+            purpose: 'verification',
             id: newBo._id,
             email: newBo.email,
             contact_no: newBo.contact_no
-        }//collecting data relate to mail in mail info and next pass into send mail
+        };
+        try {
+            await sendBOVerificationSMS(newBo._id,newBo.email, newBo.contact_no)
+            await sendMailToBo(email, mailInfo);
 
-        await sendMailToBo(email, mailInfo); //sending verification mail
+            console.log("STEP 7: Verification Mail Sent");
+        } catch (mailError) {
+            console.error("Mail Error:", mailError);
+        }
 
-        return res.status(200).json({ message: 'Business owner created successfully', data: newBo });
+        return res.status(200).json({ message: 'Business Owner Registered Successfully', data: newBo });
+
     } catch (error) {
-        console.error('Error creating business owner:', error);
+        if (error.name === 'ValidationError') {
+            console.error("Validation Error:", error);
+            return res.status(400).json({ message: error.message });
+        }
+        console.error("Internal Server Error:", error);
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+
+
 
 //get list of all business owner from bo registers whose both contact and email are verified
 exports.getAllBusinessOwners = async (_req, res) => {
@@ -109,6 +132,7 @@ exports.verifyEmail = async (req, res) => {
         }
 
         const idExsists = await boModel.findOne({ _id: req.params.id });
+        console.log("idExsists=======>",idExsists)
 
         if (idExsists) {//sending already verified mail case of mailor contact already verified 
             if (idExsists.is_email_verified) {
@@ -126,35 +150,51 @@ exports.verifyEmail = async (req, res) => {
                 { new: true }
             );
 
-            //in case of verification failed send verificatio  error
+            console.log("verifiedMail=======>",verifiedMail);
             if (!verifiedMail) {
                 return res.status(404).json({ success: false, message: "Verification Failed", emailSendingErr: true });
             }
+            const employee = await employeeSchema.findOne({ _id: idExsists.onboard_by });
+            const newPassword = await generateRandomPassword();
 
-
-            const mailInfo = { //aggregating mail info for sending mail to bo with his or her customer id
+            const newCustomer = await customerModel.create({
+                business_owner_ref_id: idExsists._id,
+                customer_name: idExsists.manager_name,
+                iiest_member_id: idExsists.customer_id,
+                username: idExsists.customer_id,
+                password: newPassword,
+                email: idExsists.email,
+                contact_no: idExsists.contact_no,
+                created_by: employee._id,
+                business_category_ID:idExsists.business_category_ID,
+                city_Id:idExsists.city_Id
+            });
+            console.log("newCustomer---->",newCustomer)
+          
+          
+            //checking for is admin or not
+            const isAdmin = employee.employee_name.toLowerCase().includes('admin');
+            const mailInfo = {
                 boName: idExsists.owner_name,
                 purpose: 'onboard',
                 customerId: verifiedMail.customer_id,
                 email: idExsists.email,
                 contact_no: idExsists.contact_no,
-                managerName: idExsists.manager_name
+                managerName: idExsists.manager_name,
+                password: newPassword
+
             }
 
-            const employee = await employeeSchema.findOne({_id: idExsists.onboard_by});
-
-            //checking for is admin or not
-            const isAdmin = employee.employee_name.toLowerCase().includes('admin');
-
             console.log('isAdmin', isAdmin);
+            if (verifiedMail) {
 
-            if(verifiedMail){
-                if(isAdmin){
+                // if (isAdmin) {
                     await sendBOOnBoardSMS(idExsists.owner_name, idExsists.manager_name, idExsists.customer_id, idExsists.contact_no)
-                }
-    
-                await sendMailToBo(verifiedMail.email, mailInfo);//sending onboard mail when bo verifies mail and contact by clicking on verify mail button 
+                // }
+          
+                console.log("mailInfo====>",mailInfo)
 
+                await sendMailToBo(verifiedMail.email, mailInfo);
                 return res.status(200).json({ success: true, message: "Email Verified" });
             }
         }
@@ -252,7 +292,7 @@ exports.getClientList = async (req, res) => {
                             $options: "i"
                         }
                     }
-                } 
+                }
             },
             {
                 $lookup: {
@@ -262,8 +302,8 @@ exports.getClientList = async (req, res) => {
                     as: 'boInfo'
                 }
             },
-            { 
-                $unwind: "$boInfo" 
+            {
+                $unwind: "$boInfo"
             },
             {
                 $group: {
@@ -299,11 +339,11 @@ exports.getClientList = async (req, res) => {
             {
                 $sort: { "createdAt": -1 }
             },
-            { 
-                $skip: (page - 1) * limit 
+            {
+                $skip: (page - 1) * limit
             },
-            { 
-                $limit: parseInt(limit) 
+            {
+                $limit: parseInt(limit)
             }
         ], {
             allowDiskUse: true
@@ -319,8 +359,8 @@ exports.getClientList = async (req, res) => {
             }
         });
 
-        return res.status(200).json({ 
-            clientList, 
+        return res.status(200).json({
+            clientList,
             totalRecords,
             totalPages: Math.ceil(totalRecords / limit),
             currentPage: page
@@ -333,3 +373,104 @@ exports.getClientList = async (req, res) => {
 };
 
 
+exports.updateBusinessOwner = async (req, res) => {
+    try {
+      const { boId, city_Id, business_category_ID } = req.body;
+  
+      if (!boId) {
+        return res.status(400).json({ success: false, message: "boId is required" });
+      }
+  
+      const updateFields = {};
+      if (city_Id) updateFields.city_Id = city_Id;
+      if (business_category_ID) updateFields.business_category_ID = business_category_ID;
+  
+      const updatedBO = await boModel.findOneAndUpdate(
+        { customer_id: boId }, // or use { customer_id: boId } depending on frontend
+        { $set: updateFields },
+        { new: true }
+      );
+      const mailInfo = {
+        purpose: 'update_account',
+        boName: updatedBO.owner_name,
+        customerId: updatedBO.customer_id,
+        email: updatedBO.email
+      };
+  
+      await sendMailToBo(updatedBO.email, mailInfo);
+  
+      if (!updatedBO) {
+        return res.status(404).json({ success: false, message: "Business Owner not found" });
+      }
+  
+      return res.status(200).json({ 
+        success: true, 
+        message: "Business Owner updated successfully",
+        updatedData: updatedBO
+      });
+  
+    } catch (error) {
+      console.error("Error updating Business Owner:", error);
+      return res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+  };
+  
+
+
+  exports.createCustomerForBo = async (req, res) => {
+    try {
+      const { boId } = req.body;
+      console.log("📌 Received BO ID:", boId);
+  
+      if (!boId) {
+        return res.status(400).json({ success: false, message: "Business Owner ID is required" });
+      }
+  
+      const bo = await boModel.findOne({ customer_id: boId });
+  
+      if (!bo) {
+        return res.status(404).json({ success: false, message: "Business Owner not found" });
+      }
+  
+      const existingCustomer = await customerModel.findOne({ business_owner_ref_id: bo._id });
+  
+      if (existingCustomer) {
+        return res.status(409).json({ success: false, message: "Customer already exists for this Business Owner" });
+      }
+  
+      const employee = await employeeSchema.findById(bo.onboard_by);
+      const newPassword = await generateRandomPassword();
+  
+      const newCustomer = await customerModel.create({
+        business_owner_ref_id: bo._id,
+        customer_name: bo.manager_name,
+        iiest_member_id: bo.customer_id,
+        username: bo.customer_id,
+        password: newPassword,
+        email: bo.email,
+        contact_no: bo.contact_no,
+        created_by: employee?._id,
+        business_category_ID: bo.business_category_ID,
+        city_Id: bo.city_Id
+      });
+  
+      const mailInfo = {
+        boName: bo.owner_name,
+        purpose: 'onboard',
+        customerId: bo.customer_id,
+        email: bo.email,
+        contact_no: bo.contact_no,
+        managerName: bo.manager_name,
+        password: newPassword
+      };
+  
+      await sendMailToBo(bo.email, mailInfo);
+  
+      return res.status(201).json({ success: true, message: "Customer created successfully", customer: newCustomer });
+  
+    } catch (error) {
+      console.error("Create Customer Error:", error);
+      return res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+  };
+  

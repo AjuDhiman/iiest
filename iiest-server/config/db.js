@@ -5,7 +5,7 @@ const { fboEbillBucket, createInvoiceBucket, empSignBucket, empImageBucket } = r
 
 const config = JSON.parse(process.env.CONFIG);
 const mongoURL = config.MONGO_URL;
-
+console.log("config=======>",config)
 const connectToMongo = async() => {
      await mongoose.connect(mongoURL).then(() => {
         console.log('Now we are connected to the DB');
@@ -15,6 +15,7 @@ const connectToMongo = async() => {
         empImageBucket();
     }).catch((error) => {
         console.log(error);
+        process.exit(1);
     });
 }
 

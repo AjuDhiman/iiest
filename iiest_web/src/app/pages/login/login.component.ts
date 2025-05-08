@@ -106,15 +106,28 @@ export class LoginComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
+  
     this.loginemployee = this.form.value;
-    this._registerService.loginEmployee(this.loginemployee)
-      .subscribe({
-        next: (res) => {
+    console.log("this.userType===============>", this.userType);
+  
+    let apiCall = this._registerService.loginEmployee(this.loginemployee); // Default API for company
+  
+    if (this.userType.userType === 'consumer') {
+      apiCall = this._registerService.loginConsumer(this.loginemployee); // API for consumer
+    }
+  
+    apiCall.subscribe({
+      next: (res) => {
+     
+  
+        console.log("consumer data=====>",res)
+        if (this.userType.userType === 'company') {
           this._registerService.storeToken(res);
           this.activeModal.close();
           const bodyElement = document.body;
           bodyElement.classList.add('app');
-          //clearing the store on login
+    
+          // Clearing the store on login
           this.store.dispatch(ClearBos);
           this.store.dispatch(ClearEmployees);
           this.store.dispatch(ClearGSTList);
@@ -122,24 +135,30 @@ export class LoginComponent implements OnInit {
           this.store.dispatch(ClearShops);
           this._utilServices.setShopListData([]);
           this._utilServices.setData([]);
-          console.log(this.userType);
-          if(this.userType.userType === 'company'){
-            this.route.navigateByUrl('/home')
-          }else{
-            
-          }
-        },
-        error: (err) => {
-          let errorObj = err.error
-          this.toastrService.error('Internal Server Error!', errorObj.message && 'Please Check Your Internet Connection');
-          this.error = true;
-          this.errorMgs = errorObj.message
-        },
-        complete: () => {
-          console.info('complete')
+          this.route.navigateByUrl('/home');
         }
-      });
+        if (this.userType.userType === 'consumer') {
+          if (res.success) {
+            localStorage.setItem("consumerAuthToken", res.authToken);
+            localStorage.setItem("consumer", JSON.stringify(res.consumer));
+            this.activeModal.close();
+            console.log("Token and Customer Schema saved successfully.");
+          }
+          this.route.navigateByUrl('/consumer-main-page');
+        }
+      },
+      error: (err) => {
+        let errorObj = err.error;
+        this.toastrService.error('Internal Server Error!', errorObj.message && 'Please Check Your Internet Connection');
+        this.error = true;
+        this.errorMgs = errorObj.message;
+      },
+      complete: () => {
+        console.info('complete');
+      }
+    });
   }
+  
   /**********************Forgot Password modal open *******************/
   openFpModal(fp: any) {
     this.activeModal.close();

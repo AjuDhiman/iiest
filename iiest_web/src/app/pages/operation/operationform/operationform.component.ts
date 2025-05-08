@@ -42,6 +42,8 @@ export class OperationformComponent implements OnInit {
   isVerifier: boolean = false;
   isSaleFormVisible: boolean = false;
   checkedDocs: any = [];
+  chatDocs: any[] = [];
+
   caseData: any;
   requiredDocs = [
     {
@@ -131,7 +133,35 @@ export class OperationformComponent implements OnInit {
     this.getUserProductType();
     this.checkActiveProduct();
   }
+  getDocShopId(shopId:any):void{
+    this._getDataService.getChatDocByShopId(shopId).subscribe({
+      next: (res: any) => {
+        console.log("res================>",res)
 
+
+        this.chatDocs = res.messages
+  .filter((msg: { file: { src: any; }; }) => msg.file && msg.file.src) // only messages with valid files
+  .map((msg: { file: any; senderType: any; message: any; timestamp: any; }) => {
+    const file = msg.file;
+    const extension = file.fileName?.split('.').pop()?.toLowerCase();
+
+    return {
+      name: file.fileName,
+      format: extension === 'pdf' ? 'pdf' : 'image', // You can enhance with other formats later
+      src: file.src,
+      from: msg.senderType,
+      message: msg.message,
+      timestamp: msg.timestamp
+    };
+  });
+
+      },
+      error: (err) => {
+        console.error('Failed to load messages:', err);
+      }
+    });
+
+}
   //this methord for geting recipient customer id 
   getCustomerId($event: any): void {
     this.customerId = $event;
@@ -142,6 +172,8 @@ export class OperationformComponent implements OnInit {
     this.caseData = $event;
     this.customerId = this.caseData.salesInfo.fboInfo.customer_id;
     //gstting all doc list
+    this.getDocShopId(this.customerId);
+
     this.getDocList();
     
   }
@@ -308,6 +340,7 @@ export class OperationformComponent implements OnInit {
       this._getDataService.getDocs(this.customerId).subscribe({
         next: res => {
           if(res){
+            console.log("res =====>",res)
             this.docList = res.docs
   
             const docNames = this.docList.map((doc: any) => doc.name);

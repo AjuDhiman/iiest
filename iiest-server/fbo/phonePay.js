@@ -17,7 +17,7 @@ const productionBaseUrl = 'https://api.phonepe.com/apis/hermes/pg/v1/'
 const sandboxBaseUrl = 'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/';
 
 // Determine whether you're in production or sandbox environment
-const isProduction = true; // Change this value as needed based on your environment
+const isProduction = true; 
 
 // Define the endpoint
 const endpoint = 'pay';
@@ -91,8 +91,8 @@ const payRequest = (grandTotal, req, res, redirectUrl) => {
         headers: {
             'Content-Type': 'application/json',
             'X-VERIFY': checksum,
-            'accept': 'application/json'
-        }
+            'accept': 'application/json',
+}
     }).then(function (response) {
         return res.status(200).json({ message: response.data.data.instrumentResponse.redirectInfo.url });
     }).catch(function (error) {

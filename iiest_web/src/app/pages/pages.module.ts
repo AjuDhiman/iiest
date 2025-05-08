@@ -14,6 +14,10 @@ import { SaleDocModalComponent } from './modals/sale-doc-modal/sale-doc-modal.co
 import { ShopsModalComponent } from './modals/shops-modal/shops-modal.component';
 import { AccountsModule } from './accounts/accounts.module';
 import { CoworksModule } from './coworks/coworks.module';
+import { ConsumerModule } from './consumer-pages/consumer/consumer.module';
+import { ShippingPolicyComponent } from './shipping-policy/shipping-policy.component';
+import { ContactUsComponent } from './contact-us/contact-us.component';
+import { ContactusformComponent } from './landingpage/contactusform/contactusform.component';
 
 
 
@@ -26,6 +30,10 @@ import { CoworksModule } from './coworks/coworks.module';
     RefundPolicyComponent,
     SaleDocModalComponent,
     ShopsModalComponent,
+    ShippingPolicyComponent,
+    ContactUsComponent,
+
+    // ConsumerHomeComponent,
   ],
   imports: [
     CommonModule,
@@ -33,14 +41,18 @@ import { CoworksModule } from './coworks/coworks.module';
     GeneralModule,
     SalesModule,
     OperationModule,
+    ConsumerModule,
     HRModule,
     AccountsModule,
-    CoworksModule
+    CoworksModule,
+
+    
   ],
   exports: [
     SalesModule,
     OperationModule,
-    OnboardVerificationComponent
+    OnboardVerificationComponent,
+  
   ]
 })
 export class PagesModule { }

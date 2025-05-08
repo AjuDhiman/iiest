@@ -10,7 +10,7 @@ import { GetdataService } from 'src/app/services/getdata.service';
 import { RegisterService } from 'src/app/services/register.service';
 import { pincodeData } from 'src/app/utils/registerinterface';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-
+import {merchantId} from '../../../../utils/config'
 
 @Component({
   selector: 'app-fbonew',
@@ -32,12 +32,14 @@ export class FbonewComponent implements OnInit, OnChanges {
   servicesNames: any = {};
   minValue: number = 1;
   loggedUser: any;
+  businessTypes:any[];
   objId: string;
   foscosFixedCharges: number
   foscosGST: number;
   fostacGST: number;
   hygieneGST: number;
   foodLableGST: number;
+  foodLabelingGST: number; // Added to fix the issue
   editedData: any;
   parsedUserData: any;
   submitted = false;
@@ -105,6 +107,7 @@ export class FbonewComponent implements OnInit, OnChanges {
   selectedFbo: any;
   byCheque: boolean = false;
   chequeImage: File; // var for cheque image
+  signatureFile: any; // var for signature file
   disabledOptions = []; // this var will contain all the options rom multiselect that have enabled false in db;
 
   //New variables by vansh on 16-01-2023
@@ -123,6 +126,7 @@ export class FbonewComponent implements OnInit, OnChanges {
   khadyaPaalnGST: number = 0;
   khadyaPaalnFixedCharges: number = 0;
   loading: boolean = false;
+  officerName: string = ''; // Declare the officerName property
   // new varable by chandan
   existingbos: Object[];
 
@@ -245,7 +249,7 @@ export class FbonewComponent implements OnInit, OnChanges {
     const item = localStorage.getItem('LoggedInUser');
   }
   ngOnInit(): void {
-
+    this.fetchBuisnessType();
     this.userData = this._registerService.LoggedInUserData();
     this.parsedUserData = JSON.parse(this.userData)
     this.userName = this.parsedUserData.employee_name;
@@ -417,7 +421,15 @@ export class FbonewComponent implements OnInit, OnChanges {
       this.fboPlaceholder = "Enter FBO Name";
     }
   }
+  fetchBuisnessType(): void {
+    this._getFboGeneralData.getAllBusinessTypes().subscribe(response => {
+      if (response.success) {
+        console.log("response===>",response);
+        this.businessTypes = response.businessTypes;
 
+      }
+    });
+  }
   //hide the exsisting fbo and open exsisting bo search
   existingUserBo($event: any) {
     // this.existingUserBoForm.reset();
@@ -530,7 +542,10 @@ export class FbonewComponent implements OnInit, OnChanges {
     this.fbo['owner_name'].setValue(fboObj.owner_name);
     this.fbo['owner_contact'].setValue(fboObj.owner_contact);
     this.fbo['business_entity'].setValue(fboObj.boInfo.business_entity);
-    this.fbo['business_category'].setValue(fboObj.boInfo.business_category);
+    console.log("businessTypes=========>",this.businessTypes)
+    const selectedBusiness = this.businessTypes.find(business => business._id === fboObj.boInfo.business_category_ID);
+
+    this.fbo['business_category'].setValue(selectedBusiness ? selectedBusiness.name : '');
     this.fbo['manager_name'].setValue(fboObj.boInfo.manager_name);
     this.fbo['business_ownership_type'].setValue(fboObj.boInfo.business_ownership_type);
     this.fbo['email'].setValue(fboObj.email);
@@ -583,7 +598,10 @@ export class FbonewComponent implements OnInit, OnChanges {
     this.isSearchEmptyBO = true;
     this.fbo['owner_name'].setValue(fboObj.owner_name);
     this.fbo['business_entity'].setValue(fboObj.business_entity);
-    this.fbo['business_category'].setValue(fboObj.business_category);
+    
+    const selectedBusiness = this.businessTypes.find(business => business._id === fboObj.business_category_ID);
+
+    this.fbo['business_category'].setValue(selectedBusiness ? selectedBusiness.name : '');
     this.fbo['business_ownership_type'].setValue(fboObj.business_ownership_type);
     this.fbo['owner_contact'].setValue(fboObj.contact_no);
     this.fbo['email'].setValue(fboObj.email);
@@ -591,6 +609,63 @@ export class FbonewComponent implements OnInit, OnChanges {
     this.fbo['boInfo'].setValue(fboObj._id);
   }
 
+  openRazorpayCheckout(paymentData: any) {
+    const sessionId = paymentData.sessionId; // ✅ Save here in closure
+  
+    const options: any = {
+      key: paymentData.keyId,
+      amount: paymentData.amount,
+      currency: paymentData.currency,
+      name: "Your Company Name",
+      description: "FBO Payment",
+      order_id: paymentData.orderId,
+      handler: (response: any) => {
+        console.log("Payment Success:", response);
+
+        const payload = {
+          code: 'PAYMENT_SUCCESS',
+          merchantId: merchantId,
+          transactionId: response.razorpay_payment_id, 
+          providerReferenceId: response.razorpay_order_id 
+        };
+        // ✅ Use the sessionId from closure scope
+        this._registerService.callPaymentSuccessApi(sessionId, payload).subscribe({
+          next: (res: any) => {
+            this._toastrService.success('Payment successful and data saved successfully!', '');
+  
+            // Optional delay for UX
+            setTimeout(() => {
+              window.location.href = `#/fbolist`;
+            }, 1000);
+          },
+          error: (error) => {
+            console.error('Error calling payment success API:', error);
+            this._toastrService.error('Payment was successful, but data saving failed. Please contact support.');
+          }
+        });
+      },
+      prefill: {
+        name: this.fboForm.value.owner_name,
+        email: this.fboForm.value.email,
+        contact: this.fboForm.value.owner_contact
+      },
+      theme: {
+        color: "#3399cc"
+      }
+    };
+  
+    const razorpay = new (window as any).Razorpay(options);
+    razorpay.open();
+  
+    razorpay.on('payment.failed', (response: any) => {
+      console.error("Payment Failed:", response.error);
+      this._toastrService.error('Payment failed. Please try again.');
+    });
+  }
+  
+  
+  
+  
 
   //Form Submit Method
   onSubmit() {
@@ -624,10 +699,25 @@ export class FbonewComponent implements OnInit, OnChanges {
       this.addFbo = this.fboForm.value;
       if (!this.isExistingFbo) {
         if (this.addFbo.payment_mode === 'Pay Page') {
-          this._registerService.fboPayment(this.objId, this.addFbo, this.foscosGST, this.fostacGST, this.hygieneGST, this.medicalGST, this.waterTestGST, this.khadyaPaalnGST, this.foscosFixedCharges).subscribe({
-            next: (res) => {
+          this._registerService.fboPayment(
+            this.objId,
+            this.addFbo,
+            this.foscosGST,
+            this.fostacGST,
+            this.hygieneGST,
+            this.medicalGST,
+            this.waterTestGST,
+            this.khadyaPaalnGST,
+            this.foscosFixedCharges
+          ).subscribe({
+            next: (res: any) => {
+              //That is for rezorpay Integration
+              // this.openRazorpayCheckout(res);
+
+              //That is for phonepay Integration
               this.loading = false;
               window.location.href = res.message;
+              
             },
             error: (err) => {
               this.loading = false;
@@ -651,6 +741,8 @@ export class FbonewComponent implements OnInit, OnChanges {
               }
             }
           })
+
+
         } else if (this.addFbo.payment_mode === 'Cash') {
           this._registerService.addFbo(this.objId, this.addFbo, this.foscosGST, this.fostacGST, this.hygieneGST, this.medicalGST, this.waterTestGST, this.khadyaPaalnGST, this.foscosFixedCharges).subscribe({
             next: (res) => {
@@ -790,7 +882,8 @@ export class FbonewComponent implements OnInit, OnChanges {
             }
           })
         }
-      } else {
+      }
+       else {
         if (this.addFbo.payment_mode === 'Cash') {
           this._registerService.existingFboSale(this.objId, this.addFbo, this.foscosGST, this.fostacGST, this.hygieneGST, this.medicalGST, this.waterTestGST, this.khadyaPaalnGST, this.foscosFixedCharges, this.existingFboId).subscribe({
             next: (res) => {
@@ -938,8 +1031,8 @@ export class FbonewComponent implements OnInit, OnChanges {
            // console.log(this.userDesignation);
             if (this.userDesignation === 'Sales Agent') {
               // Enable only the "Khadya Paaln" option, disable others
-              //return item.key !== 'Khadya Paaln';
-              return !item.value.enabled;
+              return item.key !== 'Khadya Paaln';
+              // return !item.value.enabled;
             }
             // For Area Officer: disable "Khadya Paaln" specifically
             else if (this.userDesignation === 'Area Officer(District Head)') {

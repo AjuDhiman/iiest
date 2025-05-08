@@ -281,6 +281,7 @@
                             <div *ngIf="fbo['business_type'].errors['required']">GST Type is required</div>
                         </div>
                     </div>
+                    
                     <div *ngIf="need_gst_number" class="col-md-3">
                         <label for="gst_number" class="form-label">GST Number<sup>*</sup></label>
                         <input type="text" placeholder="GST Number" formControlName="gst_number"
@@ -486,12 +487,15 @@
 
                     <div class="col-md-3">
                         <label for="payment_mode" class=" form-label">Payment Mode<sup>*</sup></label>
+
                         <select id="payment_mode" formControlName="payment_mode" placeholder="Payment Mode"
                             [ngClass]="{ 'is-invalid': submitted && fbo['payment_mode'].errors }"
                             class="form-select form-select-sm" (change)="ModeofPayment($event)">
                             <option value="" disabled selected>Select Mode of Payment</option>
-                            <option *ngFor="let mode of paymentMode" [value]="mode">{{ mode }}</option>
+                            <!-- [disabled]="mode === 'By Cheque' || mode === 'Pay Later'" -->
+                            <option *ngFor="let mode of paymentMode"  [value]="mode"  >{{ mode }}</option>
                         </select>
+                        
                         <div *ngIf="submitted && fbo['payment_mode'].errors" class="invalid-feedback">
                             <div *ngIf="fbo['payment_mode'].errors['required']">Mode of Payment is required
                             </div>

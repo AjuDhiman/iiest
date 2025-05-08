@@ -13,13 +13,7 @@ const { deleteDocFromS3 } = require('../controllers/operationControllers/documen
 const router = express.Router();
 const employeeFilesStorage = multer.memoryStorage();
 const employeeFilesUpload = multer({storage: employeeFilesStorage});
-
-
-
-
-
 //-----------------------------------------------routes--------------------------------------------------------------------------------------
-
 router.post('/empregister', authMiddleware, employeeRegister); //Route of regitering new employee
 router.post('/login', employeeLogin);// Route for calling login API for a particular employee
 router.post('/forgot-password', forgotPassword);  //route for calling forgot password api
@@ -48,7 +42,6 @@ router.get('/getemployeedocuploadurl/:name', authMiddleware, getEmployeeDocUploa
 router.post('/deletedfroms3', authMiddleware, deleteDocFromS3); //route for deleting image from s3
 router.post('/generatepresignedgeturl', authMiddleware, generatePresignedGetUrl); //route for getting presigned url for a key comming from client
 
-
 // ---------------------------------------------------------routes for Highcharts APIs ----------------------------------------------------------
 router.get('/getproductsaledata',authMiddleware, getProductSaleData); //route for getting data for productwise chart
 router.get('/getareawisesaledata', authMiddleware, getAreaWiseSalesData); //route for getting data for Area Wise chart
@@ -57,19 +50,11 @@ router.get('/getclienttypesaledata', authMiddleware , getClientTypeSalesData); /
 router.get('/getmothwisesale', authMiddleware, getMonthWiseSaleData); //route for getting data for Month Wise or time interval wise chart
 router.get('/getrepeatedcustdata',authMiddleware, getRepeactCustomerData); //route for getting data for customer repetition chart
 router.get('/getticketdeliverychartdata', authMiddleware, ticketDeviveryChartData); //route for getting data for ticket delivery chart
-
-
-
-
 //----------------------------------------------------------routes for Statlist APIs-------------------------------------------------------------
 router.get('/gettopsalespersons', authMiddleware, getTopSalesPersons);//route for getting to sales person list
 router.get('/gettopproducts', authMiddleware, getTopProducts);//route for getting to to product list
 router.get('/getempundermanager', authMiddleware, getEmpUnderManager); //route for getting to sales of employee under a manager
 router.get('/getmostrepeatedcust', authMiddleware, mostRepeatedCustomer); //route for getting to most repeted customer list
-
-
-
-
 router.post('/verifymail/:id', verifyEmail);//route for verifing mail
 router.get('/getempnamelist', getEmployeeNameAndId); //route for getting employee name and id list for onboard form
 

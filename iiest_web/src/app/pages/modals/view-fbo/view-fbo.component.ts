@@ -67,6 +67,7 @@ export class ViewFboComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log("fbo data====================================>", this.fboData)
     this.isfostac = true ? this.fboData.product_name.includes('Fostac Training') : this.isfostac = false;
 
     //generating full address by aggregating state, address, district and pincode
@@ -76,6 +77,7 @@ export class ViewFboComponent implements OnInit {
     this.fulladdress = this.formatAddress(this.fulladdress);
 
     if (this.fboData.foscosInfo) {
+      console.log("fboData.foscosInfo===========>",this.fboData)
       this.calculateRemaningDays();
     }
 
@@ -208,6 +210,7 @@ export class ViewFboComponent implements OnInit {
 
   //Methord opens view invoice modal
   viewInvoice(): void {
+    
     const modalRef = this.ngbModal.open(ViewDocumentComponent, { size: 'xl', backdrop: 'static' });
     modalRef.componentInstance.doc = {
       name: `Invoice of ${this.fboData.fboInfo.fbo_name}`,

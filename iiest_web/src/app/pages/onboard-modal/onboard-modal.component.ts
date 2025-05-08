@@ -16,12 +16,14 @@ export class OnboardModalComponent implements OnInit {
   businessForm: FormGroup = new FormGroup({
     owner_name: new FormControl(''),
     business_entity: new FormControl(''),
-    business_category: new FormControl(''),
+    business_category_Id: new FormControl(''),
     manager_name: new FormControl(''),
     business_ownership_type: new FormControl(''),
     contact_no: new FormControl(''),
     email: new FormControl(''),
-    onboard_by: new FormControl('')
+    onboard_by: new FormControl(''),
+    businessForm: new FormControl(''),
+    cityID:new FormControl(''),
   });
 
   //var for traicking if submit button is clicked or not
@@ -32,6 +34,9 @@ export class OnboardModalComponent implements OnInit {
 
   //list of all active sales executive who can onboard 
   empList: {_id: string, employee_name: string, employee_id: string}[];
+  businessTypes: any[] = []; // Store business types
+  cities: any[] = []; // Store business types
+
 
   constructor(private formBuilder: FormBuilder, 
     private _registerService: RegisterService, 
@@ -42,6 +47,8 @@ export class OnboardModalComponent implements OnInit {
   ngOnInit(): void {
     this.setFormValidation();
     this.getEmpNameNIdList();
+    this.fetchBuisnessType();
+    this.fetchAllCities();
   }
 
   get businessform(): { [key: string]: AbstractControl } {
@@ -52,12 +59,15 @@ export class OnboardModalComponent implements OnInit {
     this.businessForm = this.formBuilder.group({
       owner_name: ['', Validators.required],
       business_entity: ['', Validators.required],
-      business_category: ['', Validators.required],
+      business_category_Id: ['', Validators.required],
       business_ownership_type: ['', Validators.required],
       manager_name: ['', Validators.required],
       contact_no: ['', [Validators.required, Validators.pattern("^((\\+91-?)|0)?[0-9]{10}$")]],
       email: ['', [Validators.required, Validators.email]],
-      onboard_by: ['', Validators.required]
+      onboard_by: ['', Validators.required],
+      cityID: ['', Validators.required],
+
+
     }); 
   }
 
@@ -91,8 +101,26 @@ export class OnboardModalComponent implements OnInit {
     });
 
   }
+  fetchBuisnessType(): void {
+    this._getDataService.getAllBusinessTypes().subscribe(response => {
+      if (response.success) {
+        console.log("response===>",response);
+        this.businessTypes = response.businessTypes;
 
-  getEmpNameNIdList(): void { //methord for getting all active sales man list for showing in onboard form
+      }
+    });
+  }
+  fetchAllCities(): void {
+    this._getDataService.getAllCities().subscribe(response => {
+      if (response.success) {
+        console.log("response===>",response);
+        this.cities = response.cities;
+
+      }
+    });
+  }
+
+  getEmpNameNIdList(): void {
     this._getDataService.getEmpNameNIdList().subscribe({
       next: res => {
         this.empList = res;

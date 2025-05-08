@@ -13,7 +13,7 @@ export const panIndiaAllowedEmpIds = [ //Employees with Pan India Employee Id
    'IIEST/FD/8234', //Rohit Kulshrestha Emp Id
 ]
 // export const chetanKapoorEmpId: string = 'IIEST/FD/0176';
-
+export const merchantId = "QCCV7hu7YN7vuo";
 //Water test Fee
 export const waterTestFee = [0, 1500, 2000, 2500];
 //Fostac Process Amount
@@ -143,7 +143,8 @@ const master_roles = [
    'Senior IT Associate',
    'IT Associate',
    'IT Developer',
-   'Design Executive'
+   'Design Executive',
+   'Consumer'
 ]
 
 export const fbo_roles = [
@@ -197,7 +198,8 @@ export const caseList_roles = [
 
 //roles of directors
 export const director_roles = [
-   'Director'
+   'Director',
+   'Technical Associate'
 ]
 
 //roles array for showing highchart conditionally

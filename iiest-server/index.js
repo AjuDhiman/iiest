@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const dotenv  = require('dotenv');
 const cors = require('cors');
-const connectToMongo = require('./config/db')
+const connectToMongo = require('./config/db.js')
 const session = require('express-session'); 
 const path = require('path');
 
@@ -37,6 +37,8 @@ app.use('/iiest', require('./routers/employeeRoute.js'));
 app.use('/iiest', require('./routers/fboRoute.js'));
 app.use('/iiest', require('./routers/operationRoute.js'));
 // app.use('/iiest', require('./routers/trainingRoute.js'));
+app.use('/iiest', require('./routers/accountsRoute.js'));
+app.use('/iiest', require('./routers/consumerRoute.js'));
 
 connectToMongo();
 

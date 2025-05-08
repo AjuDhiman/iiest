@@ -13,9 +13,9 @@ import { ClientListComponent } from './client-list/client-list.component';
 import { NgbActiveModal, NgbModalModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { KhadyapaalnComponent } from './fboproduct/khadyapaaln/khadyapaaln.component';
 import { FoodlabelingComponent } from './fboproduct/foodlabeling/foodlabeling.component';
-
-
-
+import { ConsumerModule } from '../consumer-pages/consumer/consumer.module';
+import { SendMailBoComponent } from './send-mail-bo/send-mail-bo.component';
+import { UpdateBoCustomerComponent } from './update-bo-customer/update-bo-customer.component';
 @NgModule({
   declarations: [
     FbonewComponent,
@@ -28,11 +28,14 @@ import { FoodlabelingComponent } from './fboproduct/foodlabeling/foodlabeling.co
     ViewFboComponent,
     ClientListComponent,
     KhadyapaalnComponent,
-    FoodlabelingComponent
+    FoodlabelingComponent,
+    SendMailBoComponent,
+    UpdateBoCustomerComponent
   ],
   imports: [
     CommonModule,
     SharedModule,
+    ConsumerModule
   ],
   exports: [
     FbonewComponent,

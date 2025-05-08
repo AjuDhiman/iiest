@@ -1,0 +1,95 @@
+
+.sidebar.collapsed {
+  transform: translateX(100%); /* Slide out to the right */
+}
+  .logo {
+    text-align: center;
+    padding: 20px 0;
+    border-bottom: 2px solid white;
+  }
+  
+  .logo-img {
+    width: 150px;
+    height: auto;
+  }
+  
+  nav ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  nav ul li {
+    padding: 15px 20px;
+    // border-bottom: 1px solid #444;
+    cursor: pointer;
+  }
+  
+  nav ul li:hover {
+    background: #444;
+  }
+  
+  .nav-item {
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  .sidebar-footer {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .login-btn {
+    background: white;
+    color: black;
+    padding: 10px;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  .toggle-btn {
+    position: absolute;
+    top: 20px;
+    left: -22px; // changed from right to left
+    width: 30px;
+    height: 30px;
+    background: #e74c3c;
+    color: white;
+    text-align: center;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+
+  .sidebar {
+    width: 250px;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease;
+    position: fixed;
+    top: 0;
+    right: 0; /* <--- Open from right */
+    z-index: 1000;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
+    transform: translateX(0); /* Shown by default */
+  }
+  
+  .sidebar.collapsed {
+    transform: translateX(100%); /* Move offscreen to the right */
+  }
+  
+  .toggle-btn {
+    position: absolute;
+    top: 20px;
+    left: -22px; /* Still on the left edge of the sidebar */
+    width: 30px;
+    height: 30px;
+    background: #e74c3c;
+    color: white;
+    text-align: center;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  

@@ -12,6 +12,105 @@ export class GetdataService {
   url = config.API_URL
   constructor(private http: HttpClient, private router: Router) { }
 
+  addExpertConsultation(consultationDetails: string,shopId:string): Observable<any> {
+    const url = `${this.url}/add-expert-consultation`;
+    const body = { consultationDetails,shopId };
+    return this.http.post<any>(url, body).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getResourceRequirements(shopId: string): Observable<any> {
+    const url = `${this.url}/get-resources?shopId=${shopId}`;
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+  changePassword(id: string, current_password: string, new_password: string): Observable<any> {
+    const url = `${this.url}/change-password`;
+    const body = { id, current_password, new_password };
+    return this.http.put<any>(url, body).pipe(
+      catchError(this.handleError)
+    );
+  }
+  addResourceRequirement(shopId:string,jobDescription:string,designation: string, count: number, salary: number): Observable<any> {
+    const url = `${this.url}/add-resources`;
+    const body = { shopId,jobDescription,designation, count, salary };
+    return this.http.post<any>(url, body).pipe(
+      catchError(this.handleError)
+    );
+  }
+  
+  updateCustomer(id: string, customer_name: string, contact_no: string): Observable<any> {
+    const url = `${this.url}/update-customer`;
+    const body = { id, customer_name, contact_no };
+    return this.http.put<any>(url, body).pipe(
+      catchError(this.handleError)
+    );
+  }
+  
+  getChatDocByShopId(shopId: string) {
+    return this.http.get<any>(`${this.url}/shops-doc?shopId=${shopId}`);
+  }
+  createCustomerForBo(boId: string): Observable<any> {
+    const url = `${this.url}/create-customer`;
+    return this.http.post<any>(url, { boId }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  
+
+  updateBusinessOwner(boId: string, city_Id: string, business_category_ID: string): Observable<any> {
+    const url = `${this.url}/updatebusinessowner`;
+    const body = { boId, city_Id, business_category_ID };
+    return this.http.put<any>(url, body).pipe(catchError(this.handleError));
+  }
+  
+  saveChatMessage(info: FormData | { boId: string, senderId: string, senderType: string, message: string }): Observable<any> {
+    const url = `${this.url}/save-chat`;
+    return this.http.post<any>(url, info).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getShopsByBoId(boId: string) {
+    return this.http.get<any>(`${this.url}/shops-By-BoId?boId=${boId}`);
+  }
+  getMessagesBySender(shopId: string) {
+    return this.http.get<any>(`${this.url}/get-chat-by-sender?shopId=${shopId}`);
+  }
+  //api for getting statistics data
+  public getConsumerStatisticsData(boId:any,city_id:string,business_type_id:string): Observable<any> {
+    const url = `${this.url}/compliance-statistics?boId=${boId}&city_id=${city_id}&business_type_id=${business_type_id}`;
+    return this.http.get<any>(url).pipe(catchError(this.handleError));
+  }
+
+  public getLicensesData(business_type_id:any,city_id:any): Observable<any> {
+    const url = `${this.url}/licenses?business_type_id=${business_type_id}&city_id=${city_id}`;
+    return this.http.get<any>(url).pipe(catchError(this.handleError));
+  }
+  public getVoluntaoryLicensesData(): Observable<any> {
+    const url = `${this.url}/voluntary-licenses`;
+    return this.http.get(url);
+  }
+
+  public getShopLicensesData(boId: any,shopId:any, city_Id: any, business_category_ID: any): Observable<any> {
+    const url = `${this.url}/shop-licenses?boId=${boId}&shopId=${shopId}&city_id=${city_Id}&business_type_id=${business_category_ID}`;
+    return this.http.get(url);
+  }
+  
+  public getAllSalesData(boId:any): Observable<any> {
+    const url = `${this.url}/allSales?boId=${boId}`;
+    return this.http.get<any>(url).pipe(catchError(this.handleError));
+  }
+
+
+  
+  public getDocs1(oid: string): Observable<any> { // for getting batchlist data from training
+    oid = oid.replace(/\//g, 'slash'); // replace '/' by word slash so we can pass it to as api endpoint
+    const url: string = `${this.url}/getdocs/${oid}`;
+    return this.http.get<any>(url).pipe(catchError(this.handleError));
+  }
+
 
   //api for getting lsit of all employees and their details
   public getEmployeeData(): Observable<any> {
@@ -19,6 +118,23 @@ export class GetdataService {
     return this.http.get<any>(url).pipe(catchError(this.handleError));
   }
 
+  public getAllBusinessTypes(): Observable<any> {
+    const url = `${this.url}/businessTypes`;
+    return this.http.get<any>(url).pipe(catchError(this.handleError));
+  }
+
+  public getAllCities(): Observable<any> {
+    const url = `${this.url}/cities`;
+    return this.http.get<any>(url).pipe(catchError(this.handleError));
+  }
+  public getLicenseByCityIdBusinesstypeid(city_id:any,business_type_id:any): Observable<any> {
+    const url = `${this.url}/licenses?city_id=${city_id}&business_type_id=${business_type_id}`;
+    return this.http.get<any>(url).pipe(catchError(this.handleError));
+  }
+  public getAllLicense(): Observable<any> {
+    const url = `${this.url}/all-licenses`;
+    return this.http.get<any>(url).pipe(catchError(this.handleError));
+  }
   //api for getting general data related to eployee registration
   public getGeneralData(): Observable<any> {
     const url = `${this.url}/empgeneraldata`;
@@ -174,7 +290,10 @@ export class GetdataService {
     const url = `${this.url}/fbo/invoice/${invoiceId}`;
     return this.http.get<any>(url).pipe(catchError(this.handleError));
   }
-
+  public getConsumerInvoice(invoiceId: string): Observable<any> {
+    const url = `${this.url}/consumer-fbo/invoice/${invoiceId}`;
+    return this.http.get<any>(url).pipe(catchError(this.handleError));
+  }
   //service for getting cowork invoice 
   public getCoworkInvoice(invoiceId: string) {
     const url = `${this.url}/getcoworkinvoice/${invoiceId}`;

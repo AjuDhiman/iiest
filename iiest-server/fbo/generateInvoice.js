@@ -42,9 +42,11 @@ const invoiceDataHandler = async (invoiceCode, mail, fboName, address, state, di
     const dateVal = date.getDate();
     const monthVal = date.getMonth() + 1;
     const yearVal = date.getFullYear();
+    console.log("dateVal====?>",dateVal)
+    console.log("yearVal====?>",yearVal)
 
-    const stateCode = (await generalDataSchema.find({}))[0].state_gst_code.find(obj => obj.state_name === state).code; //var for setting place of supply in invoice
-
+    const stateCode = (await generalDataSchema.find({}))[0].state_gst_code.find(obj => obj.state_name === state).code;
+console.log("stateCode====?>",stateCode)
     const { description, code } = getProductSpecificData(serviceType, qty, prodDetails, extraFee, processingAmount);
 
     const infoObj = {

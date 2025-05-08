@@ -1,0 +1,77 @@
+<div class="form-container">
+  
+  <div class="d-flex mt-4 align-items-center mb-4 ms-5">
+    <fa-icon [icon]="faArrowLeft" (click)="goBack()" class="me-2" style="cursor: pointer;"></fa-icon>
+    <h5 class="mb-0 fw-bold">Consumer Settings</h5>
+  </div>
+
+  <!-- Consumer Form -->
+  <form [formGroup]="consumerForm" (ngSubmit)="onSubmit()" class="section-form">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>IIEST Member ID</label>
+        <input type="text" formControlName="iiest_member_id" placeholder="Enter Member ID" />
+      </div>
+      <div class="form-group">
+        <label>Customer Name</label>
+        <input type="text" formControlName="customer_name" placeholder="Enter Full Name" />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" formControlName="email" placeholder="Enter Email Address" />
+      </div>
+      <div class="form-group">
+        <label>Contact No</label>
+        <input type="text" formControlName="contact_no" placeholder="Enter Contact Number" />
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit">💾 Save</button>
+    </div>
+  </form>
+
+  <!-- Change Password Section -->
+  <h3 class="section-title">🔒 Change Password</h3>
+
+  <form [formGroup]="changePasswordForm" (ngSubmit)="onPasswordChange()" class="section-form" novalidate>
+    <div class="form-grid">
+      <!-- Current Password -->
+      <div class="form-group">
+        <label>Current Password</label>
+        <input type="password" formControlName="current_password" placeholder="Enter Current Password" />
+        <div class="error-message" *ngIf="changePasswordForm.get('current_password')?.touched && changePasswordForm.get('current_password')?.errors">
+          <span *ngIf="changePasswordForm.get('current_password')?.errors?.['required']">Current password is required.</span>
+        </div>
+      </div>
+  
+      <!-- New Password -->
+      <div class="form-group">
+        <label>New Password</label>
+        <input type="password" formControlName="new_password" placeholder="Enter New Password" />
+        <div class="error-message" *ngIf="changePasswordForm.get('new_password')?.touched && changePasswordForm.get('new_password')?.errors">
+          <span *ngIf="changePasswordForm.get('new_password')?.errors?.['required']">New password is required.</span>
+          <span *ngIf="changePasswordForm.get('new_password')?.errors?.['minlength']">New password must be at least 6 characters.</span>
+        </div>
+      </div>
+  
+      <!-- Confirm New Password -->
+      <div class="form-group">
+        <label>Confirm New Password</label>
+        <input type="password" formControlName="confirm_password" placeholder="Re-enter New Password" />
+        <div class="error-message" *ngIf="changePasswordForm.get('confirm_password')?.touched && changePasswordForm.get('confirm_password')?.errors">
+          <div class="error-message" *ngIf="changePasswordForm.get('confirm_password')?.touched && changePasswordForm.get('confirm_password')?.errors">
+            <span *ngIf="changePasswordForm.get('confirm_password')?.errors?.['required']">Please confirm your new password.</span>
+            <span *ngIf="changePasswordForm.get('confirm_password')?.errors?.['passwordMismatch']">Passwords do not match.</span>
+          </div>
+                  </div>
+      </div>
+    </div>
+  
+    <div class="form-actions">
+      <button type="submit" [disabled]="changePasswordForm.invalid">🔁 Change Password</button>
+    </div>
+  </form>
+  
+  
+</div>

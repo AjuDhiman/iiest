@@ -1,5 +1,8 @@
-<app-header *ngIf="showHeader" [item]="isToken" [userdata]="loggedInUserData" (toogleSideBarEvent)="onSidebarToggle($event)"></app-header>
+<app-header *ngIf="showHeader  && !showConsumerHeader " [item]="isToken" [userdata]="loggedInUserData" (toogleSideBarEvent)="onSidebarToggle($event)"></app-header>
+<app-consumer-sidebar  *ngIf="showHeader && showConsumerHeader"  ></app-consumer-sidebar>
 <div [ngClass]="{'app-wrapper' : showHeader, 'left-margin-250': isSidebarVisible && largeDisplay} "> 
 <router-outlet></router-outlet>
-</div> 
-<app-footer *ngIf="showHeader" [isSidebarVisible]="isSidebarVisible" [largeDisplay]="largeDisplay"></app-footer>   
+</div>
+<app-consumer-footer   *ngIf=" showHeader && showConsumerHeader"></app-consumer-footer>
+
+<app-footer *ngIf="showHeader  && !showConsumerHeader" [isSidebarVisible]="isSidebarVisible" [largeDisplay]="largeDisplay"></app-footer>   

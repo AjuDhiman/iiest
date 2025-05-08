@@ -1,43 +1,67 @@
 //-------This  File contains the all the gupshup SMS related vars and methords --------
 
 const GUPSHUP_CONFIG = JSON.parse(process.env.GUPSHUP_CONFIG);
+const RAPID_SMS_CONFIG = JSON.parse(process.env.RAPID_SMS_CONFIG);
+const FRONT_END = JSON.parse(process.env.FRONT_END);
+
 const DLT_CONFIG = JSON.parse(process.env.DLT_CONFIG);
 var request = require("request");
+const axios = require('axios');
+const https = require('https');
+const qs = require('qs')
 
 
 // methord for sending bo verification sms
-exports.sendBOVerificationSMS = async (manager_contact, email, verificationtion_link, phoneNo) => {
+// manager_contact
 
-    const dltTempletID = '1007352532729271833';
+async function shortenURLWithTinyURL(longUrl) {
+    try {
+      const response = await axios.get(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`);
+      let shortUrl = response.data;
+  
+      // Remove protocol (http:// or https://) if present
+      shortUrl = shortUrl.replace(/^https?:\/\//, '');
+  
+      return shortUrl; // cleaned URL without protocol
+    } catch (error) {
+      console.error('TinyURL Error:', error.message);
+      throw error;
+    }
+  }
+  
+exports.sendBOVerificationSMS = async (_id, email, phoneNo) => {
+    const verifyLink = `${FRONT_END.VIEW_URL}#/verifyonboard/bo/${_id}`;
+    const dltTempletID = '1007928778645796672';
+     const shortUrl = await shortenURLWithTinyURL(verifyLink);
+     const decodedShortUrl = decodeURIComponent(shortUrl);
 
-    const message = `Thanks for registering in the Connect Bharat. To complete the registration process
-                     and activate your account, Please verify your email address ${email} and your phone 
-                     number ${manager_contact}.by clicking the link below. ${verificationtion_link}For any query call us 
-                     on 9289310979 - Connect Bharat (IIEST)`;
+    // const message = `Thanks for registering in the Connect Bharat. To complete the registration process and activate your account, Please verify your email address ${email} and your phone number ${phoneNo}.by clicking the link below. ${shortUrl}For any query call us on 9289310979 - Connect Bharat (IIEST)`;
+    const message = `Thanks for registering in the Connect Bharat. To complete the registration process and activate your account, Please verify your email address ${email} and your phone number ${phoneNo}.by clicking the link below. ${decodedShortUrl} For any query call us on 9289310979 - Connect Bharat (IIEST)`;
+    console.log("aaaa",message);
+    await sendRapidoSMS(message, phoneNo, dltTempletID);
 
-    //sending sms
-    await sendSMS(message, phoneNo);
-
-}
-
-
+};
 
 
 // methord for sending bo Onboard sms
 exports.sendBOOnBoardSMS = async (owner_name, manager_name, bo_id, phoneNo) => {
 
     console.log(owner_name, manager_name, bo_id, phoneNo);
-
+    console.log("owner_name==============>",owner_name, manager_name, bo_id, phoneNo);
     const dltTempletID = '1007928778645796672';
+    // const message = `Thanks for registering in the Connect Bharat.Your Business Operation(BO) Number is
+    //                  generated and sent to you via message and email. You will receive a call within 3 
+    //                  days to verify your details. Please use it for reference whenever you contact us . 
+    //                  BO Name - ${owner_name}, Manager Name - ${manager_name}, BO ID No - ${bo_id}. For any query call us
+    //                  on 9289310979 - Connect Bharat (IIESTF)`;
 
-    const message = `Thanks for registering in the Connect Bharat.Your Business Operation(BO) Number is
-                     generated and sent to you via message and email. You will receive a call within 3 
-                     days to verify your details. Please use it for reference whenever you contact us . 
-                     BO Name - ${owner_name}, Manager Name - ${manager_name}, BO ID No - ${bo_id}. For any query call us
-                     on 9289310979 - Connect Bharat (IIESTF)`;
+
+    const message = `Thanks for registering in the Connect Bharat.Your Business Operation(BO) Number is generated and sent to you via message and email. You will receive a call within 3 days to verify your details. Please use it for reference whenever you contact us . BO Name - ${owner_name}, Manager Name - ${manager_name}, BO ID No - ${bo_id}. For any query call us on 9289310979 -Connect Bharat (IIESTF)`;
+
 
     //sending sms
-    const messageSent =  await sendSMS(message, phoneNo);
+    // const messageSent =  await sendSMS(message, phoneNo,dltTempletID);
+    const messageSent =  await sendRapidoSMS(message, phoneNo,dltTempletID);
 
     return messageSent
 
@@ -58,10 +82,6 @@ exports.sendFostacVerificationSMS = async (owner_name, manager_name, manager_con
     await sendSMS(message, phoneNo);
 
 }
-
-
-
-
 
 // methord for sending verification sms for foscos
 exports.SendFoscosVerificationSMS = async (owner_name, manager_name, manager_contact, email, phoneNo) => {
@@ -108,42 +128,127 @@ exports.foscosVerificationSMS = async (owner_name, manager_name, manager_contact
     await sendSMS(dltTempletID, message, phoneNo);
 }
 
-//async function sendSMS(dltTempletID, message, phoneNo)
-async function sendSMS(message, phoneNo) {
-    const params = new URLSearchParams()
-    params.append('destination', phoneNo);
-    params.append('message', message);
+//async function sendSMS(dltTempletID, message, phoneNo)======
+// async function sendSMS(message, phoneNo,dltTempletID) 
+// {
+//     console.log("message====>",message);
+//     console.log("phoneNo====>",phoneNo);
 
-    var options = {
-        method: 'POST',
-        url: 'https://enterprise.smsgupshup.com/GatewayAPI/rest',
-        form:
-        {
-            method: 'sendMessage',
-            send_to: phoneNo,
-            msg: message,
-            msg_type: 'text',
-            userid: GUPSHUP_CONFIG.userid, auth_scheme: 'plain',
-            password: GUPSHUP_CONFIG.password,
-            v:1.1,
-            format: 'text',
-           // principalEntityId: DLT_CONFIG.principalEntityId,
-            //dltTempletID: dltTempletID
-        }
-    };
+//     const params = new URLSearchParams()
+//     params.append('destination', phoneNo);
+//     params.append('message', message);
 
-    return new Promise((resolve, reject) => {
-        request(options, function (error, response, body) {
-            if (error){
-                // throw new Error(error);
-                reject(error);
-            };
-            console.log(body);
-            resolve(body)
+//     var options = {
+//         method: 'POST',
+//         url: 'https://enterprise.smsgupshup.com/GatewayAPI/rest',
+//         form:
+//         {
+//             method: 'sendMessage',
+//             send_to: phoneNo,
+//             msg: message,
+//             msg_type: 'text',
+//             userid: GUPSHUP_CONFIG.userid, auth_scheme: 'plain',
+//             password: GUPSHUP_CONFIG.password,
+//             v:1.1,
+//             format: 'text',
+//            principalEntityId: DLT_CONFIG.principalEntityId,
+//             dltTempletID: dltTempletID
+//         }
+//     };
+ 
+    
+//     return new Promise((resolve, reject) => {
+//         request(options, function (error, response, body) {
+//             if (error){
+//                 // throw new Error(error);
+//                 reject(error);
+//             };
+//             console.log("body=====>",body);
+//             resolve(body)
+//         });
+//     })
+
+// }
+
+
+
+
+    async function sendSMS(message, phoneNo,dltTempletID,) {
+            console.log("message====>", message);
+            console.log("phoneNo====>", phoneNo);
+            console.log("userid==>",GUPSHUP_CONFIG.userid);
+            console.log("password==>",GUPSHUP_CONFIG.password);
+            console.log("dlt_template_id==>",dltTempletID);
+            console.log("pe_id==>",DLT_CONFIG.principalEntityId)
+  const payload = {
+                method: 'sendMessage',
+                send_to: phoneNo,
+                msg: message,
+                msg_type: 'text',
+                userid: GUPSHUP_CONFIG.userid,
+                auth_scheme: 'plain',
+                password: GUPSHUP_CONFIG.password,
+                v: '1.1',
+                format: 'text',
+                dlt_template_id:dltTempletID, 
+                pe_id: DLT_CONFIG.principalEntityId 
+            }            
+            const httpsAgent = new https.Agent({
+                rejectUnauthorized: false,
+                secureOptions: require('constants').SSL_OP_LEGACY_SERVER_CONNECT || 0x00000004
+            });
+        
+            try {
+                const response = await axios({
+                    method: 'post',
+                    url: 'https://enterprise.smsgupshup.com/GatewayAPI/rest',
+                    data: qs.stringify(payload),
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    httpsAgent
+                });
+                console.log("body=====>", response.data);
+                return response.data;
+            } catch (error) {
+                console.error("SMS sending error:", error.response?.data || error.message || error);
+                throw error;
+            }
+    }
+
+
+    async function sendRapidoSMS(templateText, phoneNo, dltTempletID, variables = []) {
+        console.log("Template Message ====>", templateText);
+        console.log("Phone No ====>", phoneNo);
+        console.log("DLT Template ID ====>", dltTempletID);
+    
+        const params = {
+            apikey: RAPID_SMS_CONFIG.authKey,
+            route: 'trans',
+            sender: RAPID_SMS_CONFIG.senderId,
+            mobileno: phoneNo,
+            text: templateText,
+            DLT_TE_ID: dltTempletID
+        };
+    
+        // Add dynamic variables as VAR1, VAR2, VAR3, ...
+        variables.forEach((value, index) => {
+            params[`VAR${index + 1}`] = value;
         });
-    })
+    
+        const url = `${RAPID_SMS_CONFIG.apiUrl}?${qs.stringify(params)}`;
+    
+        try {
+            const response = await axios.get(url);
+            console.log("RapidSMS response ====>", response.data);
+            return response.data;
+        } catch (error) {
+            console.error("RapidSMS sending error:", error.response?.data || error.message || error);
+            throw error;
+        }
+    }
+    
 
-}
 
 
 

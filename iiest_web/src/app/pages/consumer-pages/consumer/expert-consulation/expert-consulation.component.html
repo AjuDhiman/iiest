@@ -1,0 +1,33 @@
+<div class="form-container">
+
+    <h2 class="section-title">     <fa-icon [icon]="faArrowLeft" (click)="goBack()" class="me-2"></fa-icon>
+      REGULATORY CONSULTANT</h2>
+  
+    <form #consultationForm="ngForm" (ngSubmit)="onSubmitConsultation(consultationForm)" class="section-form">
+  
+      <!-- Consultation Textarea -->
+      <div class="form-group">
+        <label for="consultationDetails">Your Consultation Details <span class="required">*</span></label>
+        <textarea
+          id="consultationDetails"
+          name="consultationDetails"
+          ngModel
+          required
+          placeholder="Please describe your consultation requirements..."
+          rows="5"
+        ></textarea>
+        <div *ngIf="consultationForm.submitted && consultationForm.controls['consultationDetails']?.invalid" class="error-message">
+          Consultation details are required.
+        </div>
+      </div>
+  
+      <!-- Submit Button -->
+      <div class="form-actions">
+        <button type="submit" [disabled]="!consultationForm.valid">
+          Submit Consultation
+        </button>
+      </div>
+  
+    </form>
+  </div>
+  

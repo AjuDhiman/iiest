@@ -1,0 +1,127 @@
+<div *ngIf="showForm" class="form-container">
+    <h2 class="section-title">Expert Resources Requirement</h2>
+    <app-consumer-right-sidebar></app-consumer-right-sidebar>
+  
+    <form #resourceForm="ngForm" (ngSubmit)="onSubmit(resourceForm)" class="section-form">
+      <div class="form-grid">
+        <!-- Designation -->
+        <div class="form-group">
+          <label for="designation">Designation <span class="required">*</span></label>
+          <input
+            type="text"
+            id="designation"
+            name="designation"
+            ngModel
+            required
+            placeholder="e.g. Sales Executive for Shop"
+          />
+          <div *ngIf="resourceForm.submitted && resourceForm.controls['designation']?.invalid" class="error-message">
+            Designation is required.
+          </div>
+        </div>
+  
+        <!-- Job Description -->
+        <div class="form-group">
+          <label for="jobDescription">Brief Job Description <span class="required">*</span></label>
+          <textarea
+            id="jobDescription"
+            name="jobDescription"
+            ngModel
+            required
+            placeholder="e.g. Responsible for handling shop sales, customer queries, and daily operations."
+            rows="3"
+          ></textarea>
+          <div *ngIf="resourceForm.submitted && resourceForm.controls['jobDescription']?.invalid" class="error-message">
+            Job description is required.
+          </div>
+        </div>
+  
+        <!-- Count -->
+        <div class="form-group">
+          <label for="count">Number of Resources Required <span class="required">*</span></label>
+          <input
+            type="number"
+            id="count"
+            name="count"
+            ngModel
+            required
+            min="1"
+            placeholder="e.g. 5"
+          />
+          <div *ngIf="resourceForm.submitted && resourceForm.controls['count']?.invalid" class="error-message">
+            Count must be at least 1.
+          </div>
+        </div>
+  
+        <!-- Salary -->
+        <div class="form-group">
+          <label for="salary">Salary per Resource (Monthly) <span class="required">*</span></label>
+          <input
+            type="number"
+            id="salary"
+            name="salary"
+            ngModel
+            required
+            min="0"
+            placeholder="e.g. 50000"
+          />
+          <div *ngIf="resourceForm.submitted && resourceForm.controls['salary']?.invalid" class="error-message">
+            Salary is required.
+          </div>
+        </div>
+      </div>
+  
+      <!-- Submit Button -->
+      <div class="form-actions d-flex justify-content-center gap-3" style="margin-bottom: 70px;">
+        <button type="submit" [disabled]="!resourceForm.valid" class="btn btn-primary">
+          Submit
+        </button>
+      
+        <button type="button" (click)="closeForm()" class="btn btn-secondary">
+          Close
+        </button>
+      </div>
+      
+    </form>
+  </div>
+  
+  <!-- Show Add Requirement button when form is hidden -->
+  <div *ngIf="!showForm" class="container mb-4">
+    <div class="row justify-content-center mt-3">
+      <div class="col-4">
+        <button (click)="goBack()" class="btn btn-primary w-100 d-flex align-items-center justify-content-center">
+          <fa-icon [icon]="faArrowLeft" class="me-2"></fa-icon>
+          Back
+        </button>
+      </div>
+      <div class="col-8">
+        <button (click)="openForm()" class="btn btn-primary w-100 d-flex align-items-center justify-content-center">
+          <fa-icon [icon]="faPlus" class="me-2"></fa-icon>
+          ADD MORE EXPERT RESOURCES
+        </button>
+      </div>
+  
+   
+    </div>
+  </div>
+  
+  
+  
+  <!-- Existing card view for listing resources -->
+  <div *ngIf="resourceList.length > 0" class="resource-list-container" style="margin-bottom: 150px;"> 
+    <h3 class="section-title">Added Resource Requirements</h3>
+  
+    <div class="card-grid">
+      <div class="resource-card" *ngFor="let resource of resourceList">
+        <h4 class="designation">{{ resource.designation }}</h4>
+        <p class="job-description">{{ resource.jobDescription }}</p>
+  
+        <div class="resource-details">
+          <p><strong>Count:</strong> {{ resource.count }}</p>
+          <p><strong>Salary:</strong> ₹{{ resource.salary }}</p>
+          <p><strong>Created At:</strong> {{ resource.createdAt | date: 'medium' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  

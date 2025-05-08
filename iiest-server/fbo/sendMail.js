@@ -7,7 +7,7 @@ const CB_BRAND_NAME = JSON.parse(process.env.CB_BRAND_NAME);
 const FRONT_END = JSON.parse(process.env.FRONT_END);
 
 const sendInvoiceMail = (clientMail, files, isPayLaterMail, data) => {
-  // console.log('files console ................', files, clientMail);
+  console.log('files console ................', files, clientMail);
   const attachments = files.map(file => {
     // console.log(JSON.stringify(file));
     return {

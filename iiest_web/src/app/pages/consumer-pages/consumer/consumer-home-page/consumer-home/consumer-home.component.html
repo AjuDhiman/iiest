@@ -1,0 +1,75 @@
+<div class="dashboard-container">
+
+  
+    <div class="main-content">
+      <div class="header">
+        <h1>Welcome,Consumer Name</h1>
+      
+      </div>
+  
+      <div class="stats-container">
+        <div class="stat-card" *ngFor="let stat of stats">
+          <h3>{{ stat.title }}</h3>
+          <p>{{ stat.value }}</p>
+        </div>
+      </div>
+  
+      <div class="chart-container">
+        <div class="card">
+          <h2>Sales Overview</h2>
+          <div class="chart-wrapper">
+            <highcharts-chart 
+              [Highcharts]="Highcharts"
+              [options]="salesChartOptions"
+              [update]="salesChartUpdateFlag"
+              style="width: 100%; height: 300px; display: block;">
+            </highcharts-chart>
+          </div>
+        </div>
+  
+        <div class="card">
+          <h2>Top Products</h2>
+          <div class="chart-wrapper">
+            <highcharts-chart 
+              [Highcharts]="Highcharts"
+              [options]="productChartOptions"
+              [update]="productChartUpdateFlag"
+              style="width: 100%; height: 300px; display: block;">
+            </highcharts-chart>
+          </div>
+        </div>
+      </div>
+  
+      <div class="card recent-transactions">
+        <h2>Recent Transactions</h2>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let transaction of recentTransactions">
+                <td>{{ transaction.id }}</td>
+                <td>{{ transaction.user }}</td>
+                <td>{{ transaction.date }}</td>
+                <td>{{ transaction.amount }}</td>
+                <td>
+                  <span [ngClass]="{
+                    'status-completed': transaction.status === 'Completed',
+                    'status-pending': transaction.status === 'Pending',
+                    'status-failed': transaction.status === 'Failed'
+                  }">{{ transaction.status }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>

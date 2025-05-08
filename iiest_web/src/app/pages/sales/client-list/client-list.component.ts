@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { faEye, faMagnifyingGlass, IconDefinition, faArrowRotateForward } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faMagnifyingGlass, IconDefinition, faArrowRotateForward, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GetdataService } from 'src/app/services/getdata.service';
 import { ShopsModalComponent } from '../../modals/shops-modal/shops-modal.component';
@@ -7,6 +7,7 @@ import { Select, Store } from '@ngxs/store';
 import { BosState } from 'src/app/store/state/bo.state';
 import { Observable, Subscription } from 'rxjs';
 import { GetBos, SetBosLoadedFalse } from 'src/app/store/actions/bo.action';
+import { SendMailBoComponent } from '../send-mail-bo/send-mail-bo.component';
 
 @Component({
   selector: 'app-client-list',
@@ -14,10 +15,8 @@ import { GetBos, SetBosLoadedFalse } from 'src/app/store/actions/bo.action';
   styleUrls: ['./client-list.component.scss']
 })
 export class ClientListComponent implements OnInit, OnDestroy {
-
-
+  faEnvelope: IconDefinition = faEnvelope;
   clientList: any;
-
   loading: boolean;
 
   //data to show in table
@@ -146,5 +145,18 @@ export class ClientListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.bosLoadedSub.unsubscribe();
+  }
+  sendUpdateEmail(fbo: any) {
+    console.log("fbo---client-->",fbo)
+
+    
+    const modalRef = this._modalService.open(SendMailBoComponent, {
+      size: 'lg',
+      backdrop: 'static',
+      centered: true
+    });
+
+    // Optional: pass fbo to modal
+    modalRef.componentInstance.boId = fbo.customer_id;
   }
 }

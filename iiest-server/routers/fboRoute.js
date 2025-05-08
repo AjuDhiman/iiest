@@ -6,7 +6,7 @@ const { existingFboCash, existingFboPayReturn, existingFboPayPage, existingFboBy
 const authMiddleware = require('../middleware/auth');
 const multer = require('multer');
 const { foscosDocuments, hraDocuments, chequeImage } = require('../config/storage');
-const { createBusinessOwner, getAllBusinessOwners, getClientList } = require('../controllers/boControllers/bo');
+const { createBusinessOwner, getAllBusinessOwners, getClientList, updateBusinessOwner, createCustomerForBo } = require('../controllers/boControllers/bo');
 const { getTicketsDocs } = require('../controllers/employeeControllers/employeeRecord');
 const { fostacRecpVerification } = require('../controllers/operationControllers/formSections');
 const { trainingBatch } = require('../controllers/trainingControllers/trainingBatch');
@@ -38,6 +38,8 @@ router.post('/fbo/addrecipient/:id', authMiddleware, addRecipient, fostacRecpVer
 router.get('/getsalesbasicdocuploadurl/:name', authMiddleware, getSalesBasicDocUploadURL); //route for getting upload url for uploading basic sales docs to AWS S3
 // router.post('/fbo/addhygieneshop/:id', authMiddleware, hraDocuments.fields([{ name: 'fostacCertificate', maxCount: 1 }, { name: 'foscosLicense', maxCount: 1 }]), addHygieneShop); //Router for adding hygiene shop data
 router.get('/fbo/invoice/:id', authMiddleware, saleInvoice);
+router.get('/consumer-fbo/invoice/:id', saleInvoice);
+
 router.post('/existingfbosale/:id', authMiddleware, existingFboCash);
 router.post('/existingfbo-paypage/:id', authMiddleware, existingFboPayPage)
 router.post('/existingfbo-paylater/:id', authMiddleware, existingFboPayLater)
@@ -50,10 +52,11 @@ router.get('/allbolist', authMiddleware, registerdBOList);
 router.put('/updatefbobasicdocstatus/:id', authMiddleware, updateFboBasicDocStatus); 
 router.get('/getticketdocs/:id', authMiddleware, getTicketsDocs); 
 router.get('/getchequepresignedurl/:id', authMiddleware, getChequeImagePresignedUrl); 
-
-
 router.put('/sendfboverificationlink/:fboid', authMiddleware, sendFboVerificationLink); //roure for sending verification link by mail and sms
 router.put('/verifyfbo/:fboid', verifyFbo); //route for updating verification info of a fbo
 router.put('/updatefboinfo/:id', authMiddleware, updateFboInfo); //route for updating fbo info
+router.put('/updatebusinessowner', authMiddleware, updateBusinessOwner); 
+router.post('/create-customer', createCustomerForBo);
+
 
 module.exports = router;

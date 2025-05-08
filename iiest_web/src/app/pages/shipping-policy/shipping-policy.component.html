@@ -1,0 +1,309 @@
+<!-- Navigation-->
+
+<nav class="navbar navbar-expand-lg navbar-light" id="mainNav"
+    style="background: linear-gradient(to left, #00173c, #011c4d); padding: 0; border-bottom: 0.5px solid #112f5d;">
+    <div class="web-header-logo">
+        <img class="" src="assets/images/landing_img/baharat-logo.png" width="200px">
+    </div>
+    <div class="nsws-link-logo" style="width: fit-content; display: flex; margin-left: 40px;">
+        <a class="navbar-brand" href="https://www.nsws.gov.in/">
+            <img class="" src="https://www.nsws.gov.in/s3fs/2022-11/State%20Approval.svg" height="50px">
+        </a>
+        <div class="text" style="display: inline; color: white; font-size:x-small;">
+            <h6 style="font-size: medium; color: #FF9933;">States</h6>
+            Under <span class="nsws-text-large" style="color: #138808;">National Single Window System</span>
+            <span class="nsws-text-small" style="color: #138808;">NSWS</span>
+        </div>
+    </div>
+    <div class="container">
+        <div id="sub-container">
+            <!-- <a class="navbar-brand" [routerLink]="['/main']">
+      <img class="logo" src="../../../assets/images/logo.png">
+   </a> -->
+            <!-- <a class="navbar-brand" [routerLink]="['/main']">
+      <img class="" src="" height="50px">
+   </a> -->
+   <!-- <a class="navbar-brand" href="https://www.nsws.gov.in/">
+    <img class="" src="https://www.nsws.gov.in/s3fs/2022-11/State%20Approval.svg" height="50px">
+</a>
+            <div class="text" style="display: inline; color: white; font-size:x-small;">
+                <h6 style="font-size: medium; color: #FF9933;">States</h6>
+                Under National <span style="color: #138808;">Single Window</span>
+            </div> -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item navLinks">
+                        <a class="nav-link px-lg-3 py-3 py-lg-4">
+                            <fa-icon class="fa-2x fa-beat" [icon]="faLocationDot" style="color: #9d151d;"></fa-icon>
+                            Kender
+                        </a>
+                        <!-- <a class="nav-link px-lg-3 py-3 py-lg-4" [routerLink]="isToken ? ['/home'] : ['/']">
+                  <fa-icon class="fa-2x" [icon]="faHome"></fa-icon>
+                  Home
+               </a> -->
+                    </li>
+                    <li class="nav-item navLinks">
+                        <a class="nav-link px-lg-3 py-3 py-lg-4" (click)="openModal()">
+                            <fa-icon class="fa-2x fa-beat" [icon]="faBuilding" style="color: #9d151d;"></fa-icon>
+                            Company
+                        </a>
+                        <!-- <a class="nav-link px-lg-3 py-3 py-lg-4" href="#about">
+                  <fa-icon class="fa-2x" [icon]="faCircleInfo"></fa-icon>
+                  About us
+              </a> -->
+                    </li>
+                    <!-- <li *ngIf="!isToken" class="nav-item navLinks">
+              
+              <a class="nav-link px-lg-3 py-3 py-lg-4" (click)="openModal()">
+                  <fa-icon class="fa-2x" [icon]="faSignIn"></fa-icon>
+                  Login
+              </a>
+          </li> -->
+                    <li class="nav-item navLinks">
+                        <a class="nav-link px-lg-3 py-3 py-lg-4">
+                            <fa-icon class="fa-2x fa-beat" [icon]="faPeopleGroup" style="color: #9d151d;"></fa-icon>
+                            Consumer
+                        </a>
+                        <!-- <a class="nav-link px-lg-3 py-3 py-lg-4" href="#contact">
+                  <fa-icon class="fa-2x" [icon]="faPhone"></fa-icon>
+                  Contact Us
+              </a> -->
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="ham" (click)="isMobileNav=!isMobileNav">
+    <span [ngClass]="{'clockwise-rotate': isMobileNav}"></span>
+    <span [ngClass]="{'hide-span': isMobileNav}"></span>
+    <span [ngClass]="{'anticlockwise-rotate': isMobileNav}"></span>
+</div>
+
+<div class="backdrop-mobile" [ngClass]="{'active-backdrop':isMobileNav}">
+
+    <div class="mobile-nav" [ngClass]="{'mobile-active-nav':isMobileNav}">
+        <ul id="menu">
+            <li>
+                <a class="">
+                    <fa-icon class="fa-x fa-beat" [icon]="faLocationDot" style="color: #9d151d;"></fa-icon>
+                    Kender
+                </a>
+            </li>
+
+            <li>
+                <a class="" (click)="openModal()">
+                    <fa-icon class="fa-x fa-beat" [icon]="faBuilding" style="color: #9d151d;"></fa-icon>
+                    Company
+                </a>
+            </li>
+
+            <li>
+                <a class="">
+                    <fa-icon class="fa-x fa-beat" [icon]="faPeopleGroup" style="color: #9d151d;"></fa-icon>
+                    Consumer
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<!-- Page Header-->
+<!-- rgba(2, 27, 77, 0.87), #010e28) -->
+<header class="" id=""
+    style="position: relative; background: linear-gradient(to left, rgba(17, 47, 106, 0.467), #5674b04a); z-index: 10;">
+    <div class="" style="width: 100%; top: 0; position: relative; z-index: 0;">
+        <div class=""
+            style="position: absolute; z-index: 11; width: 100%; height: 100%;background: linear-gradient(to left, rgba(17, 47, 106, 0.467), #5674b04a);">
+        </div>
+        <video #backgroundVidRef [autoplay]="true" [muted]="true" [loop]="true" preload="auto" style="width: 100%;">
+            <source src="assets/images/landing_img/map26.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="head-content">
+        <div class="" style="width: 35%; color: white;">
+            <h1 class="head-text">
+                Connecting <span style="color: #FF9933; font-weight: bold;">People</span> with the <span
+                    style="color: #138808; font-weight: bold; line-height: 1;">Government</span>
+            </h1>
+            <br>
+            <h4 class="h4-text connecttest">
+                <span style="
+          color: #F8BD39;
+          border-bottom: 1px dashed #F8BD39;
+      ">Connecting </span>15000+ SMEs
+            </h4>
+        </div>
+        <div class="onboard-sec">
+            <div class="web-logo">
+                <img class="web-img" src="assets/images/landing_img/landing-page-logo8.png" width="150">
+            </div>
+            <button class="onboard-btn" (click)="openOnboardModal()">ONBOARD</button>
+        </div>
+    </div>
+
+    <div class="py-4 my-4 w-100 d-flex justify-content-center"
+        style="background-color:rgba(255, 255, 255, 0.0); height: 100px; position: absolute; bottom: 0px;">
+        <!-- <div class="d-flex justify-content-around w-75 align-items-center h-100" style="position: absolute; top: 0;">
+      <a class="pe-auto">
+          <div class="icon h-75 gap-1 w-25 justify-content-end d-flex flex-column-reverse align-items-center">
+              <span style="color: white; font-size: 1.2rem;">Chapter</span>
+              <fa-icon class="fa-3x fa-beat" [icon]="faLocationDot" style="color: #9d151d;"></fa-icon>
+          </div>
+      </a>
+      <a class="pe-auto" (click)="openModal()">
+          <div class="icon h-75 w-25 gap-1 justify-content-end d-flex flex-column-reverse align-items-center">
+              <span style="color: white; font-size: 1.2rem;">Company </span>
+              <fa-icon class="fa-3x fa-beat" [icon]="faBuilding" style="color: #9d151d;"></fa-icon>
+          </div>
+      </a>
+      <a class="pe-auto">
+          <div class="icon h-75 w-25  gap-1 justify-content-end d-flex flex-column-reverse align-items-center">
+              <span style="color: white; font-size: 1.2rem;">Consumer </span>
+              <fa-icon class="fa-3x fa-beat" [icon]="faPeopleGroup" style="color: #9d151d;"></fa-icon>
+          </div>
+      </a>
+  </div> -->
+    </div>
+</header>
+<br>
+<!-- Main Content-->
+<div class="container px-4 px-lg-5" id="about" style="text-align: justify;">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+            <!-- Post preview-->
+            <div class="post-preview">
+                <h2 class="post-title">Shipping Policy</h2>
+            </div>
+            <div>
+                <p>Our company is committed to delivering your products in a timely, safe, and reliable manner. Our Shipping Policy outlines the standards and procedures we follow to ensure a smooth delivery experience. We operate in compliance with all applicable regulations to maintain transparency and customer satisfaction.</p>
+        
+                <p><b>1. Shipping Charges:</b><br>
+                Shipping charges are calculated based on the delivery location, weight, and dimensions of the package. Any applicable shipping fees will be clearly communicated at checkout before you confirm your order.</p>
+        
+                <p><b>2. Delivery Timeline:</b><br>
+                Standard delivery timelines range from <b>3 to 7 business days</b>, depending on your location and product availability. Delays due to unforeseen circumstances such as weather conditions, strikes, or logistical challenges will be communicated promptly.</p>
+        
+                <p><b>3. Order Processing:</b><br>
+                Orders are processed within <b>1-2 business days</b> from the date of purchase. Orders placed on weekends or public holidays will be processed on the next working day.</p>
+        
+                <p><b>4. Shipping Partners:</b><br>
+                We partner with trusted national and local courier services to ensure reliable and safe delivery of your orders. Tracking details will be shared via SMS or email once the order is dispatched.</p>
+        
+                <p><b>5. Shipping Restrictions:</b><br>
+                We currently ship within India only. Certain remote locations may have limited delivery services, and in such cases, our team will reach out to inform you of alternative arrangements.</p>
+        
+                <p><b>6. Failed Delivery Attempts:</b><br>
+                In case of failed delivery attempts due to incorrect address, unavailability of recipient, or other reasons, our courier partner will make <b>up to 3 attempts</b> to deliver your package. After the final attempt, the order may be returned to us.</p>
+        
+                <p><b>7. Damaged or Lost Packages:</b><br>
+                If your order arrives damaged or is lost in transit, please contact our support team within <b>48 hours</b> of delivery or expected delivery date. We will investigate and resolve the issue promptly, either by resending the product or issuing a full refund.</p>
+        
+                <p><b>8. Order Tracking:</b><br>
+                Customers can track their orders through the tracking link provided in the dispatch confirmation email/SMS. For any queries related to tracking, our support team is always available to assist you.</p>
+            </div>
+            <!-- Divider-->
+        </div>
+        
+    </div>
+</div>
+<!-- <div class="container px-4 px-lg-5 position-relative" id="contact"> -->
+<!--   <div class="row gx-4 gx-lg-5 justify-content-center">
+  <div class="col-md-10 col-lg-8 col-xl-7"> -->
+<!-- Post preview-->
+<!-- <div class="post-preview mb-4">
+          <h2 class="post-title">Contact us</h2>
+      </div> -->
+<!-- Divider-->
+<!-- <hr class="my-4" />
+  </div>
+</div>-->
+<!-- </div>  -->
+<!-- Footer-->
+<footer class="border-top">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <ul class="list-inline text-center">
+                    <li class="list-inline-item">
+                        <a href="">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"> </i>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="footer-nav">
+                    <div class="social-media-links">
+                        <ul class="social-link-list">
+                            <li class="social-link">
+                                <a href="https://www.instagram.com/iiest_federation/" target="_blank">
+                                    <img src="assets/images/icons/social-media/insta.png" alt="Instagram">
+                                    <p>Instagram</p>
+                                    </a>
+                            </li>
+                            <li class="social-link">
+                                
+                                <a href="https://www.facebook.com/iiest.federation/about" target="_blank">
+                                    <img src="assets/images/icons/social-media/facebook.png" alt="Facebook">
+                                   <p>Facebook</p> 
+                                </a>
+                            </li>
+                            <li class="social-link">
+                                <a href="https://www.linkedin.com/in/iiest-federation9599195100/" target="_blank">
+                                    <img src="assets/images/icons/social-media/linkedin.png" alt="LinkedIn">
+                                    <p>LinkedIn</p>
+                                </a>
+                            </li>
+                            <li class="social-link">
+                                <a href="https://www.youtube.com/@Contact_Bharat" target="_blank">
+                                    <img src="assets/images/icons/social-media/youtube.png" alt="Youtube">
+                                    <p>Youtube</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <ul class="footer-nav-bar"
+                        style="display: flex; justify-content: center; margin-top: 20px; margin-bottom: 20px;">
+                        <li class="nav-link active"><a style="color: #157347;" (click)="routeTo('home')">Home </a> |
+                        </li>
+                        <li class="nav-link"><a style="color: #157347" (click)="routeTo('terms-and-conditions')">Terms &
+                                Conditions </a> | </li>
+                                <li class="nav-link"><a style="color: #157347" (click)="routeTo('privacy-policy')">Privacy
+                                    Policy </a> | </li>
+                        <li class="nav-link"><a style="color: #157347" (click)="routeTo('refund-policy')">Cancellation and Refunds
+                            </a> | </li>
+                            <li class="nav-link"><a style="color: black">Shipping Policy
+                            </a> | </li>
+                            <li class="nav-link"><a style="color: #157347" (click)="routeTo('contact-us')">Contact Us
+                            </a> </li>
+                    </ul>
+                </div>
+                <div class="small text-center text-muted fst-italic">Copyright &copy; 2024 All Rights Reserved By Connect Bharat
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>

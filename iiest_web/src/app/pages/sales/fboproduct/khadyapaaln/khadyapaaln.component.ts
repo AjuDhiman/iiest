@@ -25,6 +25,7 @@ export class KhadyapaalnComponent implements OnInit {
   //khadya_paaln_serviceName: { [key: string]: string } = {};
   constructor(private rootFormGroup: FormGroupDirective) { }
   ngOnInit(): void {
+    console.log("khadya_paaln_serviceName=============>",this.khadya_paaln_serviceName);
     this.khadya_paaln = this.rootFormGroup.control.get(this.formGroupName) as FormGroup;
    console.log(this.khadya_paaln)
   }
@@ -47,12 +48,16 @@ export class KhadyapaalnComponent implements OnInit {
  
    //This methord caculates gst and total in case of service change
    onServiceSelect(): void {
-    console.log(this.khadya_paaln.value.khadya_paaln_service_name)
-     if (this.khadya_paaln.value.khadya_paaln_service_name !== '') {
+    console.log(this.khadya_paaln.value.khadya_paaln_service_name);
+    console.log("this.khadya_paaln.value.khadya_paaln_service_name==>",this.khadya_paaln.value.khadya_paaln_service_name);
+    console.log("this.khadya_paaln.value.khadya_paaln_processing_amount==>",this.khadya_paaln.value.khadya_paaln_processing_amount);
+   if (this.khadya_paaln.value.khadya_paaln_service_name !== '') {
       this.showDiscountCheckbox = true;
       //this.showDiscountCheckbox = this.khadya_paaln.value.khadya_paaln_service_name === '2' ? true : false; 
       let serviceKey = this.khadya_paaln.value.khadya_paaln_service_name;
       this.khadya_paaln.get('khadya_paaln_processing_amount')?.setValue(this.khadya_paaln_processAmnt[serviceKey]); 
+      // this.khadya_paaln.get('khadya_paaln_total')?.setValue(0);
+
        this.GSTandTotalAmnt(this.khadya_paaln.value.khadya_paaln_processing_amount);
      }
    }
@@ -60,13 +65,16 @@ export class KhadyapaalnComponent implements OnInit {
    GSTandTotalAmnt(param: number) {
     console.log(param);
      const baseAmount = typeof param === 'string' ? parseFloat(param) : param;
-     const gst = Math.round((baseAmount * 18) / 100);   
+     const gst = Math.round((baseAmount * 0) / 100);   
      const totalAmountWithGST = baseAmount + gst;
      this.khadya_paaln.get('khadya_paaln_total')?.setValue(totalAmountWithGST);
     //this.khadyaPaalnTotalAmount(totalAmountWithGST);
      this.khadyaGSTAmount.emit(totalAmountWithGST);
+      //  this.khadyaGSTAmount.emit(250);
+
    }
  
+
    //patching only khadys palasn amont in case of khadya paaln
    khadyaPaalnTotalAmount(TotalAmnt: any) {
      //this.khadya_paaln.patchValue({ 'grand_total': TotalAmnt });

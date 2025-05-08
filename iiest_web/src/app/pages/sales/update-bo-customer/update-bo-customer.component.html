@@ -1,0 +1,13 @@
+<div class="update-info-container">
+  <h2>Welcome to Connect Bharat</h2>
+
+  <p>Dear <strong></strong>,</p>
+
+  <p>We’re glad to have you onboard. Please review your current details:</p>
+
+  <p>To access new features and government benefits, please keep your account details updated.</p>
+
+  <button class="update-button" (click)="createCustomer()" [disabled]="isCreating">
+    {{ isCreating ? 'Creating Account...' : 'Create My Account' }}
+  </button>
+</div>

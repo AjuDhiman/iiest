@@ -17,7 +17,7 @@ const coworkInvoiceTemplate = (data) => {
     let invoiceType;
 
     //getting invoic type
-    if(data.receiptNo !== 'Performa'){
+    if (data.receiptNo !== 'Performa') {
         switch (data.invoiceType) {
             case 'Customer':
                 invoiceType = "C U S T O M E R";
@@ -35,7 +35,7 @@ const coworkInvoiceTemplate = (data) => {
     } else {
         invoiceType = 'P E R F O R M A'
     }
-  
+
 
     let calculateTax = function (invoiceType, state) {
         if (invoiceType === 'TAX') {
@@ -336,14 +336,21 @@ const coworkInvoiceTemplate = (data) => {
                             </p>
                         </div>
             <div style="display: flex; justify-content: space-between;">
-                <div>
-                
-                <section style="position: relative; margin-top: 40px;">
-                    <img src="${stampImg}" height=100 width=100 alt="iiest_stamp"> <br>
-                    
-                    Piyush Sharma
-                </section>
-            </div>
+
+                <p><b>Invoice is payable within 2 days *</b><br/>
+                <b>Please make invoice payment in our following bank account</b></p>
+                <br/>
+                <p><b>Account Name: </b>IIEST Incubation and Business Centre</p>
+                <p><b>Bank Name: </b>IndusInd Bank</p>
+                <p><b>Account No.: </b>250359359359</p>
+                <p><b>IFSC Code: </b>INDB0000005</p>
+                <p><b>Account Type: </b>Current</p>
+
+              <section style="position: relative; margin-top: 40px;">
+    <img src="${stampImg}" height=100 width=100 alt="iiest_stamp"> <br>
+    Piyush Sharma
+</section>
+
                     </div>
                 </div>
             

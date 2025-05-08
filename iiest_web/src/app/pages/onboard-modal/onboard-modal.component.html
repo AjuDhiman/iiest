@@ -40,15 +40,40 @@
       <div class="col-md-12 my-2">
         <label for="business_category" class="form-label">Business Category<sup>*</sup></label>
         <div class="select-wrapper">
-          <select class="form-control" formControlName="business_category" id="business_category"
-            [ngClass]="{ 'is-invalid': (submitted && businessform['business_category'].errors)}" id="business_category">
+          <select class="form-control" formControlName="business_category_Id" id="business_category_Id"
+            [ngClass]="{ 'is-invalid': (submitted && businessform['business_category_Id'].errors)}" id="business_category_Id">
             <option value="" selected disabled hidden>Select Business Category &#9662;</option>
-            <option value="Food Business Operator">Food Business Operator</option>
-            <option value="Other">Other</option>
+            
+            <!-- <option value="Food Business Operator">Food Business Operator</option>
+            <option value="Other">Other</option> -->
+            <option *ngFor="let type of businessTypes" [value]="type._id">
+              {{ type.name }}
+            </option>
           </select>
         </div>
-        <div *ngIf="submitted && businessform['business_category'].errors" class="invalid-feedback">
-          <div *ngIf="businessform['business_category'].errors['required']">Business Category Name is
+        <div *ngIf="submitted && businessform['business_category_Id'].errors" class="invalid-feedback">
+          <div *ngIf="businessform['business_category_Id'].errors['required']">Business Category Name is
+            Required</div>
+        </div>
+      </div>
+
+
+      <div class="col-md-12 my-2">
+        <label for="business_category" class="form-label">Select City<sup>*</sup></label>
+        <div class="select-wrapper">
+          <select class="form-control" formControlName="cityID" id="cityID"
+            [ngClass]="{ 'is-invalid': (submitted && businessform['cityID'].errors)}" id="cityID">
+            <option value="" selected disabled hidden>Select City &#9662;</option>
+            <!-- <option value="Food Business Operator">Food Business Operator</option>
+            <option value="Other">Other</option> -->
+
+            <option *ngFor="let City of cities" [value]="City._id">
+              {{ City.name }}
+            </option>
+          </select>
+        </div>
+        <div *ngIf="submitted && businessform['cityID'].errors" class="invalid-feedback">
+          <div *ngIf="businessform['cityID'].errors['required']">Business Category Name is
             Required</div>
         </div>
       </div>
@@ -93,6 +118,9 @@
             Required</div>
         </div>
       </div>
+
+
+
 
       <!-- Email Field -->
       <div class="col-md-12 my-2">

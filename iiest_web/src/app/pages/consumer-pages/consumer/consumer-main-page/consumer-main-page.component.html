@@ -1,0 +1,144 @@
+<div class="container text-center py-3 container-dash shop-container">
+    <!-- Image Grid -->
+    <div class="row g-2 mb-3">
+      <!-- Show dynamic image if srcObject is available -->
+      <div class="col-12" *ngIf="statistics?.srcObject; else defaultImage">
+        <img [src]="statistics?.srcObject" alt="Shop Image" class="img-fluid rounded shadow">
+      </div>
+      
+      <!-- Default static image (this will be used when srcObject is NOT available) -->
+      <ng-template #defaultImage>
+        <div class="col-12">
+          <img src="../../../../../assets/images/doc-thumb-2.jpg" alt="Default Shop Image" class="img-fluid rounded shadow">
+        </div>
+      </ng-template>  
+    </div>
+    
+  
+    <!-- Compliance Title -->
+    <h4 class="fw-bold text-dark mb-3">Single Window Tracking System</h4>
+
+ <div
+ role="button"
+  class="d-inline-flex align-items-center rounded mb-3 position-relative"
+  (mouseenter)="showDropdown = true"
+  (mouseleave)="showDropdown = false"
+>
+  <fa-icon [icon]="faStore" class="fa-lg text-primary me-2"></fa-icon>
+  <h5 class="mb-0 me-2 text-dark" style="cursor: pointer;">Shops</h5>
+  <span class="badge bg-primary rounded-pill">{{ shops.length }}</span>
+
+  <!-- Dropdown content -->
+  <div
+    class="dropdown-menu-custom"
+    *ngIf="showDropdown"
+  >
+  
+    <div *ngFor="let shop of shops" class="dropdown-item-custom" (click)="navigateToDashboard(shop)">
+      <img
+      [src]="shop.shopPhoto || '../../../../../assets/images/doc-thumb-2.jpg'"
+      class="shop-photo rounded-circle"
+      alt="Shop Photo"
+    />
+      <span class="shop-tittle ms-2">{{ shop.shopId }}({{shop.district}})</span>
+ </div>
+  </div>
+</div>
+
+    <div class="row align-items-center justify-content-center">
+      <!-- Compliance Legends (Left Side) -->
+      <div class="col-6 text-start">
+        <div class="d-flex align-items-center mb-2" >
+          <div class="legend-circle bg-success me-2"></div>
+          <span class="fw-bold text-success">{{statistics.completedCompliances}} COMPLETED COMPLIANCES</span>
+        </div>
+        <div class="d-flex align-items-center mt-2">
+          <div class="legend-circle bg-danger me-2"></div>
+          <span class="fw-bold text-danger">{{statistics.pendingCompliances}} PENDING COMPLIANCES</span>
+        </div>
+
+        <div class="d-flex align-items-center mt-2">
+          <div class="legend-circle bg-warning me-2"></div>
+          <span class="fw-bold text-warning">{{statistics.initiatedCompliances}} INITIATED COMPLIANCES</span>
+        </div>
+        
+<!-- 
+        <div class="d-flex align-items-center mt-2">
+          <div class="legend-circle text-total me-2"></div>
+          <span class="fw-bold text-total">{{statistics.totalLicenses}} TOTAL COMPLIANCES</span>
+        </div> -->
+      </div>
+  
+      <!-- Compliance Chart (Right Side) -->
+      <div class="col-6 text-end" role="button">
+        <div class="chart-container position-relative">
+
+          <!-- ✅ Curved text SVG placed outside the main circle -->
+          <svg viewBox="0 0 120 60" class="position-absolute curved-text">
+            <defs>
+              <path id="topArc" d="M 10,50 A 50,50 0 0,1 110,50" />
+            </defs>
+            <text fill="#333" font-size="5" font-weight="bold">
+              <textPath href="#topArc" startOffset="50%" text-anchor="middle">
+              COMPLETION TIMELINE 
+              </textPath>
+            </text>
+          </svg>
+        
+          <!-- Main circle chart -->
+          <div class="circle-chart position-relative">
+        
+            <!-- Center content inside the circle -->
+            <div class="circle-content">
+              <h5 class="text-primary fw-bold"> 6</h5>
+              <small>MONTHS</small>
+            </div>
+        
+          </div>
+        </div>
+        
+      </div>
+      <!-- Icons Section -->
+       
+      <div class="container mt-3" style="margin-bottom: 100px;">
+        <div class="row text-center">
+          <!-- First Row -->
+          <div class="col-6 mb-4">
+            <img src="../../../../../assets/images/consumer-icons/group (1).png"alt="EDN" class="icon-image mb-1" />
+            <div class="fw-semibold">MARKET
+            </div>
+          </div>
+          <div class="col-6 mb-4 "  (click)="openNotificationModal()">
+            <img src="../../assets/images/consumer-icons/circular.png" alt="CIRCULAR" class="icon-image mb-1" />
+            <div class="fw-semibold">CIRCULAR</div>
+          </div>
+      
+          <!-- Second Row -->
+          <div class="col-6 mb-2" (click)="navigateToLocalOfficer()">
+            <img src="../../../../../assets/images/consumer-icons/data-protection.png" alt="LOCAL OFFICER" class="icon-image mb-1" />
+            <div class="fw-semibold">LOCAL OFFICER</div>
+          </div>
+          <div class="col-6 mb-2">
+            <img src="../../assets/images/consumer-icons/training.png" alt="TRAINING" class="icon-image mb-1" />
+            <div class="fw-semibold">TRAINING</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- modal popup -->
+      <div class="modal fade" id="notificationModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog notification-dialog">
+          <div class="modal-content border border-secondary shadow-lg">
+            <div class="modal-body p-0">
+              <iframe *ngIf="trustedVideoUrl" [src]="trustedVideoUrl" width="100%" height="200" frameborder="0" allowfullscreen class="w-100"></iframe>
+            </div>
+            <div class="modal-footer py-1 px-2 justify-content-end">
+              <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  

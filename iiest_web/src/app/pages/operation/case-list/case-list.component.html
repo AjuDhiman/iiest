@@ -220,7 +220,7 @@
                                         *ngFor="let data of filteredData | paginate: { itemsPerPage: itemsNumber, currentPage: pageNumber, id:'case-list' }; let i=index">
                                         <td class="cell"><span class="truncate">{{i+itemsNumber*(pageNumber-1)+1}}
                                             </span></td>
-                                        <td class="cell"><span class="truncate text-capitalize selector"
+                                        <td class="cell"><span class="truncate text-capitalize selector  text-primary font-semibold"
                                                 (click)="collectResData('Fostac', data._id)">
                                                 <!-- (click)="doSale(data)" > -->
 
@@ -241,14 +241,17 @@
                                         <td *ngIf="data.salesInfo.fboInfo; else noData" class="cell"><span
                                                 class="truncate text-capitalize">{{data.salesInfo.fboInfo.customer_id}}</span>
                                         </td>
+                                        
                                         <td *ngIf="data.salesInfo.fboInfo" class="cell text-center"><span
                                                 (click)="recipient(data.salesInfo, 'Fostac')"
                                                 class="truncate active-selection">{{data.salesInfo.fostacInfo.recipient_no}}</span>
                                         </td>
+
                                         <td *ngIf="data.salesInfo.fboInfo" class="cell"><span
                                                 class="truncate">{{data.salesInfo.fostacInfo.fostac_total |
                                                 inrAmount}}</span>
                                         </td>
+
                                         <td class="cell text-center"><span
                                                 class="truncate">{{getFormattedSalesDate(data.createdAt)}}</span>
                                         </td>

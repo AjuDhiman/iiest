@@ -7,7 +7,7 @@ const salesModel = require('../../models/employeeModels/employeeSalesSchema');
 const employeeSchema = require('../../models/employeeModels/employeeSchema');
 const { ObjectId } = require('mongodb');
 const { createInvoiceBucket, empSignBucket } = require('../../config/buckets');
-const payRequest = require('../../fbo/phonePay');
+const razorPayRequest = require('../../fbo/razorPay');
 const areaAllocationModel = require('../../models/employeeModels/employeeAreaSchema');
 const { sendInvoiceMail, sendCheckMail, sendFboVerificationMail } = require('../../fbo/sendMail');
 const boModel = require('../../models/BoModels/boSchema');
@@ -18,6 +18,8 @@ const { getDocObject, invoicesPath, fboBasicDocsPath, uploadDocObject, doesFileE
 const docsModel = require('../../models/operationModels/documentsSchema');
 const { default: mongoose } = require('mongoose');
 const { logAudit } = require('../generalControllers/auditLogsControllers');
+const payRequest = require('../../fbo/phonePay');
+
 const FRONT_END = JSON.parse(process.env.FRONT_END);
 const BACK_END = process.env.BACK_END;
 
@@ -25,74 +27,70 @@ let fboFormData = {};
 
 //method for initiating payment with phone pe
 exports.fboPayment = async (req, res) => {
+  let fboFormData;
   try {
-    let success = false;
-
     const userInfo = await employeeSchema.findById(req.params.id);
     const signatureFile = userInfo.signatureImage;
     const officerName = userInfo.employee_name;
     const panelType = userInfo.panel_type;
 
     if (!signatureFile) {
-      success = false;
-      return res.status(404).json({ success, signatureErr: true });
+      return res.status(404).json({ success: false, signatureErr: true });
     }
 
     const areaAlloted = await areaAllocationModel.findOne({ employeeInfo: req.params.id });
     const panIndiaAllowedIds = (await generalDataSchema.find({}))[0].pan_india_allowed_ids;
 
-    console.log(panIndiaAllowedIds);
-
     if (!panIndiaAllowedIds.includes(req.user.employee_id) && panelType !== 'FSSAI Relationship Panel') {
-
       if (!areaAlloted) {
-        success = false;
-        return res.status(404).json({ success, areaAllocationErr: true })
+        return res.status(404).json({ success: false, areaAllocationErr: true });
       }
     }
 
-    const signExists = await doesFileExist(`${employeeDocsPath}${signatureFile}`);
-    console.log('sign Exsists:', signExists)
-
-    if (!signExists) {
-      return res.status(404).json({ success, noSignErr: true })
-    }
-
-
     const formBody = req.body;
-    const createrId = req.params.id
+    const createrId = req.params.id;
 
-    const fboFormData = await sessionModel.create({
+    fboFormData = await sessionModel.create({
       data: {
-        ...formBody, createrObjId: createrId, signatureFile, officerName: officerName,
-        apiCalled: false //this property in data chrecks if api for pay page return already called or not in case of payment link share
+        ...formBody,
+        createrObjId: createrId,
+        signatureFile,
+        officerName,
+        apiCalled: false
       }
     });
 
+
+
     if (!panIndiaAllowedIds.includes(req.user.employee_id) && panelType !== 'FSSAI Relationship Panel') {
       const pincodeCheck = areaAlloted.pincodes.includes(formBody.pincode);
-
       if (!pincodeCheck) {
-        success = false;
-        return res.status(404).json({ success, wrongPincode: true });
+        return res.status(404).json({ success: false, wrongPincode: true });
       }
     }
+    //That is for phonepay integration
 
     payRequest(formBody.grand_total, req.user, res, `${BACK_END}/fbo-pay-return/${fboFormData._id}`);
 
+//That is for rezorpay integration
+    // const paymentData = await razorPayRequest(formBody.grand_total, req.user, fboFormData._id);
+    // return res.status(200).json(paymentData);
+    
+
   } catch (error) {
-    console.log(error);
-    await sessionModel.findByIdAndDelete(fboFormData._id);// delete session in any case of faliure
-    return res.status(500).json({ message: 'Internal Server Error' });
+    console.error(error);
+    // if (fboFormData) {
+    //   await sessionModel.findByIdAndDelete(fboFormData._id); // Cleanup session if error
+    // }
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
-}
+};
 
 //methord for creating fbo and sale entry and other task that should be done after payment cinfirmation from phone pe
 exports.fboPayReturn = async (req, res) => {
 
   let sessionId = req.params.id; //Disclaimer: This sessionId here is used to get stored data from sessionData Model from mongoose this used in place of session because of unaviliblity of session in case of redirect in pm2 server so do not take it as express-session
-
-  await new Promise(resolve => setTimeout(resolve, 500)); //wait fot 0.5 sec brfore proceeding for beating db update threshold for updating api called proprty of session data in case api call backed more than one time in amount of ms 
+  // await new Promise(resolve => setTimeout(resolve, 500)); //wait fot 0.5 sec brfore proceeding for beating db update threshold for updating api called proprty of session data in case api call backed more than one time in amount of ms 
 
   try {
 
@@ -165,7 +163,6 @@ exports.fboPayReturn = async (req, res) => {
         //generating customer id or rather say ShopId
         const { idNumber, generatedCustomerId } = await generatedInfo();
 
-        console.log('foscosFixedCharge', foscosFixedCharge);
 
         //getting boInfo
         const boData = await boModel.findOne({ _id: boInfo });
@@ -284,7 +281,6 @@ exports.fboPayReturn = async (req, res) => {
 
           const qty = hygiene_audit.shops_no;
           const invoice = await invoiceDataHandler(invoiceCode, email, fbo_name, address, state, district, pincode, owner_contact, email, total_processing_amount, extraFee, totalGST, qty, business_type, gst_number, hygiene_audit.hra_total, 'HRA', hygiene_audit, signatureFile, invoiceUploadStream, officerName, generatedCustomerId, boData);
-
           invoiceData.push(invoice);
           invoiceIdArr.push({ src: invoice.fileName, code: invoiceCode, product: 'HRA' });
 
@@ -438,23 +434,26 @@ exports.fboPayReturn = async (req, res) => {
         //creating shop details obj in case of HRA and Foscos
         product_name.forEach(async (product) => {
           const addShop = await shopModel.create({
-            salesInfo: selectedProductInfo._id, managerName: boData.manager_name, address: address, state: state, district: district, pincode: pincode, shopId: generatedCustomerId, product_name: product, village: village,
+            salesInfo: selectedProductInfo._id, managerName: boData.manager_name, address: address, state: state, district: district, pincode: pincode, shopId: generatedCustomerId, product_name: product, village: village, boId:boData.customer_id,
             tehsil: tehsil, isVerificationLinkSend: false
           }); //create shop after sale for belongs  tohis sale
 
           await logAudit(createrObjId, "fbo_registers", fboEntry._id, {}, fboEntry, `${product} sold by paypage`);
         })
 
+
         //lastly redirect user to fbo form
         res.redirect(`${FRONT_END.VIEW_URL}/#/fbo`);
 
         const isPayLaterMail = false;
+        console.log("invoiceData======>",invoiceData)
         sendInvoiceMail(email, invoiceData, isPayLaterMail, {});
+        return res.status(200).json({ message: "Payment successfull" });
 
       }
     }
   } catch (error) {
-    console.log(error);
+    console.log("errorssss ====>",error);
     return res.status(500).json({ message: "Internal Server Error" });
   } finally {
     await sessionModel.findByIdAndDelete(sessionId);// delete session data at last in any case sucess or faliure
@@ -733,19 +732,19 @@ exports.boPayLater = async (req, res) => {
     const user = req.user;
     const signatureFile = user.signatureImage;
 
-    const signExists = await doesFileExist(`${employeeDocsPath}${signatureFile}`);
-    console.log('sign Exsists:', signExists)
+    // const signExists = await doesFileExist(`${employeeDocsPath}${signatureFile}`);
+    // console.log('sign Exsists:', signExists)
 
-    if (!signExists) {
-      return res.status(404).json({ success: false, noSignErr: true })
-    }
+    // if (!signExists) {
+    //   return res.status(404).json({ success: false, noSignErr: true })
+    // }
 
     //generating customer id or rather say ShopId
     const { idNumber, generatedCustomerId } = await generatedInfo();
 
     //getting boInfo
     const boData = await boModel.findOne({ _id: boInfo });
-
+console.log("boData================>",boData)
     //array for saving invoices datas
     const invoiceData = [];
 
@@ -844,8 +843,8 @@ exports.boPayLater = async (req, res) => {
     //creating shop details obj in case of HRA and Foscos
     product_name.forEach(async (product) => {
       const addShop = await shopModel.create({
-        salesInfo: selectedProductInfo._id, managerName: boData.manager_name, address: address, state: state, district: district, pincode: pincode, shopId: generatedCustomerId, product_name: product, village: village,
-        tehsil: tehsil, isVerificationLinkSend: false
+        salesInfo:  selectedProductInfo._id, managerName: boData.manager_name, address: address, state: state, district: district, pincode: pincode, shopId: generatedCustomerId, product_name: product, village: village,
+        tehsil: tehsil, isVerificationLinkSend: false,boId:boData.customer_id,
       }); //create shop after sale for belongs  tohis sale
       await logAudit(user._id, "fbo_registers", fboEntry._id, {}, fboEntry, `${product} sold by paylater`);
     })
@@ -962,6 +961,8 @@ exports.saleInvoice = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 }
+
+//method getting invoice  in 
 
 exports.getClientList = async (req, res) => {
   try {
@@ -1112,6 +1113,9 @@ exports.updateFboBasicDocStatus = async (req, res) => {
             format: doc.format,
             multipleDoc: doc.isMultiDoc,
             src: src,
+            issuedDate: doc.issuedDate,
+            licenseDuration:doc.licenseDuration 
+            
           }
         }
       });
@@ -1310,7 +1314,7 @@ exports.approveChequeOrPaylaterSale = async (req, res) => {
 
     if (product_name.includes('Khadya Paaln')) { //generating  Invoivce
       const invoiceCode = await generateInvoiceCode(salesInfo.fboInfo.business_type);//generating new imvoice code
-
+console.log("invoiceCode==>",invoiceCode)
       fileName = `${Date.now()}_${fboInfo.id_num}.pdf`;
       invoiceUploadStream = invoiceBucket.openUploadStream(`${fileName}`);
 
@@ -1320,7 +1324,7 @@ exports.approveChequeOrPaylaterSale = async (req, res) => {
 
       const qty = 1;
       const invoice = await invoiceDataHandler(invoiceCode, fboInfo.email, fboInfo.fbo_name, fboInfo.address, fboInfo.state, fboInfo.district, fboInfo.pincode, fboInfo.owner_contact, fboInfo.email, total_processing_amount, extraFee, totalGST, qty, fboInfo.business_type, fboInfo.gst_number, khadyaPaalnInfo.khadya_paaln_total, 'Khadya Paaln', khadyaPaalnInfo, signatureFile, invoiceUploadStream, employeeInfo.employee_name, fboInfo.customer_id, fboInfo.boInfo);
-
+console.log("invoice====>",invoice)
       invoiceData.push(invoice);
       invoiceIdArr.push({ src: invoice.fileName, code: invoiceCode, product: 'Khadya Paaln' });
     }
@@ -1442,8 +1446,6 @@ exports.verifyFbo = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(fboObjId)) { //sending error message in case of wrong format of objet id send in parameter
       return res.status(404).json({ success: false, message: "Not A Valid Request" }); //this message will be shown in verifing mail frontend
     }
-
-
 
     const idExsists = await fboModel.findOne({ _id: fboObjId });
 

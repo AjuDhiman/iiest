@@ -464,7 +464,7 @@ export class VerificationSectionComponent implements OnInit, OnChanges {
           //   console.log(div.nativeElement.attributes.refrence);
           // })
 
-          
+          console.log("caseData===========>",this.caseData)
           // this.fieldVerifications = (this.fieldVerifications.map(div => div) as any);
 
           this.emitCaseData.emit(this.caseData);
